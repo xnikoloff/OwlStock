@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain;
 using OwlStock.Infrastructure;
+using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 using System.Reflection;
 
@@ -15,11 +17,17 @@ namespace OwlStock.Services
             _context = context;
         }
 
-        public async Task<List<Photo>> All()
+        public async Task<List<AllPhotosDTO>> All()
         {
             if(_context.Photos is not null)
             {
-                return await _context.Photos.ToListAsync();
+                return await _context.Photos
+                    .Select(p => new AllPhotosDTO
+                    {
+                        PhotoName = p.Name,
+                        FileName = p.FileName
+                    })
+                    .ToListAsync();
             }
 
             throw new NullReferenceException($"{_context.Photos} is null");
@@ -43,15 +51,57 @@ namespace OwlStock.Services
             return photo;
         }
 
-        public async Task<int> Create(Photo? photo)
+        public async Task<int> Create(CreatePhotoDTO? createPhotoDto)
         {
-            if(photo is null)
+            if(createPhotoDto is null)
             {
-                throw new NullReferenceException($"{nameof(photo)} is null");
+                throw new NullReferenceException($"{nameof(createPhotoDto)} is null");
             }
 
+            byte[]? fileData = null;
+
+            if (createPhotoDto?.FormFile?.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    createPhotoDto.FormFile.CopyTo(ms);
+                    fileData = ms.ToArray();
+                }
+            }
+
+            string fileName = UploadeFile(createPhotoDto?.FormFile, createPhotoDto?.Name, createPhotoDto?.WebRootPath);
+
+            Photo photo = new()
+            {
+                Name = createPhotoDto?.Name,
+                Description = createPhotoDto?.Description,
+                FileName = fileName,
+                FileType = createPhotoDto?.FormFile?.ContentType,
+                FileData = fileData
+            };
+
             await _context.AddAsync(photo);
-            return await _context.SaveChangesAsync();
+            int saveChanges = await _context.SaveChangesAsync();
+
+
+            return saveChanges;
+        }
+
+        public string UploadeFile(IFormFile? file, string? photoName, string? webRootPath)
+        {
+            string? uniqueFileName = null;
+
+            if (file != null && photoName != null && webRootPath != null)
+            {
+                string uploadsFolder = Path.Combine(webRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + "_" + photoName + file.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName ?? "";
         }
     }
 }

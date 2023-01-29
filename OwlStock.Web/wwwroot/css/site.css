@@ -16,3 +16,15 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+form .form-group{
+    margin-bottom: 25px;
+}
+
+.card{
+    margin-bottom: 20px;
+}
+
+.card img {
+    width: 315px;
+}

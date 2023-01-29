@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain;
+using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
-using System.Runtime.CompilerServices;
 
 namespace OwlStock.Web.Controllers
 {
     public class PhotoController : Controller
     {
         private readonly IPhotoService _service;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PhotoController(IPhotoService service)
+        public PhotoController(IPhotoService service, IWebHostEnvironment webHostEnvironment)
         {
             _service = service;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -33,15 +35,19 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Photo? photo)
+        public async Task<IActionResult> Create(CreatePhotoDTO? createPhotoDTO)
         {
             if (!ModelState.IsValid)
             {
-                return View(photo);
+                return View(createPhotoDTO);
             }
 
-            await _service.Create(photo);
-
+            if(createPhotoDTO is not null)
+            {
+                createPhotoDTO.WebRootPath = _webHostEnvironment.WebRootPath;
+                await _service.Create(createPhotoDTO);
+            }
+            
             return RedirectToAction(nameof(All));
         }
     }

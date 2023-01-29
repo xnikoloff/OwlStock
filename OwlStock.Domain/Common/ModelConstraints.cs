@@ -5,5 +5,6 @@
         //Picture
         public const int PictureNameMaxLength = 500;
         public const int PictureDescriptionMaxLength = 2000;
+        public const string PhotoFormFileDisplayName = "File";
     }
 }
