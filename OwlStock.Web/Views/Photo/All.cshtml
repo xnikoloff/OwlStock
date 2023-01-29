@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="image-container">
-                            <img src="~/images/@dto?.FileName" alt="No Image"/>
+                            <a asp-action="PhotoById" asp-route-id="@dto.Id"><img src="~/images/@dto?.FileName" alt="No Image" /></a>
                         </div>
                     </div>
                     <div class="card-footer">

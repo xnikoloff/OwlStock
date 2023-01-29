@@ -24,6 +24,7 @@ namespace OwlStock.Services
                 return await _context.Photos
                     .Select(p => new AllPhotosDTO
                     {
+                        Id = p.Id,
                         PhotoName = p.Name,
                         FileName = p.FileName
                     })

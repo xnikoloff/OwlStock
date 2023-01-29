@@ -28,3 +28,7 @@ form .form-group{
 .card img {
     width: 315px;
 }
+
+.photo-container img{
+    width: 600px;
+}
