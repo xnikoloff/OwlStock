@@ -1,14 +1,29 @@
 ﻿@model Photo
 
-<div class="row">
-    <div class="col-12 col-md-6 col-lg-4">
+<div class="row mt-4">
+    <div class="col-12 col-md-6 col-lg-10">
         <div class="photo-container">
             <img src="~/images/@Model.FileName"/>
         </div>
-        <div class="info-container">
+        <div class="info-container">    
             <h1>@Model.Name</h1>
             <hr />
             <p>@Model.Description</p>
         </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-2 mt-3">
+        <form asp-action="DownloadPhoto">
+            <input type="hidden" asp-for="FileData"/>
+            <input type="hidden" asp-for="FileName"/>
+            <input type="hidden" asp-for="FileType"/>
+            <select name="photoSize" class="form-control my-2">
+                <option value="@PhotoSize.Small">Small</option>
+                <option value="@PhotoSize.Medium">Medium</option>
+                <option selected value="@PhotoSize.Large">Large</option>
+                <option value="@PhotoSize.OriginalSize">OriginalSize</option>
+            </select>
+
+            <button type="submit" class="btn btn-success">Download</button>
+        </form>
     </div>
 </div>

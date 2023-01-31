@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain;
+using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
-using System.Reflection;
+using SixLabors.ImageSharp;
 
 namespace OwlStock.Services
 {
     public class PhotoService : IPhotoService
     {
         private readonly OwlStockDbContext _context;
-
+        
         public PhotoService(OwlStockDbContext context)
         {
             _context = context;
@@ -46,7 +47,7 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.Photos)} is null");
             }
 
-            Photo photo = await _context.Photos.FindAsync(id) ?? 
+            Photo? photo = await _context.Photos.FindAsync(id) ?? 
                 throw new NullReferenceException($"{nameof(photo)} is null");
 
             return photo;
@@ -97,10 +98,9 @@ namespace OwlStock.Services
                 string uploadsFolder = Path.Combine(webRootPath, "images");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + "_" + photoName + file.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+
+                file.CopyTo(fileStream);
             }
             return uniqueFileName ?? "";
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain;
+using OwlStock.Domain.Enumerations;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 
@@ -8,11 +9,13 @@ namespace OwlStock.Web.Controllers
     public class PhotoController : Controller
     {
         private readonly IPhotoService _service;
+        private readonly IPhotoResizer _photoResizer;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PhotoController(IPhotoService service, IWebHostEnvironment webHostEnvironment)
+        public PhotoController(IPhotoService service, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment)
         {
             _service = service;
+            _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -49,6 +52,26 @@ namespace OwlStock.Web.Controllers
             }
             
             return RedirectToAction(nameof(All));
+        }
+
+        [HttpPost]
+        public FileResult DownloadPhoto(Photo photo, PhotoSize photoSize)
+        {
+            if(string.IsNullOrEmpty(photo?.FileName) || string.IsNullOrEmpty(photo?.FileType) || 
+                photo?.FileData == null)
+            {
+                throw new ArgumentNullException($"{nameof(photo)}");
+            }
+
+            Photo resizedPhoto = _photoResizer.Resize(photo, photoSize);
+
+            if (string.IsNullOrEmpty(resizedPhoto?.FileName) || string.IsNullOrEmpty(resizedPhoto?.FileType) ||
+                resizedPhoto?.FileData == null)
+            {
+                throw new NullReferenceException($"{nameof(photo)} null");
+            }
+
+            return File(resizedPhoto.FileData, resizedPhoto.FileType, resizedPhoto.FileName);
         }
     }
 }
