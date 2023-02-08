@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlStock.Domain", "OwlStock
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlStock.Infrastructure", "OwlStock.Infrastructure\OwlStock.Infrastructure.csproj", "{7A98DC8A-3013-4A79-95F6-04EB80B07574}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OwlStock.Services", "OwlStock.Services\OwlStock.Services.csproj", "{C0F7B389-1354-4A87-9764-5F0DAABA8E17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlStock.Services", "OwlStock.Services\OwlStock.Services.csproj", "{C0F7B389-1354-4A87-9764-5F0DAABA8E17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OwlStock.Tests", "OwlStock.Tests\OwlStock.Tests.csproj", "{243BE15F-9BBC-4097-9512-ED30E658C2E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C0F7B389-1354-4A87-9764-5F0DAABA8E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0F7B389-1354-4A87-9764-5F0DAABA8E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0F7B389-1354-4A87-9764-5F0DAABA8E17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{243BE15F-9BBC-4097-9512-ED30E658C2E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{243BE15F-9BBC-4097-9512-ED30E658C2E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{243BE15F-9BBC-4097-9512-ED30E658C2E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{243BE15F-9BBC-4097-9512-ED30E658C2E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
