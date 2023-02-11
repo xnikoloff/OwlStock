@@ -10,12 +10,12 @@ namespace OwlStock.Services
 {
     public class PhotoResizer : IPhotoResizer
     {
-        public Photo Resize(Photo photo, PhotoSize photoSize)
+        public byte[] Resize(byte[] fileData, PhotoSize photoSize)
         {
             // memory stream
             using var memoryStream = new MemoryStream();
             // file stream
-            using var image = Image.Load(photo?.FileData);
+            using var image = Image.Load(fileData);
             
             IResampler sampler = KnownResamplers.Lanczos3;
             bool compand = true;
@@ -42,14 +42,7 @@ namespace OwlStock.Services
             memoryStream.Position = 0; // The position needs to be reset.
 
             // prepare result to byte[]
-            return new Photo()
-            {
-                Name = photo?.Name,
-                FileName = photo?.FileName,
-                Description = photo?.Description,
-                FileType = photo?.FileType,
-                FileData = memoryStream.ToArray()
-            };
+            return memoryStream.ToArray();
         }
 
         private Size GetSize(Size originalSize, PhotoSize newSize)

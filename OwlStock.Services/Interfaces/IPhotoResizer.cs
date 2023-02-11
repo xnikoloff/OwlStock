@@ -5,6 +5,6 @@ namespace OwlStock.Services.Interfaces
 {
     public interface IPhotoResizer
     {
-        Photo Resize(Photo photo, PhotoSize photoSize);   
+        byte[] Resize(byte[] fileData, PhotoSize photoSize);   
     } 
 }

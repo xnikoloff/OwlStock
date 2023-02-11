@@ -5,24 +5,25 @@ using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
-using SixLabors.ImageSharp;
 
 namespace OwlStock.Services
 {
     public class PhotoService : IPhotoService
     {
         private readonly OwlStockDbContext _context;
+        private readonly IPhotoResizer _photoResizer;
         
-        public PhotoService(OwlStockDbContext context)
+        public PhotoService(OwlStockDbContext context, IPhotoResizer photoResizer)
         {
             _context = context;
+            _photoResizer = photoResizer;
         }
 
         public async Task<List<AllPhotosDTO>> All()
         {
             if(_context.Photos is not null)
             {
-                return await _context.Photos
+                List<AllPhotosDTO> allPhotosDTO = await _context.Photos
                     .Select(p => new AllPhotosDTO
                     {
                         Id = p.Id,
@@ -30,6 +31,8 @@ namespace OwlStock.Services
                         FileName = p.FileName
                     })
                     .ToListAsync();
+
+                return allPhotosDTO;
             }
 
             throw new NullReferenceException($"{_context.Photos} is null");
@@ -49,7 +52,7 @@ namespace OwlStock.Services
 
             Photo? photo = await _context.Photos.FindAsync(id) ?? 
                 throw new NullReferenceException($"{nameof(photo)} is null");
-
+            
             return photo;
         }
 
@@ -60,49 +63,54 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(createPhotoDto)} is null");
             }
 
-            byte[]? fileData = null;
-
-            if (createPhotoDto?.FormFile?.Length > 0)
-            {
-                using (var ms = new MemoryStream())
-                {
-                    createPhotoDto.FormFile.CopyTo(ms);
-                    fileData = ms.ToArray();
-                }
-            }
-
-            string fileName = UploadeFile(createPhotoDto?.FormFile, createPhotoDto?.Name, createPhotoDto?.WebRootPath);
 
             Photo photo = new()
             {
                 Name = createPhotoDto?.Name,
                 Description = createPhotoDto?.Description,
-                FileName = fileName,
-                FileType = createPhotoDto?.FormFile?.ContentType,
-                FileData = fileData
+                FileName = createPhotoDto?.FormFile?.FileName,
+                FileType = createPhotoDto?.FormFile?.ContentType
             };
+
+            string fileName = GetFileName(createPhotoDto?.Name, createPhotoDto?.FormFile?.FileName);
+            UploadeFile(createPhotoDto?.FormFile, photo, createPhotoDto?.WebRootPath, PhotoSize.OriginalSize, fileName);
+            UploadeFile(createPhotoDto?.FormFile, photo, createPhotoDto?.WebRootPath, PhotoSize.Small, fileName);
+
+            photo.FileName = fileName;
 
             await _context.AddAsync(photo);
             int saveChanges = await _context.SaveChangesAsync();
 
-
             return saveChanges;
         }
 
-        public string UploadeFile(IFormFile? file, string? photoName, string? webRootPath)
+        public void UploadeFile(IFormFile? file, Photo photo, string? webRootPath, PhotoSize size, string fileName)
         {
-            string? uniqueFileName = null;
-
-            if (file != null && photoName != null && webRootPath != null)
+            if (file != null && photo?.Name != null && webRootPath != null)
             {
                 string uploadsFolder = Path.Combine(webRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + "_" + photoName + file.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using var fileStream = new FileStream(filePath, FileMode.Create);
+                string filePath = Path.Combine(uploadsFolder, size.ToString() + "_" + fileName);
 
-                file.CopyTo(fileStream);
+                //iformfile to byte array
+                byte[] data = ConvertFormFileToByteArray(file);
+
+                //resize
+                byte[] resired = _photoResizer.Resize(data, size);
+                using FileStream stream = File.OpenWrite(filePath);
+                stream.Write(resired, 0, resired.Length);
             }
-            return uniqueFileName ?? "";
+        }
+
+        private static byte[] ConvertFormFileToByteArray(IFormFile file)
+        {
+            using MemoryStream stream = new();
+            file.CopyTo(stream);
+            return stream.ToArray();
+        }
+
+        private static string GetFileName(string photoName, string fileName)
+        {
+             return Guid.NewGuid().ToString() + "_" + photoName + "_" + fileName;
         }
     }
 }

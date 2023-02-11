@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OwlStock.Domain;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using OwlStock.Domain;
 
 namespace OwlStock.Web.Controllers
 {
@@ -57,21 +58,11 @@ namespace OwlStock.Web.Controllers
         [HttpPost]
         public FileResult DownloadPhoto(Photo photo, PhotoSize photoSize)
         {
-            if(string.IsNullOrEmpty(photo?.FileName) || string.IsNullOrEmpty(photo?.FileType) || 
-                photo?.FileData == null)
-            {
-                throw new ArgumentNullException($"{nameof(photo)}");
-            }
 
-            Photo resizedPhoto = _photoResizer.Resize(photo, photoSize);
+            byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\{PhotoSize.OriginalSize.ToString() + "_" + photo?.FileName}");
+            byte[] resized = _photoResizer.Resize(fileData, photoSize);
 
-            if (string.IsNullOrEmpty(resizedPhoto?.FileName) || string.IsNullOrEmpty(resizedPhoto?.FileType) ||
-                resizedPhoto?.FileData == null)
-            {
-                throw new NullReferenceException($"{nameof(photo)} null");
-            }
-
-            return File(resizedPhoto.FileData, resizedPhoto.FileType, resizedPhoto.FileName);
+            return File(resized, photo?.FileType, photo?.FileName);
         }
     }
 }

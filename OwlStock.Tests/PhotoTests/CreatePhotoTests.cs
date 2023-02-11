@@ -38,7 +38,7 @@ namespace OwlStock.Tests.PhotoTests
                 WebRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
             };
 
-            IPhotoService service = new PhotoService(context);
+            IPhotoService service = null;
 
             //Act
             int recordsCountBefore = 0;
