@@ -1,5 +1,7 @@
-﻿using OwlStock.Domain.Common;
+﻿using Microsoft.AspNetCore.Identity;
+using OwlStock.Domain.Common;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OwlStock.Domain
 {
@@ -20,5 +22,10 @@ namespace OwlStock.Domain
         public string? FileType { get; set; }
 
         public byte[]? FileData { get; set; }
+
+        [ForeignKey(nameof(IdentityUser))]
+        public string? IdentityUserId { get; set; }
+
+        public IdentityUser? IdentityUser { get; set; }
     }
 }

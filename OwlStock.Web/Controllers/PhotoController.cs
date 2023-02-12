@@ -4,6 +4,9 @@ using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using OwlStock.Domain;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 
 namespace OwlStock.Web.Controllers
 {
@@ -12,7 +15,7 @@ namespace OwlStock.Web.Controllers
         private readonly IPhotoService _service;
         private readonly IPhotoResizer _photoResizer;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
+        
         public PhotoController(IPhotoService service, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment)
         {
             _service = service;
@@ -49,6 +52,7 @@ namespace OwlStock.Web.Controllers
             if(createPhotoDTO is not null)
             {
                 createPhotoDTO.WebRootPath = _webHostEnvironment.WebRootPath;
+                createPhotoDTO.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 await _service.Create(createPhotoDTO);
             }
             
@@ -62,7 +66,12 @@ namespace OwlStock.Web.Controllers
             byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\{PhotoSize.OriginalSize.ToString() + "_" + photo?.FileName}");
             byte[] resized = _photoResizer.Resize(fileData, photoSize);
 
-            return File(resized, photo?.FileType, photo?.FileName);
+            if (!string.IsNullOrEmpty(photo?.FileType))
+            {
+                return File(resized, photo.FileType, photo?.FileName);
+            }
+
+            throw new NullReferenceException($"{nameof(photo.FileType)} is null");
         }
     }
 }

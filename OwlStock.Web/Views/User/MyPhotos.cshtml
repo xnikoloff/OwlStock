@@ -1,0 +1,21 @@
+﻿@model List<AllPhotosDTO>
+
+<div class="container">
+    <div class="row">
+        @foreach(AllPhotosDTO dto in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="image-container">
+                            <a asp-action="PhotoById" asp-route-id="@dto?.Id"><img src="~/images/@(PhotoSize.Small.ToString() + "_" +  dto?.FileName)" alt="No Image" /></a>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <h4>@dto?.PhotoName</h4>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

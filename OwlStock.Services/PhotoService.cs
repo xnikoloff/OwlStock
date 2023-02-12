@@ -28,7 +28,8 @@ namespace OwlStock.Services
                     {
                         Id = p.Id,
                         PhotoName = p.Name,
-                        FileName = p.FileName
+                        FileName = p.FileName,
+                        UserId = p.IdentityUserId
                     })
                     .ToListAsync();
 
@@ -36,6 +37,12 @@ namespace OwlStock.Services
             }
 
             throw new NullReferenceException($"{_context.Photos} is null");
+        }
+
+        public async Task<List<AllPhotosDTO>> All(string? userId)
+        {
+            List<AllPhotosDTO> allPhotosDTO = await All();
+            return allPhotosDTO.Where(dto => dto.UserId == userId).ToList();
         }
 
         public async Task<Photo> GetById(int? id)
@@ -69,7 +76,8 @@ namespace OwlStock.Services
                 Name = createPhotoDto?.Name,
                 Description = createPhotoDto?.Description,
                 FileName = createPhotoDto?.FormFile?.FileName,
-                FileType = createPhotoDto?.FormFile?.ContentType
+                FileType = createPhotoDto?.FormFile?.ContentType,
+                IdentityUserId = createPhotoDto?.UserId
             };
 
             string fileName = GetFileName(createPhotoDto?.Name, createPhotoDto?.FormFile?.FileName);

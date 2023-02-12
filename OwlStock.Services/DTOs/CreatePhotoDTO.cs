@@ -15,5 +15,7 @@ namespace OwlStock.Services.DTOs
         public IFormFile? FormFile { get; set; }
 
         public string? WebRootPath { get; set; }
+
+        public string? UserId { get; set; }
     }
 }
