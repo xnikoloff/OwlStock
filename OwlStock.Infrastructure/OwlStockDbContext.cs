@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain;
+using OwlStock.Domain.Entities;
 using OwlStock.Infrastructure.Configuration;
 
 namespace OwlStock.Infrastructure
@@ -13,6 +14,7 @@ namespace OwlStock.Infrastructure
             : base(options) { }
 
         public DbSet<Photo>? Photos { get; set; }
+        public DbSet<Order>? Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

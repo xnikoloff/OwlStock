@@ -23,6 +23,8 @@ namespace OwlStock.Domain
 
         public byte[]? FileData { get; set; }
 
+        public decimal Price { get; set; }
+
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }
 

@@ -9,6 +9,7 @@ namespace OwlStock.Services
         {
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IPhotoResizer, PhotoResizer>();
+            services.AddTransient<IOrderService, OrderService>();
 
             return services;
         }
