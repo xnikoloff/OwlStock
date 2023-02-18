@@ -45,7 +45,7 @@ namespace OwlStock.Services
             return allPhotosDTO.Where(dto => dto.UserId == userId).ToList();
         }
 
-        public async Task<Photo> GetById(int? id)
+        public async Task<PhotoByIdDTO> GetById(int? id)
         {
             if(id is null)
             {
@@ -60,7 +60,11 @@ namespace OwlStock.Services
             Photo? photo = await _context.Photos.FindAsync(id) ?? 
                 throw new NullReferenceException($"{nameof(photo)} is null");
             
-            return photo;
+            return new PhotoByIdDTO
+            {
+                Photo = photo,
+                PhotoSize = PhotoSize.Large
+            };
         }
 
         public async Task<int> Create(CreatePhotoDTO? createPhotoDto)

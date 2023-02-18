@@ -1,29 +1,68 @@
-﻿@model Photo
+﻿@model PhotoByIdDTO
 
 <div class="row mt-4">
     <div class="col-12 col-md-6 col-lg-10">
         <div class="photo-container">
-            <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model.FileName)"/>
+            <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
         </div>
         <div class="info-container">    
-            <h1>@Model.Name</h1>
+            <h1>@Model?.Photo?.Name</h1>
             <hr />
-            <p>@Model.Description</p>
+            <p>@Model?.Photo?.Description</p>
         </div>
     </div>
     <div class="col-12 col-md-6 col-lg-2 mt-3">
         <form asp-action="DownloadPhoto">
-            <input type="hidden" asp-for="FileData"/>
-            <input type="hidden" asp-for="FileName"/>
-            <input type="hidden" asp-for="FileType"/>
-            <select name="photoSize" class="form-control my-2">
-                <option value="@PhotoSize.Small">Small</option>
-                <option value="@PhotoSize.Medium">Medium</option>
-                <option selected value="@PhotoSize.Large">Large</option>
-                <option value="@PhotoSize.OriginalSize">OriginalSize</option>
-            </select>
 
+            <input type="hidden" asp-for="Photo.FileData"/>
+            <input type="hidden" asp-for="Photo.FileName"/>
+            <input type="hidden" asp-for="Photo.FileType"/>
+            <input type="hidden" asp-for="Photo.Price"/>
+
+            <p>Price: <span id="price-text">@Model?.Photo?.Price</span> BGN</p>
+            <select asp-for="PhotoSize" class="form-control my-2" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
             <button type="submit" class="btn btn-success">Download</button>
+
         </form>
     </div>
 </div>
+
+<script>
+
+    $(document).ready(function(){
+
+        //calculate price on page load
+        calculatePrice();
+
+        //calculate price when different size is selected
+        $("#PhotoSize").change(function(){
+            calculatePrice();
+        });
+    });
+
+    function calculatePrice(){
+        let price = $("#Photo_Price");
+        let priceText = $("#price-text");
+        let size = $("#PhotoSize").find(":selected");
+
+        switch (size.val()) {
+            case "@((int)PhotoSize.Small)": {
+                priceText.html((parseInt(price.val()) - (parseInt(price.val()) * 0.8)).toFixed(2));
+                break;
+            }
+            case "@((int)PhotoSize.Medium)": {
+                priceText.html((parseInt(price.val()) - (parseInt(price.val()) * 0.5)).toFixed(2));
+                break;
+            }
+            case "@((int)PhotoSize.Large)": {
+                priceText.html((parseInt(price.val()) - (parseInt(price.val()) * 0.2)).toFixed(2));
+                break;
+            }
+            default: {
+                priceText.html(price.val());
+                break;
+            }
+        }
+    }
+
+</script>
