@@ -1,4 +1,4 @@
-﻿using OwlStock.Domain;
+﻿using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 
 namespace OwlStock.Services.DTOs

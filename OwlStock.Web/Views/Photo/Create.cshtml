@@ -2,7 +2,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4 mt-3">
             <form asp-action="Create" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label asp-for="Name"></label>
@@ -13,8 +13,16 @@
                     <input asp-for="Description" class="form-control" />
                 </div>
                 <div class="form-group">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Categories"></label>
+                    <select multiple asp-for="Categories" asp-items="@Html.GetEnumSelectList<Category>()" class="form-control"></select>
+                </div>
+                <div class="form-group">
                     <label asp-for="FormFile"></label>
-                    <input asp-for="FormFile" class="form-control"/>
+                    <input asp-for="FormFile" class="form-control" />
                 </div>
                 <button type="submit" class="btn btn-success">Create</button>
             </form>

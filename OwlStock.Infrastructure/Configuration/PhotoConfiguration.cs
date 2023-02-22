@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OwlStock.Domain;
+using OwlStock.Domain.Entities;
 
 namespace OwlStock.Infrastructure.Configuration
 {

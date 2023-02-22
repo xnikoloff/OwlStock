@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using OwlStock.Domain;
+using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Services.DTOs;
@@ -74,15 +74,18 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(createPhotoDto)} is null");
             }
 
-
             Photo photo = new()
             {
                 Name = createPhotoDto?.Name,
                 Description = createPhotoDto?.Description,
                 FileName = createPhotoDto?.FormFile?.FileName,
                 FileType = createPhotoDto?.FormFile?.ContentType,
-                IdentityUserId = createPhotoDto?.UserId
+                IdentityUserId = createPhotoDto?.UserId,
             };
+            
+            List<PhotoCategory> photoCategories = GetCategories(createPhotoDto?.Categories, photo);
+
+            photo.PhotoCategories = photoCategories;
 
             string fileName = GetFileName(createPhotoDto?.Name, createPhotoDto?.FormFile?.FileName);
             UploadeFile(createPhotoDto?.FormFile, photo, createPhotoDto?.WebRootPath, PhotoSize.OriginalSize, fileName);
@@ -94,6 +97,22 @@ namespace OwlStock.Services
             int saveChanges = await _context.SaveChangesAsync();
 
             return saveChanges;
+        }
+
+        private static List<PhotoCategory> GetCategories(List<Category> categories, Photo photo)
+        {
+            List<PhotoCategory> photoCategories = new();
+
+            foreach(Category category in categories)
+            {
+                photoCategories.Add(new()
+                {
+                    Category = category,
+                    Photo = photo
+                });
+            }
+
+            return photoCategories;
         }
 
         public void UploadeFile(IFormFile? file, Photo photo, string? webRootPath, PhotoSize size, string fileName)

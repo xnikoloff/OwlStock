@@ -3,10 +3,10 @@ using OwlStock.Domain.Enumerations;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
-using OwlStock.Domain;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using OwlStock.Domain.Entities;
 
 namespace OwlStock.Web.Controllers
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OwlStock.Domain;
+using OwlStock.Domain.Entities;
 using OwlStock.Infrastructure;
 
 namespace OwlStock.Tests

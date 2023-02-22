@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OwlStock.Infrastructure;
 
@@ -11,9 +12,10 @@ using OwlStock.Infrastructure;
 namespace OwlStock.Infrastructure.Migrations
 {
     [DbContext(typeof(OwlStockDbContext))]
-    partial class OwlStockDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230222121432_AddCategoryToPhotoEntity")]
+    partial class AddCategoryToPhotoEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,13 +255,16 @@ namespace OwlStock.Infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
+            modelBuilder.Entity("OwlStock.Domain.Photo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
@@ -295,6 +300,7 @@ namespace OwlStock.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            Category = 0,
                             Description = "Description Test Photo 1",
                             Name = "Test Photo 1",
                             Price = 0m
@@ -302,6 +308,7 @@ namespace OwlStock.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
+                            Category = 0,
                             Description = "Description Test Photo 2",
                             Name = "Test Photo 2",
                             Price = 0m
@@ -309,31 +316,11 @@ namespace OwlStock.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
+                            Category = 0,
                             Description = "Description Test Photo 3",
                             Name = "Test Photo 3",
                             Price = 0m
                         });
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PhotoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhotoId");
-
-                    b.ToTable("PhotosCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -393,7 +380,7 @@ namespace OwlStock.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
 
-                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
+                    b.HasOne("OwlStock.Domain.Photo", "Photo")
                         .WithMany()
                         .HasForeignKey("PhotoId");
 
@@ -402,29 +389,13 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Navigation("Photo");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
+            modelBuilder.Entity("OwlStock.Domain.Photo", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
 
                     b.Navigation("IdentityUser");
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoCategory", b =>
-                {
-                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
-                        .WithMany("PhotoCategories")
-                        .HasForeignKey("PhotoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Photo");
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
-                {
-                    b.Navigation("PhotoCategories");
                 });
 #pragma warning restore 612, 618
         }
