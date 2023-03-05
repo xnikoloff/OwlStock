@@ -1,11 +1,13 @@
-﻿namespace OwlStock.Domain.Enumerations
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OwlStock.Domain.Enumerations
 {
     public enum Category
     {
         Landscape = 1,
         Nature = 2,
         Street = 3,
-        TexturesAndPatterns = 4,
+        Patterns = 4,
         Animals = 5,
         Fashion = 6,
         Food = 7,
@@ -22,7 +24,6 @@
         Events = 18,
         Night = 19,
         Astro = 20,
-        LongExposure = 21,
         Macro = 22
     }
 }

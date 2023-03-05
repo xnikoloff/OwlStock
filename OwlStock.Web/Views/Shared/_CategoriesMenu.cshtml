@@ -1,0 +1,44 @@
+﻿<div class="container">
+    <div class="d-flex align-items-center">
+        <div class="flex-shrink-0">
+            <a href="#" class="btn-left btn-link p-2 toggle text-dark"><i class="fa fa-arrow-left"></i></a>
+        </div>
+        <div class="flex-grow-1 w-100 o-hidden">
+            <ul class="nav nav-fill text-uppercase small position-relative flex-nowrap">
+                @foreach (Category category in Enum.GetValues(typeof(Category)))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Photo" asp-action="All">@category</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="flex-shrink-0">
+            <a href="#" class="btn-right btn-link toggle p-2 text-dark"><i class="fa fa-arrow-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .o-hidden {
+        overflow:hidden;
+    }
+
+    .nav {
+        transition: transform 0.4s;
+        transform: translateX(50%);
+        left: -50%;
+    }
+
+    .nav.justify-content-end {
+        transform: translateX(0);
+        left: 0;
+    }
+</style>
+
+<script>
+    $('.toggle').click(function () {
+        $('.nav').toggleClass("justify-content-end");
+        $('.toggle').toggleClass("text-light");
+    });
+</script>
