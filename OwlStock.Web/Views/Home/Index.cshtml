@@ -30,10 +30,10 @@
             <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element].Id)">
                 <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element]?.FileName)">
             </a>
-            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element].Id)">
+            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element + 1].Id)">
                 <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 1]?.FileName)">
             </a>
-            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element].Id)">
+            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element + 2].Id)">
                 <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 2]?.FileName)">
             </a>
         </div>
