@@ -1,8 +1,94 @@
-﻿@{
+﻿@model List<AllPhotosDTO>
+
+@{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 wrapper">
+            <div class="banner mx-auto text-center">
+                <h1 class="text-white mt-4">OwlStock</h1>
+                <h4 class="text-white">Stock photos for you or your business.</h4>
+                <a asp-controller="Photo" asp-action="All" class="btn btn-lg btn-warning font-weight-bold mt-4">Discover</a>
+            </div>
+        </div>
+    </div>
 </div>
+<div class="container-fluid mt-2">
+    @{
+        int iterations = Model.Count / 3;
+        int element = 0;
+    }
+
+    <div class="row row-gallery">
+
+    @for(int i = 0; i < iterations; i++)
+    {
+        
+        <div class="column">
+            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element].Id)">
+                <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element]?.FileName)">
+            </a>
+            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element].Id)">
+                <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 1]?.FileName)">
+            </a>
+            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element].Id)">
+                <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 2]?.FileName)">
+            </a>
+        </div>
+        
+
+        element += 3;
+    }
+    
+    </div>
+</div>
+
+<style>
+    .banner {
+        margin-top: 100px;
+    }
+
+    .banner h1 {
+        font-size: 6rem;
+    }
+
+    .banner .btn:hover {
+        cursor: pointer;
+    }
+
+    .row-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 4px;
+    }
+    /* Create four equal columns that sits next to each other */
+    .column {
+        flex: 25%;
+        max-width: 25%;
+        padding: 0 4px;
+    }
+
+    .column img {
+        margin-top: 8px;
+        vertical-align: middle;
+        width: 100%;
+    }
+
+    /* Responsive layout - makes a two column-layout instead of four columns */
+    @@media screen and (max-width: 800px) {
+        .column {
+            flex: 50%;
+            max-width: 50%;
+        }
+    }
+
+    /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+    @@media screen and (max-width: 600px) {
+        .column {
+            flex: 100%;
+            max-width: 100%;
+        }
+    }
+</style>
