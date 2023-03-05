@@ -24,12 +24,14 @@ namespace OwlStock.Services
             if(_context.Photos is not null)
             {
                 List<AllPhotosDTO> allPhotosDTO = await _context.Photos
+                    .Include(p => p.PhotoCategories)
                     .Select(p => new AllPhotosDTO
                     {
                         Id = p.Id,
                         PhotoName = p.Name,
+                        Categories = p.PhotoCategories.Select(e => e.Category).ToList(),
                         FileName = p.FileName,
-                        UserId = p.IdentityUserId
+                        UserId = p.IdentityUserId,
                     })
                     .ToListAsync();
 
@@ -43,6 +45,15 @@ namespace OwlStock.Services
         {
             List<AllPhotosDTO> allPhotosDTO = await All();
             return allPhotosDTO.Where(dto => dto.UserId == userId).ToList();
+        }
+
+        public async Task<List<AllPhotosDTO>> AllByCategory(Category category)
+        {
+            List<AllPhotosDTO> allPhotosDTO = await All();
+
+            return allPhotosDTO
+                .Where(dto => dto.Categories.Contains(category))
+                .ToList();
         }
 
         public async Task<PhotoByIdDTO> GetById(int? id)

@@ -12,13 +12,13 @@ namespace OwlStock.Web.Controllers
 {
     public class PhotoController : Controller
     {
-        private readonly IPhotoService _service;
+        private readonly IPhotoService _photoService;
         private readonly IPhotoResizer _photoResizer;
         private readonly IWebHostEnvironment _webHostEnvironment;
         
-        public PhotoController(IPhotoService service, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment)
+        public PhotoController(IPhotoService photoService, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment)
         {
-            _service = service;
+            _photoService = photoService;
             _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
         }
@@ -26,13 +26,19 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            return View(await _service.All());
+            return View(await _photoService.All());
         }
 
         [HttpGet]
         public async Task<IActionResult> PhotoById(int? id)
         {
-            return View(await _service.GetById(id));
+            return View(await _photoService.GetById(id));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllByCategory(Category category)
+        {
+            return View(await _photoService.AllByCategory(category));
         }
 
         [HttpGet]
@@ -53,7 +59,7 @@ namespace OwlStock.Web.Controllers
             {
                 createPhotoDTO.WebRootPath = _webHostEnvironment.WebRootPath;
                 createPhotoDTO.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                await _service.Create(createPhotoDTO);
+                await _photoService.Create(createPhotoDTO);
             }
             
             return RedirectToAction(nameof(All));

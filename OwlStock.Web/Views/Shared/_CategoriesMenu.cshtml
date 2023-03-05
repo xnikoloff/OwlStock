@@ -8,7 +8,7 @@
                 @foreach (Category category in Enum.GetValues(typeof(Category)))
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Photo" asp-action="All">@category</a>
+                        <a class="nav-link text-dark" asp-controller="Photo" asp-action="AllByCategory" asp-route-category="@category">@category</a>
                     </li>
                 }
             </ul>
