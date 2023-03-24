@@ -24,6 +24,9 @@
                 <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element + 2].Id)">
                     <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 2]?.FileName)">
                 </a>
+                <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element + 3].Id)">
+                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 3]?.FileName)">
+                </a>
             </div>
 
 
