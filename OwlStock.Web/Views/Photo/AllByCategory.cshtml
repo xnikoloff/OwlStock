@@ -1,9 +1,9 @@
 ﻿@model List<AllPhotosDTO>
 
 <div class="container">
-    <div class="row">
-        <div class="col-12 col-md-6 col-lg-4">
-            <h4>@Context?.Request?.Query["category"]</h4>
+    <div class="row bg-light my-3 p-3 rounded">
+        <div class="col-12 col-md-6 col-lg-12">
+            <h4>@(ViewData["categoryDescription"] ?? "")</h4>
         </div>
     </div>
     <partial name="_Grid" model="Model"/>

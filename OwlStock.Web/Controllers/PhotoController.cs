@@ -15,12 +15,15 @@ namespace OwlStock.Web.Controllers
         private readonly IPhotoService _photoService;
         private readonly IPhotoResizer _photoResizer;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ICategoryService _categoryService;
         
-        public PhotoController(IPhotoService photoService, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment)
+        public PhotoController(IPhotoService photoService, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment,
+            ICategoryService categoryService)
         {
             _photoService = photoService;
             _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -38,6 +41,7 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> AllByCategory(Category category)
         {
+            ViewData["categoryDescription"] = GetCategoryDescription(category);
             return View(await _photoService.AllByCategory(category));
         }
 
@@ -78,6 +82,11 @@ namespace OwlStock.Web.Controllers
             }
 
             throw new NullReferenceException($"{nameof(photo.FileType)} is null");
+        }
+
+        private string GetCategoryDescription(Category category)
+        {
+            return _categoryService.GetCategoryDescription(category);
         }
     }
 }
