@@ -30,16 +30,5 @@ namespace OwlStock.Web.Controllers
 
             return View(await _photoService.All(userId));
         }
-
-        [HttpGet]
-        public async Task<IActionResult> MyOrders()
-        {
-            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ??
-                throw new NullReferenceException($"User Id not available");
-
-
-
-            return View(await _orderService.All(userId));
-        }
     }
 }

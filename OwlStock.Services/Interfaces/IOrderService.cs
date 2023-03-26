@@ -6,5 +6,6 @@ namespace OwlStock.Services.Interfaces
     {
         Task<List<Order>> All();
         Task<List<Order>> All(string userId);
+        Task<bool> CreateOrder(Order order);
     }
 }

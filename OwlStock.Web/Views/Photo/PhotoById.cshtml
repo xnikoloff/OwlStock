@@ -1,29 +1,36 @@
 ﻿@model PhotoByIdDTO
 
-<div class="row mt-4">
-    <div class="col-12 col-md-6 col-lg-10">
-        <div class="photo-container">
-            <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-12 col-md-6 col-lg-10">
+            <div class="photo-container">
+                <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)" />
+            </div>
+            <div class="info-container">
+                <h1>@Model?.Photo?.Name</h1>
+                <hr />
+                <p>@Model?.Photo?.Description</p>
+            </div>
         </div>
-        <div class="info-container">    
-            <h1>@Model?.Photo?.Name</h1>
-            <hr />
-            <p>@Model?.Photo?.Description</p>
+        <div class="col-12 col-md-6 col-lg-2 mt-3">
+            <form asp-controller="Order" asp-action="OrderInfo" method="GET">
+
+                <input type="hidden" asp-for="Photo.Id" />
+                <input type="hidden" asp-for="Photo.FileData" />
+                <input type="hidden" asp-for="Photo.FileName" />
+                <input type="hidden" asp-for="Photo.FileType" />
+                <input type="hidden" asp-for="Photo.Name" />
+
+                <div class="form-group">
+                    <label asp-for="Photo.Price"></label>
+                    <input id="photo-price" class="form-control" />
+                    <input type="hidden" asp-for="Photo.Price" />
+                </div>
+                
+                <select asp-for="PhotoSize" class="form-control my-2" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
+                <button type="submit" class="btn btn-success">Download</button>
+            </form>
         </div>
-    </div>
-    <div class="col-12 col-md-6 col-lg-2 mt-3">
-        <form asp-action="DownloadPhoto">
-
-            <input type="hidden" asp-for="Photo.FileData"/>
-            <input type="hidden" asp-for="Photo.FileName"/>
-            <input type="hidden" asp-for="Photo.FileType"/>
-            <input type="hidden" asp-for="Photo.Price"/>
-
-            <p>Price: <span id="price-text">@Model?.Photo?.Price</span> BGN</p>
-            <select asp-for="PhotoSize" class="form-control my-2" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
-            <button type="submit" class="btn btn-success">Download</button>
-
-        </form>
     </div>
 </div>
 
@@ -41,25 +48,32 @@
     });
 
     function calculatePrice(){
+        let priceInt = @(Model.Photo.Price.ToString().Split(',')[0]);
+        let priceDecimal = @(Model.Photo.Price.ToString().Split(',')[1]);
+        let priceCalculated = $("#photo-price");
         let price = $("#Photo_Price");
-        let priceText = $("#price-text");
+        let priceValue = priceInt + '.' + priceDecimal;
         let size = $("#PhotoSize").find(":selected");
 
         switch (size.val()) {
             case "@((int)PhotoSize.Small)": {
-                priceText.html((parseInt(price.val()) - (parseInt(price.val()) * 0.8)).toFixed(2));
+                price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.8)).toFixed(2));
+                priceCalculated.val(price.val());
                 break;
             }
             case "@((int)PhotoSize.Medium)": {
-                priceText.html((parseInt(price.val()) - (parseInt(price.val()) * 0.5)).toFixed(2));
+                price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.5)).toFixed(2));
+                priceCalculated.val(price.val());
                 break;
             }
             case "@((int)PhotoSize.Large)": {
-                priceText.html((parseInt(price.val()) - (parseInt(price.val()) * 0.2)).toFixed(2));
+                price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.2)).toFixed(2));
+                priceCalculated.val(price.val());
                 break;
             }
             default: {
-                priceText.html(price.val());
+                price.val(priceValue);
+                priceCalculated.val(price.val());
                 break;
             }
         }

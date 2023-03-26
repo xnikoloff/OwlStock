@@ -2,17 +2,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OwlStock.Infrastructure;
 using OwlStock.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<OwlStockDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString ?? 
+        throw new NullReferenceException($"{connectionString} is null")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<OwlStockDbContext>();
+
+builder.Services.AddMvc().
+    AddJsonOptions(options =>
+    {
+        JsonStringEnumConverter enumConverter = new();
+        options.JsonSerializerOptions.Converters.Add(enumConverter);
+    });
 
 //configure password
 builder.Services.Configure<IdentityOptions>(options =>

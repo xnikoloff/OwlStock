@@ -35,5 +35,13 @@ namespace OwlStock.Services
                 .Where(o => o.IdentityUserId == userId)
                 .ToListAsync();
         }
+
+        public async Task<bool> CreateOrder(Order order)
+        {
+            await _context.AddAsync(order);
+
+            int result = await _context.SaveChangesAsync();
+            return result > 0;
+        }
     }
 }
