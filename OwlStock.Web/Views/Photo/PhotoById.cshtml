@@ -2,18 +2,14 @@
 
 <div class="container">
     <div class="row mt-4">
-        <div class="col-12 col-md-6 col-lg-10">
-            <div class="photo-container">
-                <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)" />
-            </div>
-            <div class="info-container">
-                <h1>@Model?.Photo?.Name</h1>
-                <hr />
-                <p>@Model?.Photo?.Description</p>
-            </div>
+        <div class="col-12 col-md-6 col-lg-8">
+        <div class="photo-container">
+            <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
         </div>
-        <div class="col-12 col-md-6 col-lg-2 mt-3">
-            <form asp-controller="Order" asp-action="OrderInfo" method="GET">
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 mt-3">
+        
+        <form asp-action="DownloadPhoto">
 
                 <input type="hidden" asp-for="Photo.Id" />
                 <input type="hidden" asp-for="Photo.FileData" />
@@ -21,18 +17,50 @@
                 <input type="hidden" asp-for="Photo.FileType" />
                 <input type="hidden" asp-for="Photo.Name" />
 
-                <div class="form-group">
-                    <label asp-for="Photo.Price"></label>
-                    <input id="photo-price" class="form-control" />
-                    <input type="hidden" asp-for="Photo.Price" />
+            <div class="row title-row">
+                <div class="mt-4">    
+                    <h4>@Model?.Photo?.Name</h4>
+                    <hr />
                 </div>
-                
-                <select asp-for="PhotoSize" class="form-control my-2" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
-                <button type="submit" class="btn btn-success">Download</button>
-            </form>
-        </div>
+            </div>
+            <div class="row size-row mt-3">
+                <div class="form-group">
+                    <label asp-for="PhotoSize"></label>
+                    <select asp-for="PhotoSize" class="form-control" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
+                    <span class="text-secondary"><i>*Price will vary based on the size</i></span>
+                </div>
+            </div>
+            <hr />
+            <div class="row price-row">
+                <h2><span id="price-text">@Model?.Photo?.Price</span> BGN</h2>
+            </div>
+            <div class="row cto-row">
+                <button type="submit" class="btn btn-primary mt-3"><b>Download</b></button>
+            </div>
+            <div class="row metadata-row p-3 bg-light mt-5">
+                <h5>Meta</h5>
+                <span>Camera: Canon ESO 1100D</span>
+                <span>Speed: 1/200</span>
+                <span>F/7.6</span>
+                <span>ISO: 200</span>
+            </div>
+        </form>
     </div>
 </div>
+<div class="row">
+    <div class="mt-4">    
+        <p>@Model?.Photo?.Description</p>
+    </div>
+</div>
+</div>
+
+<style>
+    .info-container{
+        background: #fafafa;
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+</style>
 
 <script>
 
