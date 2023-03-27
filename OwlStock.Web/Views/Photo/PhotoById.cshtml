@@ -32,7 +32,8 @@
             </div>
             <hr />
             <div class="row price-row">
-                <h2><span id="price-text">@Model?.Photo?.Price</span> BGN</h2>
+                <input type="hidden" asp-for="Photo.Price"/>
+                <h2><span id="price-text"></span> BGN</h2>
             </div>
             <div class="row cto-row">
                 <button type="submit" class="btn btn-primary mt-3"><b>Download</b></button>
@@ -78,30 +79,29 @@
     function calculatePrice(){
         let priceInt = @(Model.Photo.Price.ToString().Split(',')[0]);
         let priceDecimal = @(Model.Photo.Price.ToString().Split(',')[1]);
-        let priceCalculated = $("#photo-price");
+        let priceCalculated = $("#price-text");
         let price = $("#Photo_Price");
-        let priceValue = priceInt + '.' + priceDecimal;
+        let priceValue = priceInt + ',' + priceDecimal;
         let size = $("#PhotoSize").find(":selected");
-
         switch (size.val()) {
             case "@((int)PhotoSize.Small)": {
                 price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.8)).toFixed(2));
-                priceCalculated.val(price.val());
+                priceCalculated.html(price.val());
                 break;
             }
             case "@((int)PhotoSize.Medium)": {
                 price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.5)).toFixed(2));
-                priceCalculated.val(price.val());
+                priceCalculated.html(price.val());
                 break;
             }
             case "@((int)PhotoSize.Large)": {
                 price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.2)).toFixed(2));
-                priceCalculated.val(price.val());
+                priceCalculated.html(price.val());
                 break;
             }
             default: {
                 price.val(priceValue);
-                priceCalculated.val(price.val());
+                priceCalculated.html(price.val());
                 break;
             }
         }

@@ -1,36 +1,16 @@
 ﻿@model List<AllPhotosDTO>
 
-@{
-    double iterations = Math.Ceiling((double)(Model.Count / 3.0));
-    int element = 0;
-}
-
     <div class="row row-gallery">
 
-    @for (int i = 0; i < iterations; i++)
+    @for (int i = 0; i < Model.Count; i++)
     {
-        if(element + 1 > Model.Count|| element + 2 > Model.Count || element + 3 > Model.Count)
-        {
-            break;
-        }
+        
+        <div class="col-12 col-md-6 col-lg-3 column">
+                <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[i].Id)">
+                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[i]?.FileName)">
+                </a>
 
-        <div class="column">
-                <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element].Id)">
-                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element]?.FileName)">
-                </a>
-                <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element + 1].Id)">
-                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 1]?.FileName)">
-                </a>
-                <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element + 2].Id)">
-                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 2]?.FileName)">
-                </a>
-                <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[element + 3].Id)">
-                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[element + 3]?.FileName)">
-                </a>
             </div>
-
-
-        element += 3;
     }
 
     </div>
