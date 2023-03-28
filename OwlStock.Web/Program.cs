@@ -13,7 +13,7 @@ builder.Services.AddDbContext<OwlStockDbContext>(options =>
         throw new NullReferenceException($"{connectionString} is null")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<OwlStockDbContext>();
 
 builder.Services.AddMvc().
