@@ -45,7 +45,7 @@ namespace OwlStock.Web.Controllers
         {
             order.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _orderService.CreateOrder(order);
-            return View(nameof(Index));
+            return RedirectToAction(nameof(MyOrders));
         }
     }
 }

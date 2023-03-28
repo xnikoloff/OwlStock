@@ -32,14 +32,26 @@ namespace OwlStock.Services
             }
 
             return await _context.Orders
+                .Include(o => o.Photo)
                 .Where(o => o.IdentityUserId == userId)
                 .ToListAsync();
         }
 
         public async Task<bool> CreateOrder(Order order)
         {
-            await _context.AddAsync(order);
+            if(order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
 
+            order.PhotoId = order?.Photo?.Id;
+            order!.Photo = null;
+
+            if(_context.Orders is not null)
+            {
+                await _context.Orders.AddAsync(order);
+            }
+            
             int result = await _context.SaveChangesAsync();
             return result > 0;
         }

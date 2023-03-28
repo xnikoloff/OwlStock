@@ -29,10 +29,25 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Photo.Price"></label>
-                    <input asp-for="Photo.Price"/>
+                    <input asp-for="Photo.Price" class="form-control" readonly/>
                 </div>
                 <button type="submit" class="btn btn-primary">Finish Order</button>
             </form>
         </div>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function(){
+        if($("#Photo_Price").val().includes('.')){
+            let priceNumbers = $("#Photo_Price").val().split('.');
+            let integer = priceNumbers[0];
+            let decimal = priceNumbers[1];
+            let price = integer + ',' + decimal;
+            $("#Photo_Price").val(price);
+        }
+        
+    })
+
+</script>
