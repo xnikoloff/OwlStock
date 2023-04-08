@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "OrderInfo";
 }
-
+<div class="container" id="dropin-container"></div>
 <div class="container">
     <div class="row mt-4">
         <h1>Your order</h1>
@@ -13,7 +13,7 @@
         <div class="col-12 col-md-6 col-lg-4">
             <form asp-action="Create" method="POST" id="payment-info-form">
                 <input type="hidden" asp-for="Photo.Id"/>
-                @Html.HiddenFor(n => n.Nonce, new { @id = "nonce" })
+                <input asp-for="Nonce" style="display:none"/>
                 <div class="form-group">
                     <label asp-for="Photo.Name"></label>
                     <input asp-for="Photo.Name" class="form-control" readonly />
@@ -32,51 +32,45 @@
                     <label asp-for="Photo.Price"></label>
                     <input asp-for="Photo.Price" class="form-control" readonly/>
                 </div>
-                <button type="submit" class="btn btn-primary">Finish Order</button>
+                <button id="submit-button" type="submit" class="btn btn-primary">Finish Order</button>
             </form>
         </div>
     </div>
 </div>
 
-<script src="https://js.braintreegateway.com/web/dropin/1.22.0/js/dropin.min.js"></script>
+<script src="https://js.braintreegateway.com/web/dropin/1.36.1/js/dropin.min.js"></script>
 <script>
-    function getNonce(){
-        var client_token = "@ViewBag.ClientToken";
-        var form = $('#payment-info-form');
+    var client_token = "@ViewBag.ClientToken";
+    var form = document.querySelector('#payment-info-form');
 
-        braintree.dropin.create({
-            authorization: client_token,
-            container: '#bt-dropin'
-        }, function (createErr, instance) {
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
+    braintree.dropin.create({
+        authorization: client_token,
+        container: '#dropin-container'
+    }, function (createErr, instance) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
 
-                instance.requestPaymentMethod(function (err, payload) {
-                    if (err) {
-                        return;
-                    }
+            instance.requestPaymentMethod(function (err, payload) {
+                if (err) {
+                    return;
+                }
 
-                    document.querySelector('#nonce').value = payload.nonce;
-                    form.submit();
-                });
+                document.querySelector('#Nonce').value = payload.nonce;
+                form.submit();
             });
         });
-    }
-    
+    });
 </script>
-
 <script>
-    $(document).ready(function(){
-        if($("#Photo_Price").val().includes('.')){
+    $(document).ready(function () {
+        if ($("#Photo_Price").val().includes('.')) {
             let priceNumbers = $("#Photo_Price").val().split('.');
             let integer = priceNumbers[0];
             let decimal = priceNumbers[1];
             let price = integer + ',' + decimal;
             $("#Photo_Price").val(price);
         }
-
-        getNonce();
     });
 
-
 </script>
+
