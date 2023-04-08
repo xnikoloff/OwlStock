@@ -88,6 +88,7 @@ namespace OwlStock.Services
             Photo photo = new()
             {
                 Name = createPhotoDto?.Name,
+                Price = createPhotoDto.Price,
                 Description = createPhotoDto?.Description,
                 FileName = createPhotoDto?.FormFile?.FileName,
                 FileType = createPhotoDto?.FormFile?.ContentType,
