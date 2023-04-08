@@ -25,12 +25,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Photo" asp-action="All">Discover</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Photo" asp-action="Create">Create</a>
-                        </li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Order" asp-action="MyOrders">Orders</a>
+                            </li>
+                        }
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
+
+                
+
             </nav>
             <partial name="_CategoriesMenu"></partial>
         </div>

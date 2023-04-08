@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Braintree;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain.Entities;
 using OwlStock.Services.DTOs;
@@ -11,10 +12,12 @@ namespace OwlStock.Web.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IBraintreeService _braintreeService;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IBraintreeService braintreeService)
         {
             _orderService = orderService;
+            _braintreeService = braintreeService;
         }
 
         [HttpGet]
@@ -29,12 +32,15 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public IActionResult OrderInfo(PhotoByIdDTO dto)
         {
+            GenerateToken();
+
             Order order = new()
             {
                 Date = DateTime.Now,
                 IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 Photo = dto.Photo,
-                PhotoSize = dto.PhotoSize
+                PhotoSize = dto.PhotoSize,
+                Nonce = ""
             };
 
             return View(order);
@@ -43,9 +49,47 @@ namespace OwlStock.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Order order)
         {
-            order.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await _orderService.CreateOrder(order);
-            return RedirectToAction(nameof(MyOrders));
+            if (order.Photo == null)
+            {   
+                return View("_Error");
+            }
+
+            if (string.IsNullOrEmpty(order.Nonce))
+            {
+                return View("_Error");
+            }
+
+            var gateway = _braintreeService.GetGateway();
+            
+            var request = new TransactionRequest
+            {
+                
+                Amount = order.Photo.Price,
+                PaymentMethodNonce = order.Nonce,
+                Options = new TransactionOptionsRequest
+                {
+                    SubmitForSettlement = true
+                }
+            };
+
+            Result<Transaction> result = gateway.Transaction.Sale(request);
+
+            if (result.IsSuccess())
+            {
+                order.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                await _orderService.CreateOrder(order);
+                return RedirectToAction(nameof(MyOrders));
+            }
+
+            return View("_Error");
+        }
+
+        private void GenerateToken()
+        {
+            //generate token
+            var gateway = _braintreeService.GetGateway();
+            var clientToken = gateway.ClientToken.Generate();
+            ViewBag.ClientToken = clientToken;
         }
     }
 }

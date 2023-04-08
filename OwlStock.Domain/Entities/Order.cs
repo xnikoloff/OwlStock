@@ -12,6 +12,8 @@ namespace OwlStock.Domain.Entities
 
         public DateTime Date { get; set; }
 
+        public string? Nonce { get; set; }
+
         public PhotoSize PhotoSize { get; set; }
 
         [ForeignKey(nameof(Photo))]
