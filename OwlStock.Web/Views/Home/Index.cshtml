@@ -8,9 +8,11 @@
     <div class="row">
         <div class="col-12 wrapper">
             <div class="banner mx-auto text-center">
-                <h1 class="text-white mt-4">OwlStock</h1>
-                <h4 class="text-white">Stock photos for you or your business.</h4>
-                <a asp-controller="Photo" asp-action="All" class="btn btn-lg btn-warning font-weight-bold mt-4">Discover</a>
+                <div class="text-wrapper">
+                    <h1 class="text-white mt-4">OwlStock</h1>
+                    <h4 class="text-white">Stock photos for you or your business.</h4>
+                    <a asp-controller="Photo" asp-action="All" class="btn btn-lg btn-warning font-weight-bold mt-4">Discover</a>
+                </div>
             </div>
         </div>
     </div>
@@ -30,5 +32,21 @@
 
     .banner .btn:hover {
         cursor: pointer;
+    }
+
+    .wrapper {
+        background-image: url('../images/@("OriginalSize_" + ViewBag.HomePhoto)');
+        background-size: cover;
+        height: 90vh;
+        backdrop-filter: brightness(30%);
+    }
+
+    .text-wrapper{
+        width: 40%;
+        margin: 0 auto;
+        padding: 20px 20px 40px 20px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+
     }
 </style>

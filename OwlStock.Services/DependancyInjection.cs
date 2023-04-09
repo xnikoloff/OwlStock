@@ -12,6 +12,7 @@ namespace OwlStock.Services
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IBraintreeService, BraintreeService>();
+            services.AddTransient<IHomeService, HomeService>();
 
             return services;
         }

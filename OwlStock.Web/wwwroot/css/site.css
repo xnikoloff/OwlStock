@@ -40,9 +40,3 @@ form .form-group{
 .photo-container img{
     width: 750px;
 }
-
-.wrapper {
-    background-image: url('../images/banner.jpg');
-    background-size: cover;
-    height: 90vh;
-}
