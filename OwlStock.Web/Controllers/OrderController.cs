@@ -77,8 +77,8 @@ namespace OwlStock.Web.Controllers
             if (result.IsSuccess())
             {
                 order.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                await _orderService.CreateOrder(order);
-                return RedirectToAction(nameof(MyOrders));
+                int id = await _orderService.CreateOrder(order);
+                return RedirectToAction(nameof(DownloadController.DownloadPrompt),"Download", new { id });
             }
 
             return View("_Error");

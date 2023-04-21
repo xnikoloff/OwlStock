@@ -66,21 +66,6 @@ namespace OwlStock.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        [HttpPost]
-        public FileResult DownloadPhoto(Photo photo, PhotoSize photoSize)
-        {
-
-            byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\{PhotoSize.OriginalSize.ToString() + "_" + photo?.FileName}");
-            byte[] resized = _photoResizer.Resize(fileData, photoSize);
-
-            if (!string.IsNullOrEmpty(photo?.FileType))
-            {
-                return File(resized, photo.FileType, photo?.FileName);
-            }
-
-            throw new NullReferenceException($"{nameof(photo.FileType)} is null");
-        }
-
         private string GetCategoryDescription(Category category)
         {
             return _categoryService.GetCategoryDescription(category);
