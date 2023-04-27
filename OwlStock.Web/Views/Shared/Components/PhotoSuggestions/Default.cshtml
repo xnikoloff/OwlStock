@@ -1,0 +1,20 @@
+﻿@model List<Photo>
+
+<div class="row">
+
+    <h5 class="text-center mt-3">Here are 3 more photos from this cateogry that you may like</h5>
+
+    @foreach(Photo photo in Model)
+    {
+        <div class="col-4 mt-5">
+            <img src="~/images/@(PhotoSize.Small.ToString() + "_" + photo?.FileName)" />
+        </div>
+    }
+    
+</div>
+
+<style>
+    img{
+        width: 300px;
+    }
+</style>

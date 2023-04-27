@@ -138,7 +138,8 @@ namespace OwlStock.Services
                 byte[] data = ConvertFormFileToByteArray(file);
 
                 //resize
-                byte[] resired = _photoResizer.Resize(data, size);
+                byte[] bytes = _photoResizer.Resize(data, size);
+                byte[] resired = bytes;
                 using FileStream stream = File.OpenWrite(filePath);
                 stream.Write(resired, 0, resired.Length);
             }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain.Entities;
+using OwlStock.Domain.Enumerations;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 using System.Security.Claims;
@@ -78,7 +79,7 @@ namespace OwlStock.Web.Controllers
             {
                 order.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 await _orderService.CreateOrder(order);
-                return RedirectToAction(nameof(MyOrders));
+                return View("_SuccessfulOrder", order.Photo.PhotoCategories);
             }
 
             return View("_Error");
