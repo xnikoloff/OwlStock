@@ -37,7 +37,20 @@ namespace OwlStock.Services
                 .ToListAsync();
         }
 
-        public async Task<bool> CreateOrder(Order order)
+        public async Task<Order> GetById(int id)
+        {
+            if(_context.Orders is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Orders)} is null");
+            }
+
+            return await _context.Orders
+                .Include(o => o.Photo)
+                .Where(o => o.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<int> CreateOrder(Order order)
         {
             if(order == null)
             {
@@ -52,8 +65,12 @@ namespace OwlStock.Services
                 await _context.Orders.AddAsync(order);
             }
             
-            int result = await _context.SaveChangesAsync();
-            return result > 0;
+            await _context.SaveChangesAsync();
+
+            return await _context.Orders
+                .OrderByDescending(o => o.Id)
+                .Select(o => o.Id)
+                .FirstOrDefaultAsync();
         }
     }
 }
