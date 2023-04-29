@@ -15,4 +15,7 @@
             </form>
         </div>
     </div>
+    <div class="row">
+        @await Component.InvokeAsync("PhotoSuggestions", ViewData["categories"])
+    </div>
 </div>

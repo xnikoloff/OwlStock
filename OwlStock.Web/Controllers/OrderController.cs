@@ -78,8 +78,11 @@ namespace OwlStock.Web.Controllers
             if (result.IsSuccess())
             {
                 order.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                int id = await _orderService.CreateOrder(order);
-                return RedirectToAction(nameof(DownloadController.DownloadPrompt),"Download", new { id });
+                order = await _orderService.CreateOrder(order);
+
+                List<Category> categories = order.Photo.PhotoCategories.Select(pc => pc.Category).ToList();
+                return RedirectToAction(nameof(DownloadController.DownloadPrompt),"Download", 
+                    new { id = order.Id, categories });
             }
 
             return View("_Error");

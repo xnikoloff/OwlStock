@@ -11,17 +11,20 @@ namespace OwlStock.Web.Controllers
         private readonly IPhotoResizer _photoResizer;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IOrderService _orderService;
+        private readonly IPhotoService _photoService;
 
-        public DownloadController(IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService)
+        public DownloadController(IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService, IPhotoService photoService)
         {
             _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
             _orderService = orderService;
+            _photoService = photoService;
         }
 
         [HttpGet]
-        public IActionResult DownloadPrompt(int id)
+        public async Task<IActionResult> DownloadPrompt(int id, List<Category> categories)
         {
+            ViewData["categories"] = categories;
             return View(id);
         }
 

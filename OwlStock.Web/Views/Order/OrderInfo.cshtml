@@ -13,6 +13,7 @@
         <div class="col-12 col-md-6 col-lg-4">
             <form asp-action="Create" method="POST" id="payment-info-form">
                 <input type="hidden" asp-for="Photo.Id"/>
+                <input type="hidden" asp-for="Photo.PhotoCategories"/>
                 <input asp-for="Nonce" style="display:none"/>
                 <div class="form-group">
                     <label asp-for="Photo.Name"></label>

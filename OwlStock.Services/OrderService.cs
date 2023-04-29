@@ -50,7 +50,7 @@ namespace OwlStock.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<int> CreateOrder(Order order)
+        public async Task<Order> CreateOrder(Order order)
         {
             if(order == null)
             {
@@ -68,8 +68,9 @@ namespace OwlStock.Services
             await _context.SaveChangesAsync();
 
             return await _context.Orders
+                .Include(o => o.Photo)
+                    .ThenInclude(p => p.PhotoCategories)
                 .OrderByDescending(o => o.Id)
-                .Select(o => o.Id)
                 .FirstOrDefaultAsync();
         }
     }
