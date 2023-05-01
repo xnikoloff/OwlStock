@@ -31,10 +31,8 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult OrderInfo(PhotoByIdDTO dto)
+        public async Task<IActionResult> OrderInfo(PhotoByIdDTO dto)
         {
-            GenerateToken();
-
             Order order = new()
             {
                 Date = DateTime.Now,
@@ -43,6 +41,15 @@ namespace OwlStock.Web.Controllers
                 PhotoSize = dto.PhotoSize,
                 Nonce = ""
             };
+
+            if (dto.Photo.IsFree)
+            {
+                await _orderService.CreateOrder(order);
+                return RedirectToAction(nameof(DownloadController.FreeDownload), "Download",
+                    new { id = order.Id });
+            }
+            
+            GenerateToken();
 
             return View(order);
         }

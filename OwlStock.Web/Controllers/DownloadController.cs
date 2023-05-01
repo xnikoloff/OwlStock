@@ -28,6 +28,11 @@ namespace OwlStock.Web.Controllers
             return View(id);
         }
 
+        public async Task<FileResult> FreeDownload(int id)
+        {
+            return await Download(id);
+        }
+
         [HttpPost]
         public async Task<FileResult> Download(int id)
         {

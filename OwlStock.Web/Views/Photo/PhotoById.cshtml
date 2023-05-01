@@ -8,14 +8,14 @@
         </div>
     </div>
     <div class="col-12 col-md-6 col-lg-4 mt-3">
-
-            <form asp-controller="Order" asp-action="OrderInfo" method="GET">
+        <form asp-controller="Order" asp-action="OrderInfo" method="GET">
 
                 <input type="hidden" asp-for="Photo.Id" />
                 <input type="hidden" asp-for="Photo.FileData" />
                 <input type="hidden" asp-for="Photo.FileName" />
                 <input type="hidden" asp-for="Photo.FileType" />
                 <input type="hidden" asp-for="Photo.Name" />
+                <input type="hidden" asp-for="Photo.IsFree" />
 
             <div class="row title-row">
                 <div class="mt-4">    
@@ -31,13 +31,27 @@
                 </div>
             </div>
             <hr />
-            <div class="row price-row">
-                <input type="hidden" asp-for="Photo.Price"/>
-                <h2><span id="price-text"></span> BGN</h2>
-            </div>
-            <div class="row cto-row">
-                <button type="submit" class="btn btn-primary mt-3"><b>Download</b></button>
-            </div>
+                @if (Model.Photo.IsFree)
+                {
+                    <div class="row cto-row">
+                        <button type="submit" class="btn btn-primary mt-3"><b>Download Free</b></button>
+                    </div>
+                }
+
+                else
+                {
+                        <div class="row price-row">
+                            <input type="hidden" asp-for="Photo.Price"/>
+                            <h2><span id="price-text"></span> BGN</h2>
+                        </div>
+
+                            <div class="row cto-row">
+                            <button type="submit" class="btn btn-primary mt-3"><b>Download</b></button>
+                        </div>
+                }
+
+                
+            
             <div class="row metadata-row p-3 bg-light mt-5">
                 <h5>Meta</h5>
                 <span>Camera: Canon ESO 1100D</span>
