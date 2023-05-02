@@ -27,7 +27,10 @@
                 <div class="form-group">
                     <label asp-for="PhotoSize"></label>
                     <select asp-for="PhotoSize" class="form-control" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
-                    <span class="text-secondary"><i>*Price will vary based on the size</i></span>
+                    @if (!Model.Photo.IsFree)
+                    {
+                        <span class="text-secondary"><i>*Price will vary based on the size</i></span>
+                    }
                 </div>
             </div>
             <hr />

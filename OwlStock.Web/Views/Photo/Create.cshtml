@@ -13,8 +13,12 @@
                     <input asp-for="Description" class="form-control" />
                 </div>
                 <div class="form-group">
+                    <input asp-for="IsFree" class="is-free"/>
+                    <label asp-for="IsFree"></label>
+                </div>
+                <div class="form-group price-group">
                     <label asp-for="Price"></label>
-                    <input asp-for="Price" class="form-control"/>
+                    <input asp-for="Price" class="form-control price"/>
                 </div>
                 <div class="form-group">
                     <label asp-for="Categories"></label>
@@ -29,3 +33,25 @@
         </div>
     </div>
 </div>
+
+<style>
+    .is-free{
+        transform: scale(1.6);
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+</style>
+
+<script>
+    $(".is-free").change(function(){
+        if($(".is-free").is(":checked")){
+            $(".price-group").css("display", "none");
+            $(".price").val(0);
+        }
+        else{
+            $(".price-group").css("display", "block");
+            $(".price").val("");
+        }
+    })
+    
+</script>

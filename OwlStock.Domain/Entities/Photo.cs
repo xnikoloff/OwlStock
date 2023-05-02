@@ -28,7 +28,7 @@ namespace OwlStock.Domain.Entities
 
         public byte[]? FileData { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public bool IsFree { get; set; }
 
         [Required]

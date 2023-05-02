@@ -72,7 +72,7 @@ namespace OwlStock.Web.Controllers
             var request = new TransactionRequest
             {
                 
-                Amount = order.Photo.Price,
+                Amount = order.Photo.Price.Value,
                 PaymentMethodNonce = order.Nonce,
                 Options = new TransactionOptionsRequest
                 {
