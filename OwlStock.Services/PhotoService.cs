@@ -12,11 +12,13 @@ namespace OwlStock.Services
     {
         private readonly OwlStockDbContext _context;
         private readonly IPhotoResizer _photoResizer;
+        private readonly IPhotoTagService _photoTagService;
         
-        public PhotoService(OwlStockDbContext context, IPhotoResizer photoResizer)
+        public PhotoService(OwlStockDbContext context, IPhotoResizer photoResizer, IPhotoTagService photoTagService)
         {
             _context = context;
             _photoResizer = photoResizer;
+            _photoTagService = photoTagService;
         }
 
         public async Task<List<AllPhotosDTO>> All()
@@ -95,6 +97,7 @@ namespace OwlStock.Services
                 FileType = createPhotoDto?.FormFile?.ContentType,
                 IdentityUserId = createPhotoDto?.UserId,
             };
+
             
             List<PhotoCategory> photoCategories = GetCategories(createPhotoDto?.Categories, photo);
 
@@ -108,6 +111,8 @@ namespace OwlStock.Services
 
             await _context.AddAsync(photo);
             int saveChanges = await _context.SaveChangesAsync();
+
+            await _photoTagService.Add(createPhotoDto?.Tags, photo.Id);
 
             return saveChanges;
         }

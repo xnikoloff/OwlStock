@@ -34,6 +34,8 @@ namespace OwlStock.Domain.Entities
         [Required]
         public ICollection<PhotoCategory> PhotoCategories { get; set; }
 
+        public List<Tag> Tags { get; set; }
+
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }
 

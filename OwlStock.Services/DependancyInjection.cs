@@ -13,6 +13,7 @@ namespace OwlStock.Services
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IBraintreeService, BraintreeService>();
             services.AddTransient<IHomeService, HomeService>();
+            services.AddTransient<IPhotoTagService, PhotoTagService>();
 
             return services;
         }

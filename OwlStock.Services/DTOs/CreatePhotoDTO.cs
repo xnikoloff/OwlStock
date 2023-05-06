@@ -12,6 +12,7 @@ namespace OwlStock.Services.DTOs
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public bool IsFree { get; set; }
+        public string? Tags { get; set; }
         public List<Category>? Categories { get; set; }
 
         [Display(Name = ModelConstraints.PhotoFormFileDisplayName)]
