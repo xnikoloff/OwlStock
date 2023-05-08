@@ -6,6 +6,7 @@ using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
+using System.Xml;
 
 namespace OwlStock.Services
 {
@@ -63,20 +64,28 @@ namespace OwlStock.Services
 
         public async Task<List<AllPhotosDTO>> AllByTags(string tagText)
         {
-            List<Tag>? tags = await _photoTagService.GetByText(tagText);
+            List<int> idList = await _photoTagService.GetPhotoIdListByTag(tagText);
+            List<AllPhotosDTO> photosByTags = new();
 
-            if (tags == null || tags.Count == 0)
+            if (idList.Count == 0)
             {
                 return new List<AllPhotosDTO>();
             }
 
-            string? text = tags?.FirstOrDefault()?.Text;
-
             List<AllPhotosDTO> allPhotosDTO = await All();  
-
-            List<AllPhotosDTO> photosByTags = allPhotosDTO
-                .Where(dto => dto.Tags != null && dto.Tags.Select(t => t.Text).Contains(text))
-                .ToList();
+            
+             for(int i = 0; i < idList.Count; i++)
+             {
+                AllPhotosDTO? dtoToAdd = allPhotosDTO.Where(dto => dto.Id == idList[i]).FirstOrDefault();
+               
+                if (dtoToAdd != null)
+                {
+                    if (!photosByTags.Contains(dtoToAdd))
+                    {
+                        photosByTags.Add(dtoToAdd);
+                    }
+                }
+             }
 
             return photosByTags;
         }

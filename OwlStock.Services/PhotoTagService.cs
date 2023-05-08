@@ -32,15 +32,16 @@ namespace OwlStock.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Tag>> GetByText(string tagText)
+        public async Task<List<int>> GetPhotoIdListByTag(string tagText)
         {
-            List<Tag> tags = await _context.Tags
+            List<int> tags = await _context.Tags
                 .Where(t => t.Text.Contains(tagText))
+                .Select(t => t.PhotoId)
                 .ToListAsync();
 
             return tags;
         }
-
+        
         private List<string> SplitTags(string tags)
         {
             List<string> tagsSplit = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -54,6 +55,4 @@ namespace OwlStock.Services
             return tagsCleaned;
         }
     }
-
-    
 }
