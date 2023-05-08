@@ -43,6 +43,12 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> AllByTag(string tag)
+        {
+            return View("AllByCategory", await _photoService.AllByTags(tag));
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return View();

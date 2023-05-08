@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
@@ -27,11 +28,13 @@ namespace OwlStock.Services
             {
                 List<AllPhotosDTO> allPhotosDTO = await _context.Photos
                     .Include(p => p.PhotoCategories)
+                    .Include(p => p.Tags)
                     .Select(p => new AllPhotosDTO
                     {
                         Id = p.Id,
                         PhotoName = p.Name,
                         Categories = p.PhotoCategories.Select(e => e.Category).ToList(),
+                        Tags = p.Tags.ToList(),
                         FileName = p.FileName,
                         UserId = p.IdentityUserId,
                     })
@@ -56,6 +59,26 @@ namespace OwlStock.Services
             return allPhotosDTO
                 .Where(dto => dto.Categories.Contains(category))
                 .ToList();
+        }
+
+        public async Task<List<AllPhotosDTO>> AllByTags(string tagText)
+        {
+            List<Tag>? tags = await _photoTagService.GetByText(tagText);
+
+            if (tags == null || tags.Count == 0)
+            {
+                return new List<AllPhotosDTO>();
+            }
+
+            string? text = tags?.FirstOrDefault()?.Text;
+
+            List<AllPhotosDTO> allPhotosDTO = await All();  
+
+            List<AllPhotosDTO> photosByTags = allPhotosDTO
+                .Where(dto => dto.Tags != null && dto.Tags.Select(t => t.Text).Contains(text))
+                .ToList();
+
+            return photosByTags;
         }
 
         public async Task<PhotoByIdDTO> GetById(int? id)

@@ -1,4 +1,5 @@
-﻿using OwlStock.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using OwlStock.Domain.Entities;
 using OwlStock.Infrastructure;
 using OwlStock.Services.Interfaces;
 
@@ -29,6 +30,15 @@ namespace OwlStock.Services
             }
 
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Tag>> GetByText(string tagText)
+        {
+            List<Tag> tags = await _context.Tags
+                .Where(t => t.Text.Contains(tagText))
+                .ToListAsync();
+
+            return tags;
         }
 
         private List<string> SplitTags(string tags)

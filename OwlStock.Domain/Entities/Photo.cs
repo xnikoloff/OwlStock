@@ -10,6 +10,7 @@ namespace OwlStock.Domain.Entities
         public Photo()
         {
             this.PhotoCategories = new HashSet<PhotoCategory>();
+            this.Tags = new HashSet<Tag>();
         }
 
         [Key]
@@ -34,7 +35,7 @@ namespace OwlStock.Domain.Entities
         [Required]
         public ICollection<PhotoCategory> PhotoCategories { get; set; }
 
-        public List<Tag> Tags { get; set; }
+        public ICollection<Tag> Tags { get; set; }
 
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }
