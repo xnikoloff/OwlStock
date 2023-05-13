@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OwlStock.Infrastructure;
 
@@ -11,9 +12,10 @@ using OwlStock.Infrastructure;
 namespace OwlStock.Infrastructure.Migrations
 {
     [DbContext(typeof(OwlStockDbContext))]
-    partial class OwlStockDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230513122953_AddPhotoShootEntity")]
+    partial class AddPhotoShootEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -342,51 +344,6 @@ namespace OwlStock.Infrastructure.Migrations
                     b.ToTable("PhotosCategories");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("IdentityUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PersonEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonFirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonFullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonLastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PhotoShootType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PhotoShootTypeDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ReservationDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdentityUserId");
-
-                    b.ToTable("PhotoShoots");
-                });
-
             modelBuilder.Entity("OwlStock.Domain.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -492,15 +449,6 @@ namespace OwlStock.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Photo");
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("IdentityUserId");
-
-                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("OwlStock.Domain.Entities.Tag", b =>

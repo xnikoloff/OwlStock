@@ -1,0 +1,77 @@
+﻿@model CreatePhotoShootDTO
+
+<div class="container">
+    <form asp-action="Reserve" method="post">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-2">
+                <label asp-for="PersonFirstName"></label>
+                <input asp-for="PersonFirstName" class="form-control" />
+            </div>
+            <div class="col-12 col-md-6 col-lg-2">
+                <label asp-for="PersonLastName"></label>
+                <input asp-for="PersonLastName" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+                <label asp-for="PersonEmail"></label>
+                <input asp-for="PersonEmail" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+                <label asp-for="PersonPhone"></label>
+                <input asp-for="PersonPhone" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+                <label asp-for="ReservationDate"></label>
+                <input asp-for="ReservationDate" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+                <label asp-for="PhotoShootType"></label>
+                <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control"></select>
+            </div>
+        </div>
+        <div class="row" id="photo-shoot-type-description">
+            <div class="col-12 col-md-6 col-lg-4">
+                <label asp-for="PhotoShootTypeDescription"></label>
+                <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+                <button type="submit">Reserve</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    label{
+        margin-top: 10px;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        //hide description
+        $("#photo-shoot-type-description").css("display", "none");
+
+        $("#PhotoShootType").change(function () {
+            let option = $('#PhotoShootType').find(":selected").val();
+
+            //7 is Other
+            if (option == 7) {
+                $("#photo-shoot-type-description").css("display", "block");
+            }
+
+            else{
+                $("#photo-shoot-type-description").css("display", "none");
+            }
+        });
+    });
+</script>
