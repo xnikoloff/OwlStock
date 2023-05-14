@@ -29,6 +29,11 @@ namespace OwlStock.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Reserve(CreatePhotoShootDTO dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
             dto.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             await _photoShootService.Reserve(dto);

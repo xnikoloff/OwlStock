@@ -5,41 +5,48 @@
         <div class="row">
             <div class="col-12 col-md-6 col-lg-2">
                 <label asp-for="PersonFirstName"></label>
-                <input asp-for="PersonFirstName" class="form-control" />
+                <input asp-for="PersonFirstName" class="form-control" required/>
+                <span asp-validation-for="PersonFirstName" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 col-lg-2">
                 <label asp-for="PersonLastName"></label>
-                <input asp-for="PersonLastName" class="form-control" />
+                <input asp-for="PersonLastName" class="form-control" required/>
+                <span asp-validation-for="PersonLastName" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4">
                 <label asp-for="PersonEmail"></label>
-                <input asp-for="PersonEmail" class="form-control" />
+                <input asp-for="PersonEmail" class="form-control" required/>
+                <span asp-validation-for="PersonEmail" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4">
                 <label asp-for="PersonPhone"></label>
-                <input asp-for="PersonPhone" class="form-control" />
+                <input asp-for="PersonPhone" class="form-control" required/>
+                <span asp-validation-for="PersonPhone" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4">
                 <label asp-for="ReservationDate"></label>
-                <input asp-for="ReservationDate" class="form-control" />
+                <input asp-for="ReservationDate" class="form-control" required/>
+                <span asp-validation-for="ReservationDate" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4">
                 <label asp-for="PhotoShootType"></label>
-                <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control"></select>
+                <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control" required></select>
+                <span asp-validation-for="PhotoShootType" class="text-danger"></span>
             </div>
         </div>
         <div class="row" id="photo-shoot-type-description">
             <div class="col-12 col-md-6 col-lg-4">
                 <label asp-for="PhotoShootTypeDescription"></label>
                 <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
+                <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
