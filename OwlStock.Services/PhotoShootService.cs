@@ -65,6 +65,7 @@ namespace OwlStock.Services
                 .Where(phs => phs.IdentityUserId == userId)
                 .Select(phs => new MyPhotoShootsDTO
                 {
+                    Id = phs.Id,
                     CreatedOn = phs.CreatedOn,
                     PhotoShootType = phs.PhotoShootType,
                     ReservationDate = phs.ReservationDate,

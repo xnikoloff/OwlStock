@@ -23,7 +23,7 @@
 
                     @foreach (MyPhotoShootsDTO dto in Model)
                     {
-                        <tr>
+                        <tr class="clickable" id="@dto.Id">
                             <td>@dto.ReservationDate</td>
                             <td>@dto.PhotoShootType</td>
                             <td>@dto.CreatedOn</td>
@@ -37,3 +37,26 @@
         </div>
     </div>
 </div>
+
+<style>
+    tr:hover{
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        let scheme = "@Context.Request.Scheme";
+        let host = "@Context.Request.Host";
+        let path = "/PhotoShoot/PhotoShootById"
+        let id = 0;
+
+        $("tr").mouseover(function () {
+            id = this.id;
+        });
+        
+        $(".clickable").click(function (){
+            window.location = scheme + "://" + host + path + '/' + id;
+        });
+    });
+</script>

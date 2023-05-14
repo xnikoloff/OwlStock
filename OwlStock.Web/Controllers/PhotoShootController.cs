@@ -49,5 +49,11 @@ namespace OwlStock.Web.Controllers
 
             return View(myPhotoShoots);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> PhotoShootById(int id)
+        {
+            return View(await _photoShootService.ReservationById(id));
+        }
     }
 }
