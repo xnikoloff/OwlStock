@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain.Entities;
 using OwlStock.Infrastructure;
 using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
+using System.Xml;
 
 namespace OwlStock.Services
 {
@@ -10,12 +12,14 @@ namespace OwlStock.Services
     {
         private readonly OwlStockDbContext _context;
 
-        public PhotoShootService(OwlStockDbContext context)
+        public PhotoShootService(OwlStockDbContext context, IFileService fileService)
         {
             _context = context;
+            _fileService = fileService;
+
         }
 
-        public async Task<List<PhotoShoot>> AllReservations()
+        public async Task<List<PhotoShoot>> AllPhotoShoots()
         {
             if(_context.PhotoShoots is null)
             {
@@ -25,7 +29,7 @@ namespace OwlStock.Services
             return await _context.PhotoShoots.ToListAsync();
         }
 
-        public async Task<PhotoShoot> ReservationById(int id)
+        public async Task<PhotoShootByIdDTO> PhotoShootById(int id)
         {
             if(id <= 0)
             {
@@ -37,16 +41,27 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
-            PhotoShoot? photoShoot = await _context.PhotoShoots
+            PhotoShootByIdDTO? dto = await _context.PhotoShoots
+                .Select(phs => new PhotoShootByIdDTO
+                {
+                    Id = phs.Id,
+                    PersonFullName = phs.PersonFullName,
+                    ReservationDate = phs.ReservationDate,
+                    PhotoShootType = phs.PhotoShootType,
+                    PhotoShootTypeDescription = phs.PhotoShootTypeDescription,
+                    CreatedOn = phs.CreatedOn,
+                    IdentityUserId = phs.IdentityUserId,
+                    PhotoShootFiles = phs.PhotoShootFiles.ToList()
+                })
                 .Where(phs => phs.Id == id)
                 .FirstOrDefaultAsync();
 
-            if(photoShoot == null) 
+            if(dto == null) 
             {
-                throw new NullReferenceException($"{nameof(photoShoot)} is null");
+                throw new NullReferenceException($"{nameof(dto)} is null");
             }
 
-            return photoShoot;
+            return dto;
         }
 
         public async Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId)
@@ -76,7 +91,7 @@ namespace OwlStock.Services
             return myPhotoShoots;
         }
 
-        public async Task<int> Reserve(CreatePhotoShootDTO dto)
+        public async Task<int> Add(CreatePhotoShootDTO dto)
         {
             if(dto == null)
             {
@@ -98,6 +113,35 @@ namespace OwlStock.Services
             };
 
             await _context.AddAsync(photoShoot);
+
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> AddFiles(AddFilesToPhotoShootDTO dto)
+        {
+            List<PhotoShootFile> files = new();
+
+            if(dto.Files == null)
+            {
+                throw new ArgumentNullException(nameof(dto.Files));
+            }
+
+            if(_context.PhotoShoots is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
+            }
+
+            foreach(PhotoShootFile file in dto.Files)
+            {
+                if(file.FileData is null)
+                {
+                    throw new NullReferenceException($"File with no data");
+                }
+
+                file.PhotoShootId = dto.PhotoShootId;
+            }
+            
+            await _context.AddRangeAsync(dto.Files);
 
             return await _context.SaveChangesAsync();
         }

@@ -22,4 +22,8 @@
     <ProjectReference Include="..\OwlStock.Services\OwlStock.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\photoshoots\" />
+  </ItemGroup>
+
 </Project>

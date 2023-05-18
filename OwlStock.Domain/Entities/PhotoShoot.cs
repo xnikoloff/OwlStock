@@ -7,6 +7,11 @@ namespace OwlStock.Domain.Entities
 {
     public class PhotoShoot
     {
+        public PhotoShoot()
+        {
+            this.PhotoShootFiles = new HashSet<PhotoShootFile>();
+        }
+
         [Key]
         public int Id { get; set; }
         public string? PersonFirstName { get; set; }
@@ -22,5 +27,7 @@ namespace OwlStock.Domain.Entities
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }
         public IdentityUser? IdentityUser { get; set; }
+
+        public ICollection<PhotoShootFile> PhotoShootFiles { get; set; }
     }
 }
