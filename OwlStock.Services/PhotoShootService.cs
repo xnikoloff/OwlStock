@@ -11,6 +11,7 @@ namespace OwlStock.Services
     public class PhotoShootService : IPhotoShootService
     {
         private readonly OwlStockDbContext _context;
+        private IFileService _fileService;
 
         public PhotoShootService(OwlStockDbContext context, IFileService fileService)
         {
@@ -41,6 +42,8 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
+            List<string> files = await _fileService.GetFilesPathsForPhotoShoot(id);
+
             PhotoShootByIdDTO? dto = await _context.PhotoShoots
                 .Select(phs => new PhotoShootByIdDTO
                 {
@@ -51,7 +54,8 @@ namespace OwlStock.Services
                     PhotoShootTypeDescription = phs.PhotoShootTypeDescription,
                     CreatedOn = phs.CreatedOn,
                     IdentityUserId = phs.IdentityUserId,
-                    PhotoShootFiles = phs.PhotoShootFiles.ToList()
+                    FilePaths = files
+
                 })
                 .Where(phs => phs.Id == id)
                 .FirstOrDefaultAsync();
@@ -85,6 +89,7 @@ namespace OwlStock.Services
                     PhotoShootType = phs.PhotoShootType,
                     ReservationDate = phs.ReservationDate,
                     ReservationFor = phs.PersonFullName
+                    
                 })
                 .ToListAsync();
 
@@ -113,35 +118,6 @@ namespace OwlStock.Services
             };
 
             await _context.AddAsync(photoShoot);
-
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task<int> AddFiles(AddFilesToPhotoShootDTO dto)
-        {
-            List<PhotoShootFile> files = new();
-
-            if(dto.Files == null)
-            {
-                throw new ArgumentNullException(nameof(dto.Files));
-            }
-
-            if(_context.PhotoShoots is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
-            }
-
-            foreach(PhotoShootFile file in dto.Files)
-            {
-                if(file.FileData is null)
-                {
-                    throw new NullReferenceException($"File with no data");
-                }
-
-                file.PhotoShootId = dto.PhotoShootId;
-            }
-            
-            await _context.AddRangeAsync(dto.Files);
 
             return await _context.SaveChangesAsync();
         }

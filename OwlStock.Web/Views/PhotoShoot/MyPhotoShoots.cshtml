@@ -18,6 +18,7 @@
                             <th>Type</th>
                             <th>Created On</th>
                             <th>Reservation For</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
@@ -28,6 +29,7 @@
                             <td>@dto.PhotoShootType</td>
                             <td>@dto.CreatedOn</td>
                             <td>@dto.ReservationFor</td>
+                            <td><a asp-action="Update" asp-route-id="@dto.Id" class="btn btn-secondary">Update</a></td>
                         </tr>
                     }
 

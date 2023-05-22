@@ -1,4 +1,4 @@
-﻿@model PhotoShoot
+﻿@model PhotoShootByIdDTO
 
 <div class="container">
     <div class="row">
@@ -38,33 +38,43 @@
         </div>
     </div>
 
-    @if (true)
+    @if(Model.FilePaths != null)
     {
-        
-        <div class="row">
-            <div class="col-12 mx-auto text-center">
-                <p><i>Your photos will apear here soon :)</i></p>
-            </div>
-        </div>
+        @if (Model.FilePaths.Count > 0)
+        {
 
-    }
-
-    else
-    {
-
-        <div class="row mt-5">
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <img />
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-success">Download</button>
+                <div class="row">
+                    <div class="col-12 mx-auto text-center">
+                        <p><i>Your photos will apear here soon :)</i></p>
                     </div>
                 </div>
-            </div>
-        </div>
 
+        }
+
+        else
+        {
+
+            <div class="row mt-5">
+                @foreach (string filePath in Model.FilePaths)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <img src="~/images/@Model.FilePaths"/>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-success">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+        }
     }
+    
+
+    
     
 </div>

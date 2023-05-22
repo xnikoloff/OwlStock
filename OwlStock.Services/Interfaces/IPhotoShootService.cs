@@ -6,7 +6,6 @@ namespace OwlStock.Services.Interfaces
     public interface IPhotoShootService
     {
         Task<int> Add(CreatePhotoShootDTO dto);
-        Task<int> AddFiles(AddFilesToPhotoShootDTO dto);
         Task<List<PhotoShoot>> AllPhotoShoots();
         Task<PhotoShootByIdDTO> PhotoShootById(int id);
         Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId);

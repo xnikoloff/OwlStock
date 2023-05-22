@@ -65,11 +65,30 @@ namespace OwlStock.Web.Controllers
             return View(await _photoShootService.PhotoShootById(id));
         }
 
-        [HttpPost]
-        public IActionResult UploadFiles(List<IFormFile> files)
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
         {
-            _fileService.Create(files, _webHostEnvironment.WebRootPath, PhotoSize.OriginalSize);
-            return View(files);
+            PhotoShootByIdDTO photoShootById = await _photoShootService.PhotoShootById(id);
+
+            AddFilesToPhotoShootDTO filesToSPhotoShoot = new()
+            {
+                PersonFullName = photoShootById.PersonFullName,
+                PhotoShootId = photoShootById.Id
+            };
+
+            return View(filesToSPhotoShoot);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateFiles(AddFilesToPhotoShootDTO dto)
+        {
+            if(dto.FormFiles == null)
+            {
+                return View(dto);
+            }
+
+            _fileService.Create(dto.FormFiles, _webHostEnvironment.WebRootPath, PhotoSize.OriginalSize);
+            return RedirectToAction(nameof(PhotoShootById), new { id = dto.PhotoShootId});
         }
     }
 }

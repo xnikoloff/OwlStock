@@ -8,11 +8,14 @@ namespace OwlStock.Domain.Entities
     {
         [Key]
         public int Id { get; set; }
+
         public string? FileName { get; set; }
-        public IFormFile? FileData { get; set; }
+
+        public string? FilePath { get; set; }
 
         [ForeignKey(nameof(PhotoShoot))]
         public int PhotoShootId { get; set; }
+
         public PhotoShoot? PhotoShoot { get; set; }
     }
 }

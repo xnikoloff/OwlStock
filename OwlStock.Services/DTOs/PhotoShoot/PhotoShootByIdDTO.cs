@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace OwlStock.Services.DTOs.PhotoShoot
 {
@@ -20,6 +21,8 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         public PhotoShootType PhotoShootType { get; set; }
         public string? PhotoShootTypeDescription { get; set; }
         public string? IdentityUserId { get; set; }
-        public List<PhotoShootFile>? PhotoShootFiles { get; set; }
+
+        [Required]
+        public List<string>? FilePaths { get; set; }
     }
 }

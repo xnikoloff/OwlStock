@@ -11,7 +11,7 @@ namespace OwlStock.Services.DTOs.PhotoShoot
     public class AddFilesToPhotoShootDTO
     {
         public int PhotoShootId { get; set; }
-        public List<PhotoShootFile>? Files { get; set; }
+        public string? PersonFullName { get; set; }
         public List<IFormFile>? FormFiles { get; set; }
     }
 }
