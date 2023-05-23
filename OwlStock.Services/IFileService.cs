@@ -6,8 +6,8 @@ namespace OwlStock.Services
 {
     public interface IFileService
     {
-        Task<int> Create(IFormFile? file, Photo photo, string? webRootPath, PhotoSize size, string fileName);
-        Task<List<string>> GetFilesPathsForPhotoShoot(int photoShootId);
-        void Create(List<IFormFile> file, string? webRootPath, PhotoSize size);
+        void Create(List<IFormFile> file, string? webRootPath, PhotoSize? size);
+        Task<List<string>> GetFilesNamesForPhotoShoot(int photoShootId);
+        Task<int> CreatePhotoShootFiles(List<IFormFile> files, int photoShootId, string webRootPath);
     }
 }

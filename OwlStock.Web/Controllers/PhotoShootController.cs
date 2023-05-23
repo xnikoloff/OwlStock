@@ -80,14 +80,16 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateFiles(AddFilesToPhotoShootDTO dto)
+        public async Task<IActionResult> UpdateFiles(AddFilesToPhotoShootDTO dto)
         {
             if(dto.FormFiles == null)
             {
                 return View(dto);
             }
 
-            _fileService.Create(dto.FormFiles, _webHostEnvironment.WebRootPath, PhotoSize.OriginalSize);
+            _fileService.Create(dto.FormFiles, _webHostEnvironment.WebRootPath, null);
+            await _fileService.CreatePhotoShootFiles(dto.FormFiles, dto.PhotoShootId, _webHostEnvironment.WebRootPath);
+
             return RedirectToAction(nameof(PhotoShootById), new { id = dto.PhotoShootId});
         }
     }

@@ -38,9 +38,9 @@
         </div>
     </div>
 
-    @if(Model.FilePaths != null)
+    @if(Model.FileNames != null)
     {
-        @if (Model.FilePaths.Count > 0)
+        @if (Model.FileNames.Count == 0)
         {
 
                 <div class="row">
@@ -55,12 +55,12 @@
         {
 
             <div class="row mt-5">
-                @foreach (string filePath in Model.FilePaths)
+                @foreach (string fileName in Model.FileNames)
                 {
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card">
                             <div class="card-body">
-                                <img src="~/images/@Model.FilePaths"/>
+                                <img src="~/images/photoshoots/@fileName"/>
                             </div>
                             <div class="card-footer">
                                 <button class="btn btn-success">Download</button>

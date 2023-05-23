@@ -23,6 +23,6 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         public string? IdentityUserId { get; set; }
 
         [Required]
-        public List<string>? FilePaths { get; set; }
+        public List<string>? FileNames { get; set; }
     }
 }

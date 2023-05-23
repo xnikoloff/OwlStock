@@ -42,7 +42,7 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
-            List<string> files = await _fileService.GetFilesPathsForPhotoShoot(id);
+            List<string> files = await _fileService.GetFilesNamesForPhotoShoot(id);
 
             PhotoShootByIdDTO? dto = await _context.PhotoShoots
                 .Select(phs => new PhotoShootByIdDTO
@@ -54,7 +54,7 @@ namespace OwlStock.Services
                     PhotoShootTypeDescription = phs.PhotoShootTypeDescription,
                     CreatedOn = phs.CreatedOn,
                     IdentityUserId = phs.IdentityUserId,
-                    FilePaths = files
+                    FileNames = files
 
                 })
                 .Where(phs => phs.Id == id)
