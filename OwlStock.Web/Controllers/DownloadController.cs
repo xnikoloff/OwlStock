@@ -22,19 +22,19 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DownloadPrompt(int id, List<Category> categories)
+        public async Task<IActionResult> DownloadPrompt(Guid id, List<Category> categories)
         {
             ViewData["categories"] = categories;
             return View(id);
         }
 
-        public async Task<FileResult> FreeDownload(int id)
+        public async Task<FileResult> FreeDownload(Guid id)
         {
             return await Download(id);
         }
 
         [HttpPost]
-        public async Task<FileResult> Download(int id)
+        public async Task<FileResult> Download(Guid id)
         {
             Order order = await _orderService.GetById(id);
 

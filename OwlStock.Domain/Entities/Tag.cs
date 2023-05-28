@@ -4,11 +4,11 @@ namespace OwlStock.Domain.Entities
 {
     public class Tag
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string? Text { get; set; }
 
         [ForeignKey(nameof(Photo))]
-        public int PhotoId { get; set; }
+        public Guid PhotoId { get; set; }
         public Photo? Photo { get; set; }
     }
 }

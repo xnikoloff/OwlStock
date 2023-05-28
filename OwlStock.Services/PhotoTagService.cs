@@ -14,7 +14,7 @@ namespace OwlStock.Services
             _context = context;
         }
 
-        public async Task<int> Add(string tags, int photoId)
+        public async Task<int> Add(string tags, Guid photoId)
         {
             List<string> tagsSplit = SplitTags(tags);
 
@@ -32,14 +32,14 @@ namespace OwlStock.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<int>> GetPhotoIdListByTag(string tagText)
+        public async Task<List<Guid>> GetPhotoIdListByTag(string tagText)
         {
-            List<int> tags = await _context.Tags
+            List<Guid> ids = await _context.Tags
                 .Where(t => t.Text.Contains(tagText))
                 .Select(t => t.PhotoId)
                 .ToListAsync();
 
-            return tags;
+            return ids;
         }
         
         private List<string> SplitTags(string tags)

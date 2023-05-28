@@ -37,7 +37,7 @@ namespace OwlStock.Services
                 .ToListAsync();
         }
 
-        public async Task<Order> GetById(int id)
+        public async Task<Order> GetById(Guid id)
         {
             if(_context.Orders is null)
             {
