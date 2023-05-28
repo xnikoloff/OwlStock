@@ -5,7 +5,7 @@ namespace OwlStock.Services.DTOs
 {
     public class AllPhotosDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string? PhotoName { get; set; }
         public List<Category>? Categories { get; set; }
         public List<Tag>? Tags { get; set; }

@@ -14,7 +14,7 @@ namespace OwlStock.Domain.Entities
         }
 
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(ModelConstraints.PictureNameMaxLength)]

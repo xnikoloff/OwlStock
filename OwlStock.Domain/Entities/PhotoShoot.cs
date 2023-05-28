@@ -13,7 +13,7 @@ namespace OwlStock.Domain.Entities
         }
 
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string? PersonFirstName { get; set; }
         public string? PersonLastName { get; set; }
         public string? PersonFullName { get; set; }

@@ -64,7 +64,7 @@ namespace OwlStock.Services
 
         public async Task<List<AllPhotosDTO>> AllByTags(string tagText)
         {
-            List<int> idList = await _photoTagService.GetPhotoIdListByTag(tagText);
+            List<Guid> idList = await _photoTagService.GetPhotoIdListByTag(tagText);
             List<AllPhotosDTO> photosByTags = new();
 
             if (idList.Count == 0)
@@ -90,7 +90,7 @@ namespace OwlStock.Services
             return photosByTags;
         }
 
-        public async Task<PhotoByIdDTO> GetById(int? id)
+        public async Task<PhotoByIdDTO> GetById(Guid? id)
         {
             if(id is null)
             {

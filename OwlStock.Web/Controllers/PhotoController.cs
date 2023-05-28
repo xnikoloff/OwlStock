@@ -30,7 +30,7 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PhotoById(int? id)
+        public async Task<IActionResult> PhotoById(Guid? id)
         {
             return View(await _photoService.GetById(id));
         }

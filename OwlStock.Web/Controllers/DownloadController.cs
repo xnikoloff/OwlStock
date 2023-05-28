@@ -28,13 +28,13 @@ namespace OwlStock.Web.Controllers
             return View(id);
         }
 
-        public async Task<FileResult> FreeDownload(int id)
+        public async Task<FileResult> FreeDownload(Guid id)
         {
             return await Download(id);
         }
 
         [HttpPost]
-        public async Task<FileResult> Download(int id)
+        public async Task<FileResult> Download(Guid id)
         {
             Order order = await _orderService.GetById(id);
 

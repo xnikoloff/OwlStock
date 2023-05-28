@@ -6,7 +6,7 @@ namespace OwlStock.Services.Interfaces
     {
         Task<List<Order>> All();
         Task<List<Order>> All(string userId);
-        Task<Order> GetById(int id);
+        Task<Order> GetById(Guid id);
         Task<Order> CreateOrder(Order order);
     }
 }

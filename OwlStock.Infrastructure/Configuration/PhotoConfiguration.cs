@@ -10,21 +10,21 @@ namespace OwlStock.Infrastructure.Configuration
             builder.HasData(
                 new Photo
                 {
-                    Id = 1,
+                    Id = Guid.NewGuid(),
                     Name = "Test Photo 1",
                     Description = "Description Test Photo 1",
                 },
 
                 new Photo
                 {
-                    Id = 2,
+                    Id = Guid.NewGuid(),
                     Name = "Test Photo 2",
                     Description = "Description Test Photo 2",
                 },
 
                 new Photo
                 {
-                    Id = 3,
+                    Id = Guid.NewGuid(),
                     Name = "Test Photo 3",
                     Description = "Description Test Photo 3",
                 }

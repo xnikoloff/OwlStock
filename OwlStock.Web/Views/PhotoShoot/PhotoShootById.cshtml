@@ -3,8 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12 col-md-6 col-lg-4 mx-auto text-center">
-            <h1>Photo Shoot for</h1>
-            <h2><i>@Model.PersonFullName</i></h2>
+            <h1>Photo Shoot #@Model.Id</h1>
         </div>
     </div>
     <hr />
@@ -14,6 +13,7 @@
             <table class="table mt-4">
                 <thead>
                     <tr>
+                        <th>Model</th>
                         <th>PhotoShoot Date</th>
                         <th>PhotoShoot Type</th>
                         <th>Created On</th>
@@ -21,6 +21,7 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td>@Model.PersonFullName</td>
                         <td>@Model.ReservationDate</td>
                         <td>@Model.PhotoShootType</td>
                         <td>@Model.CreatedOn</td>

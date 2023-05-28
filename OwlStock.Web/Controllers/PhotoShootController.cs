@@ -60,13 +60,13 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PhotoShootById(int id)
+        public async Task<IActionResult> PhotoShootById(Guid id)
         {
             return View(await _photoShootService.PhotoShootById(id));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update(Guid id)
         {
             PhotoShootByIdDTO photoShootById = await _photoShootService.PhotoShootById(id);
 

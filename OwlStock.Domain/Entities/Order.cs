@@ -8,7 +8,7 @@ namespace OwlStock.Domain.Entities
     public class Order
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -17,7 +17,7 @@ namespace OwlStock.Domain.Entities
         public PhotoSize PhotoSize { get; set; }
 
         [ForeignKey(nameof(Photo))]
-        public int? PhotoId { get; set; }
+        public Guid? PhotoId { get; set; }
 
         public Photo? Photo { get; set; }
 

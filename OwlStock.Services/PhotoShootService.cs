@@ -30,13 +30,8 @@ namespace OwlStock.Services
             return await _context.PhotoShoots.ToListAsync();
         }
 
-        public async Task<PhotoShootByIdDTO> PhotoShootById(int id)
+        public async Task<PhotoShootByIdDTO> PhotoShootById(Guid id)
         {
-            if(id <= 0)
-            {
-                throw new ArgumentException($"{nameof(id)} is or less than 0");
-            }
-
             if(_context.PhotoShoots is null)
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");

@@ -7,7 +7,7 @@ namespace OwlStock.Services.Interfaces
     {
         Task<int> Add(CreatePhotoShootDTO dto);
         Task<List<PhotoShoot>> AllPhotoShoots();
-        Task<PhotoShootByIdDTO> PhotoShootById(int id);
+        Task<PhotoShootByIdDTO> PhotoShootById(Guid id);
         Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId);
         Task<List<PhotoShoot>> ShowAvailableSlots();
     }

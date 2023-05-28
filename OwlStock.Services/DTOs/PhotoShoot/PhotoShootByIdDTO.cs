@@ -14,7 +14,7 @@ namespace OwlStock.Services.DTOs.PhotoShoot
 {
     public class PhotoShootByIdDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string? PersonFullName { get; set; }
         public DateTime ReservationDate { get; set; }
         public DateTime CreatedOn { get; set; }

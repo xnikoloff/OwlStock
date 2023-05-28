@@ -58,7 +58,7 @@ namespace OwlStock.Services
             
         }
 
-        public async Task<List<string>> GetFilesNamesForPhotoShoot(int photoShootId)
+        public async Task<List<string>> GetFilesNamesForPhotoShoot(Guid photoShootId)
         {
             if(_context.PhotoShootFiles is null)
             {
@@ -73,7 +73,7 @@ namespace OwlStock.Services
             return paths;
         }
 
-        public async Task<int> CreatePhotoShootFiles(List<IFormFile> files, int photoShootId, string webRootPath)
+        public async Task<int> CreatePhotoShootFiles(List<IFormFile> files, Guid photoShootId, string webRootPath)
         {
             
             foreach(IFormFile file in files)
