@@ -31,7 +31,9 @@ namespace OwlStock.Services
         }
 
         public async Task<PhotoShootByIdDTO> PhotoShootById(Guid id)
-        {
+            {
+                throw new ArgumentException($"{nameof(id)} is or less than 0");
+            }
 
             if(_context.PhotoShoots is null)
             {

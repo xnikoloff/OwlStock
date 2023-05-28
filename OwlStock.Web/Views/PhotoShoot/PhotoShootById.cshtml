@@ -1,0 +1,80 @@
+﻿@model PhotoShootByIdDTO
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 mx-auto text-center">
+            <h1>Photo Shoot for</h1>
+            <h2><i>@Model.PersonFullName</i></h2>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-6 mx-auto mt-5">
+            <h4 class="mx-auto text-center">Details</h4>
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th>PhotoShoot Date</th>
+                        <th>PhotoShoot Type</th>
+                        <th>Created On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.ReservationDate</td>
+                        <td>@Model.PhotoShootType</td>
+                        <td>@Model.CreatedOn</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 mx-auto text-center">
+            <h4>Photos</h4>
+            <hr />
+        </div>
+    </div>
+
+    @if(Model.FileNames != null)
+    {
+        @if (Model.FileNames.Count == 0)
+        {
+
+                <div class="row">
+                    <div class="col-12 mx-auto text-center">
+                        <p><i>Your photos will apear here soon :)</i></p>
+                    </div>
+                </div>
+
+        }
+
+        else
+        {
+
+            <div class="row mt-5">
+                @foreach (string fileName in Model.FileNames)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <img src="~/images/photoshoots/@fileName"/>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-success">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+        }
+    }
+    
+
+    
+    
+</div>
