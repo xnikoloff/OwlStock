@@ -16,6 +16,7 @@ namespace OwlStock.Services
             services.AddTransient<IPhotoTagService, PhotoTagService>();
             services.AddTransient<IPhotoShootService, PhotoShootService>();
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IEmailService, EmailService>();
 
             return services;
         }

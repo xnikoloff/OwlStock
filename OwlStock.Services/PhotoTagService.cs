@@ -34,12 +34,12 @@ namespace OwlStock.Services
 
         public async Task<List<Guid>> GetPhotoIdListByTag(string tagText)
         {
-            List<Guid> tags = await _context.Tags
+            List<Guid> ids = await _context.Tags
                 .Where(t => t.Text.Contains(tagText))
                 .Select(t => t.PhotoId)
                 .ToListAsync();
 
-            return tags;
+            return ids;
         }
         
         private List<string> SplitTags(string tags)

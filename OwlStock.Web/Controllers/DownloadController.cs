@@ -22,7 +22,7 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DownloadPrompt(int id, List<Category> categories)
+        public async Task<IActionResult> DownloadPrompt(Guid id, List<Category> categories)
         {
             ViewData["categories"] = categories;
             return View(id);

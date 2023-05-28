@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OwlStock.Infrastructure.Migrations
 {
-    public partial class Initial : Migration
+    public partial class ChangeIntIdToGuid : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,20 +46,6 @@ namespace OwlStock.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Photos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Photos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,20 +154,154 @@ namespace OwlStock.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Photos",
-                columns: new[] { "Id", "Description", "Name" },
-                values: new object[] { 1, "Description Test Photo 1", "Test Photo 1" });
+            migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    IsFree = table.Column<bool>(type: "bit", nullable: false),
+                    IdentityUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photos_AspNetUsers_IdentityUserId",
+                        column: x => x.IdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PhotoShoots",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PersonLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PersonFullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PersonEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PersonPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReservationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PhotoShootType = table.Column<int>(type: "int", nullable: false),
+                    PhotoShootTypeDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdentityUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PhotoShoots", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PhotoShoots_AspNetUsers_IdentityUserId",
+                        column: x => x.IdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Nonce = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhotoSize = table.Column<int>(type: "int", nullable: false),
+                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IdentityUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_IdentityUserId",
+                        column: x => x.IdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Orders_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PhotosCategories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Category = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PhotosCategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PhotosCategories_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PhotoShootFiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhotoShootId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PhotoShootFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PhotoShootFiles_PhotoShoots_PhotoShootId",
+                        column: x => x.PhotoShootId,
+                        principalTable: "PhotoShoots",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.InsertData(
                 table: "Photos",
-                columns: new[] { "Id", "Description", "Name" },
-                values: new object[] { 2, "Description Test Photo 2", "Test Photo 2" });
+                columns: new[] { "Id", "Description", "FileData", "FileName", "FileType", "IdentityUserId", "IsFree", "Name", "Price" },
+                values: new object[] { new Guid("3bc620b2-a9b5-4280-a477-6d436de6f402"), "Description Test Photo 3", null, null, null, null, false, "Test Photo 3", null });
 
             migrationBuilder.InsertData(
                 table: "Photos",
-                columns: new[] { "Id", "Description", "Name" },
-                values: new object[] { 3, "Description Test Photo 3", "Test Photo 3" });
+                columns: new[] { "Id", "Description", "FileData", "FileName", "FileType", "IdentityUserId", "IsFree", "Name", "Price" },
+                values: new object[] { new Guid("495b9b36-a305-45d4-8f49-aa44d1fba775"), "Description Test Photo 1", null, null, null, null, false, "Test Photo 1", null });
+
+            migrationBuilder.InsertData(
+                table: "Photos",
+                columns: new[] { "Id", "Description", "FileData", "FileName", "FileType", "IdentityUserId", "IsFree", "Name", "Price" },
+                values: new object[] { new Guid("e133f19f-cd99-40d0-b3f0-ed445dd6c321"), "Description Test Photo 2", null, null, null, null, false, "Test Photo 2", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -221,6 +341,41 @@ namespace OwlStock.Infrastructure.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_IdentityUserId",
+                table: "Orders",
+                column: "IdentityUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_PhotoId",
+                table: "Orders",
+                column: "PhotoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_IdentityUserId",
+                table: "Photos",
+                column: "IdentityUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PhotosCategories_PhotoId",
+                table: "PhotosCategories",
+                column: "PhotoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PhotoShootFiles_PhotoShootId",
+                table: "PhotoShootFiles",
+                column: "PhotoShootId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PhotoShoots_IdentityUserId",
+                table: "PhotoShoots",
+                column: "IdentityUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_PhotoId",
+                table: "Tags",
+                column: "PhotoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -241,10 +396,25 @@ namespace OwlStock.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Photos");
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "PhotosCategories");
+
+            migrationBuilder.DropTable(
+                name: "PhotoShootFiles");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "PhotoShoots");
+
+            migrationBuilder.DropTable(
+                name: "Photos");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

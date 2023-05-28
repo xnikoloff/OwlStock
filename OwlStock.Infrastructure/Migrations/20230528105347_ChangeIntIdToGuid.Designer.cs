@@ -12,8 +12,8 @@ using OwlStock.Infrastructure;
 namespace OwlStock.Infrastructure.Migrations
 {
     [DbContext(typeof(OwlStockDbContext))]
-    [Migration("20230212122339_AddIdentityUserToPhotoEntity")]
-    partial class AddIdentityUserToPhotoEntity
+    [Migration("20230528105347_ChangeIntIdToGuid")]
+    partial class ChangeIntIdToGuid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,13 +226,41 @@ namespace OwlStock.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Photo", b =>
+            modelBuilder.Entity("OwlStock.Domain.Entities.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Nonce")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PhotoSize")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.HasIndex("PhotoId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
@@ -250,10 +278,16 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Property<string>("IdentityUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsFree")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -264,22 +298,128 @@ namespace OwlStock.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("495b9b36-a305-45d4-8f49-aa44d1fba775"),
                             Description = "Description Test Photo 1",
+                            IsFree = false,
                             Name = "Test Photo 1"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("e133f19f-cd99-40d0-b3f0-ed445dd6c321"),
                             Description = "Description Test Photo 2",
+                            IsFree = false,
                             Name = "Test Photo 2"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("3bc620b2-a9b5-4280-a477-6d436de6f402"),
                             Description = "Description Test Photo 3",
+                            IsFree = false,
                             Name = "Test Photo 3"
                         });
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhotoId");
+
+                    b.ToTable("PhotosCategories");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PersonEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonFirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonFullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PhotoShootType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhotoShootTypeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("PhotoShoots");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShootFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PhotoShootId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhotoShootId");
+
+                    b.ToTable("PhotoShootFiles");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhotoId");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -333,13 +473,82 @@ namespace OwlStock.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Photo", b =>
+            modelBuilder.Entity("OwlStock.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
+
+                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId");
+
+                    b.Navigation("IdentityUser");
+
+                    b.Navigation("Photo");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
 
                     b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoCategory", b =>
+                {
+                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
+                        .WithMany("PhotoCategories")
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Photo");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
+
+                    b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShootFile", b =>
+                {
+                    b.HasOne("OwlStock.Domain.Entities.PhotoShoot", "PhotoShoot")
+                        .WithMany("PhotoShootFiles")
+                        .HasForeignKey("PhotoShootId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PhotoShoot");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.Tag", b =>
+                {
+                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
+                        .WithMany("Tags")
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Photo");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
+                {
+                    b.Navigation("PhotoCategories");
+
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
+                {
+                    b.Navigation("PhotoShootFiles");
                 });
 #pragma warning restore 612, 618
         }
