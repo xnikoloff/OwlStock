@@ -16,8 +16,6 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         [MaxLength(ModelConstraints.PersonNameMaxLength)]
         public string? PersonLastName { get; set; }
 
-        [Required]
-        [Display(Name = "Email")]
         [MaxLength(ModelConstraints.PersonEmailMaxLength)]
         public string? PersonEmail { get; set; }
 

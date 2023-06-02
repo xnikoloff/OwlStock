@@ -44,6 +44,7 @@ namespace OwlStock.Web.Controllers
             }
 
             dto.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            dto.PersonEmail = User.FindFirstValue(ClaimTypes.Email);
 
             await _photoShootService.Add(dto);
             return View("_SucessfulReservation");
