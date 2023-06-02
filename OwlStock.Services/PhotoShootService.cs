@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain.Entities;
+using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
+using OwlStock.Infrastructure.Common.EmailTemplates.PhotoShoot;
 using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
 using System.Xml;
@@ -11,12 +13,14 @@ namespace OwlStock.Services
     public class PhotoShootService : IPhotoShootService
     {
         private readonly OwlStockDbContext _context;
-        private IFileService _fileService;
+        private readonly IFileService _fileService;
+        private readonly IEmailService _emailService;
 
-        public PhotoShootService(OwlStockDbContext context, IFileService fileService)
+        public PhotoShootService(OwlStockDbContext context, IFileService fileService, IEmailService emailService)
         {
             _context = context;
             _fileService = fileService;
+            _emailService = emailService;
 
         }
 
@@ -32,16 +36,6 @@ namespace OwlStock.Services
 
         public async Task<PhotoShootByIdDTO> PhotoShootById(Guid id)
         { 
-            if(id <= 0)
-            {
-                throw new ArgumentException($"{nameof(id)} is or less than 0");
-            }
-
-            if(id <= 0)
-            {
-                throw new ArgumentException($"{nameof(id)} is or less than 0");
-            }
-
             if(_context.PhotoShoots is null)
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
@@ -124,7 +118,20 @@ namespace OwlStock.Services
 
             await _context.AddAsync(photoShoot);
 
-            return await _context.SaveChangesAsync();
+            int result = await _context.SaveChangesAsync();
+
+            PhotoShootEmailTemplateDTO emailDto = new()
+            {
+                Date = dto.ReservationDate,
+                Recipient = dto.PersonEmail,
+                Type = dto.PhotoShootType,
+                PersonFullName = dto.PersonFirstName + " " + dto.PersonLastName,
+                EmailTemplate = EmailTemplate.CreatePhotoShoot
+            };
+
+            await _emailService.Send(emailDto);
+
+            return result;
         }
 
         public Task<List<PhotoShoot>> ShowAvailableSlots()
