@@ -12,7 +12,7 @@ namespace OwlStock.Services.Interfaces
         Task<List<AllPhotosDTO>> All(string? userId);
         Task<List<AllPhotosDTO>> AllByCategory(Category category);
         Task<List<AllPhotosDTO>> AllByTags(string tag);
-        Task<PhotoByIdDTO> GetById(int? id);
+        Task<PhotoByIdDTO> GetById(Guid? id);
         Task<int> Create(CreatePhotoDTO? createPhotoDto);
     }
 }

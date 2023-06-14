@@ -90,7 +90,7 @@ namespace OwlStock.Services
             return photosByTags;
         }
 
-        public async Task<PhotoByIdDTO> GetById(int? id)
+        public async Task<PhotoByIdDTO> GetById(Guid? id)
         {
             if(id is null)
             {
