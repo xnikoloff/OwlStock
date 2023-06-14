@@ -12,14 +12,14 @@ using OwlStock.Infrastructure;
 namespace OwlStock.Infrastructure.Migrations
 {
     [DbContext(typeof(OwlStockDbContext))]
-    [Migration("20230521112538_fetch")]
-    partial class fetch
+    [Migration("20230614205224_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -228,11 +228,9 @@ namespace OwlStock.Infrastructure.Migrations
 
             modelBuilder.Entity("OwlStock.Domain.Entities.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -243,8 +241,8 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Property<string>("Nonce")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PhotoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PhotoSize")
                         .HasColumnType("int");
@@ -260,11 +258,9 @@ namespace OwlStock.Infrastructure.Migrations
 
             modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
@@ -302,21 +298,21 @@ namespace OwlStock.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("bcee5ab0-5bf0-440b-a579-b3f00bbcd92b"),
                             Description = "Description Test Photo 1",
                             IsFree = false,
                             Name = "Test Photo 1"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("993578b9-7a38-45b4-b062-769191f0b628"),
                             Description = "Description Test Photo 2",
                             IsFree = false,
                             Name = "Test Photo 2"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("d8cc248a-1bd9-43df-b668-dc0def785b74"),
                             Description = "Description Test Photo 3",
                             IsFree = false,
                             Name = "Test Photo 3"
@@ -325,17 +321,15 @@ namespace OwlStock.Infrastructure.Migrations
 
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
-                    b.Property<int>("PhotoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -346,11 +340,9 @@ namespace OwlStock.Infrastructure.Migrations
 
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -391,17 +383,18 @@ namespace OwlStock.Infrastructure.Migrations
 
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShootFile", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhotoShootId")
-                        .HasColumnType("int");
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PhotoShootId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -412,14 +405,12 @@ namespace OwlStock.Infrastructure.Migrations
 
             modelBuilder.Entity("OwlStock.Domain.Entities.Tag", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("PhotoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OwlStock.Infrastructure.Migrations
 {
-    public partial class ChangeIntIdToGuid : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -291,17 +291,17 @@ namespace OwlStock.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "Photos",
                 columns: new[] { "Id", "Description", "FileData", "FileName", "FileType", "IdentityUserId", "IsFree", "Name", "Price" },
-                values: new object[] { new Guid("3bc620b2-a9b5-4280-a477-6d436de6f402"), "Description Test Photo 3", null, null, null, null, false, "Test Photo 3", null });
+                values: new object[] { new Guid("993578b9-7a38-45b4-b062-769191f0b628"), "Description Test Photo 2", null, null, null, null, false, "Test Photo 2", null });
 
             migrationBuilder.InsertData(
                 table: "Photos",
                 columns: new[] { "Id", "Description", "FileData", "FileName", "FileType", "IdentityUserId", "IsFree", "Name", "Price" },
-                values: new object[] { new Guid("495b9b36-a305-45d4-8f49-aa44d1fba775"), "Description Test Photo 1", null, null, null, null, false, "Test Photo 1", null });
+                values: new object[] { new Guid("bcee5ab0-5bf0-440b-a579-b3f00bbcd92b"), "Description Test Photo 1", null, null, null, null, false, "Test Photo 1", null });
 
             migrationBuilder.InsertData(
                 table: "Photos",
                 columns: new[] { "Id", "Description", "FileData", "FileName", "FileType", "IdentityUserId", "IsFree", "Name", "Price" },
-                values: new object[] { new Guid("e133f19f-cd99-40d0-b3f0-ed445dd6c321"), "Description Test Photo 2", null, null, null, null, false, "Test Photo 2", null });
+                values: new object[] { new Guid("d8cc248a-1bd9-43df-b668-dc0def785b74"), "Description Test Photo 3", null, null, null, null, false, "Test Photo 3", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

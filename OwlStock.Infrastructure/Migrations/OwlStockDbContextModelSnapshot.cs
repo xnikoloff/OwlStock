@@ -17,7 +17,7 @@ namespace OwlStock.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -296,21 +296,21 @@ namespace OwlStock.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("495b9b36-a305-45d4-8f49-aa44d1fba775"),
+                            Id = new Guid("bcee5ab0-5bf0-440b-a579-b3f00bbcd92b"),
                             Description = "Description Test Photo 1",
                             IsFree = false,
                             Name = "Test Photo 1"
                         },
                         new
                         {
-                            Id = new Guid("e133f19f-cd99-40d0-b3f0-ed445dd6c321"),
+                            Id = new Guid("993578b9-7a38-45b4-b062-769191f0b628"),
                             Description = "Description Test Photo 2",
                             IsFree = false,
                             Name = "Test Photo 2"
                         },
                         new
                         {
-                            Id = new Guid("3bc620b2-a9b5-4280-a477-6d436de6f402"),
+                            Id = new Guid("d8cc248a-1bd9-43df-b668-dc0def785b74"),
                             Description = "Description Test Photo 3",
                             IsFree = false,
                             Name = "Test Photo 3"
