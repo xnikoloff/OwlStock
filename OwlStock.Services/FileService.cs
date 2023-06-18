@@ -9,51 +9,19 @@ namespace OwlStock.Services
 {
     public class FileService : IFileService
     {
-        private readonly IPhotoResizer _photoResizer;
         private readonly OwlStockDbContext _context;
 
         public FileService(IPhotoResizer photoResizer, OwlStockDbContext context)
         {
-            _photoResizer = photoResizer;
             _context = context;
         }
 
-        public void Create(List<IFormFile> files, string? webRootPath, PhotoSize? size)
+        public void Create(byte[] file, string? webRootPath, string filePath)
         {
-            string filePath = "";
-
-            foreach (IFormFile file in files)
+            if (file != null && webRootPath != null)
             {
-
-                if (file != null && webRootPath != null)
-                {
-                        
-                    filePath = size != null ? BuildFilePath(file, webRootPath, size.Value) : 
-                        BuildFilePath(file, webRootPath);
-                    
-                    //iformfile to byte array
-                    byte[] data = ConvertFormFileToByteArray(file);
-                    byte[]? resised = null;
-
-                    //resize
-                    if(size != null)
-                    {
-                        byte[] bytes = _photoResizer.Resize(data, size.Value);
-                        resised = bytes;
-                    }
-
-                    using FileStream stream = File.OpenWrite(filePath);
-
-                    if(resised != null)
-                    {
-                        stream.Write(resised, 0, resised.Length);
-                    }
-
-                    else
-                    {
-                        stream.Write(data, 0, data.Length);
-                    }
-                }
+                using FileStream stream = File.OpenWrite(filePath);
+                stream.Write(file, 0, file.Length);
             }
             
         }
@@ -97,23 +65,7 @@ namespace OwlStock.Services
             return await _context.SaveChangesAsync();
         }
 
-        private static string BuildFilePath(IFormFile file, string webRootPath, PhotoSize size)
-        {
-            string uploadsFolder = Path.Combine(webRootPath, "images");
-            string filePath = Path.Combine(uploadsFolder, size.ToString() + "_" + file.FileName);
-
-            return filePath;
-        }
-
-        private static string BuildFilePath(IFormFile file, string webRootPath)
-        {
-            string uploadsFolder = Path.Combine(webRootPath, "images/photoshoots");
-            string filePath = Path.Combine(uploadsFolder,  file.FileName);
-
-            return filePath;
-        }
-
-        private static byte[] ConvertFormFileToByteArray(IFormFile file)
+        public byte[] ConvertFormFileToByteArray(IFormFile file)
         {
             using MemoryStream stream = new();
             file.CopyTo(stream);

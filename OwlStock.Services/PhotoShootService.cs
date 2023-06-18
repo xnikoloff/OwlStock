@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
@@ -14,14 +15,15 @@ namespace OwlStock.Services
     {
         private readonly OwlStockDbContext _context;
         private readonly IFileService _fileService;
+        private readonly IPhotoResizer _photoResizer;
         private readonly IEmailService _emailService;
 
-        public PhotoShootService(OwlStockDbContext context, IFileService fileService, IEmailService emailService)
+        public PhotoShootService(OwlStockDbContext context, IFileService fileService, IEmailService emailService, IPhotoResizer photoResizer)
         {
             _context = context;
             _fileService = fileService;
             _emailService = emailService;
-
+            _photoResizer = photoResizer;
         }
 
         public async Task<List<PhotoShoot>> AllPhotoShoots()
@@ -132,6 +134,36 @@ namespace OwlStock.Services
             await _emailService.Send(emailDto);
 
             return result;
+        }
+
+        public async Task AddFiles(Guid photoShootId, List<IFormFile> files, string? webRootPath, PhotoSize? size)
+        {
+            if(webRootPath == null)
+            {
+                throw new NullReferenceException($"{nameof(webRootPath)} is null");
+            }
+            
+            foreach (IFormFile file in files)
+            {
+                string photoShootsFolder = Path.Combine(webRootPath, size == null ? "images/photoshoots" : "images");
+                string filePath = Path.Combine(photoShootsFolder, size == null ? file.FileName : size.ToString() + "_" + file.FileName);
+
+                //iformfile to byte array
+                byte[] data =  _fileService.ConvertFormFileToByteArray(file);
+                byte[]? resised = null;
+
+                //resize
+                if (size != null)
+                {
+                    byte[] bytes = _photoResizer.Resize(data, size.Value);
+                    resised = bytes;
+                }
+
+                _fileService.Create(resised ?? data, webRootPath, filePath);
+                
+            }
+
+            await _fileService.CreatePhotoShootFiles(files, photoShootId, webRootPath);
         }
 
         public Task<List<PhotoShoot>> ShowAvailableSlots()
