@@ -138,6 +138,7 @@ namespace OwlStock.Services
 
         public async Task AddFiles(Guid photoShootId, List<IFormFile> files, string? webRootPath, PhotoSize? size)
         {
+            string photoShootsFolder = "";
             if(webRootPath == null)
             {
                 throw new NullReferenceException($"{nameof(webRootPath)} is null");
@@ -145,7 +146,7 @@ namespace OwlStock.Services
             
             foreach (IFormFile file in files)
             {
-                string photoShootsFolder = Path.Combine(webRootPath, size == null ? "images/photoshoots" : "images");
+                photoShootsFolder = Path.Combine(webRootPath, size == null ? "images/photoshoots" : "images");
                 string filePath = Path.Combine(photoShootsFolder, size == null ? file.FileName : size.ToString() + "_" + file.FileName);
 
                 //iformfile to byte array
@@ -164,6 +165,20 @@ namespace OwlStock.Services
             }
 
             await _fileService.CreatePhotoShootFiles(files, photoShootId, webRootPath);
+
+            PhotoShoot? photoShoot = await _context.PhotoShoots!
+                .Where(ps => ps.Id == photoShootId).FirstOrDefaultAsync() ?? 
+                    throw new NullReferenceException($"{nameof(PhotoShoot)} with id {photoShootId} cannot be found");
+
+            UpdatePhotoShootEmailTemplateDTO dto = new()
+            {
+                EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
+                PersonFullName = photoShoot.PersonFullName,
+                Recipient = photoShoot.PersonEmail,
+                Url = $"https:///flashstudio.com/photoshoot/{photoShootId}/"
+            };
+
+            await _emailService.Send(dto);
         }
 
         public Task<List<PhotoShoot>> ShowAvailableSlots()
