@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using OwlStock.Infrastructure.Common.EmailTemplates.PhotoShoot;
 using OwlStock.Infrastructure.Common.EmailTemplates;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OwlStock.Services
 {
@@ -57,6 +58,7 @@ namespace OwlStock.Services
             {
                 case EmailTemplate.CreatePhotoShoot:
                 {
+                        //TODO: Add update template
 
                      return PhotoShootEmailTemplates.CreatePhotoShootTemplate
                     (
@@ -64,6 +66,15 @@ namespace OwlStock.Services
                          ((PhotoShootEmailTemplateDTO)dto).Date,
                          ((PhotoShootEmailTemplateDTO)dto).Type
                     );
+                }
+
+                case EmailTemplate.UpdatePhotosForPhotoShoot:
+                {
+                        return PhotoShootEmailTemplates.UpdatePhotoShootTemplate
+                            (
+                                ((UpdatePhotoShootEmailTemplateDTO)dto).PersonFullName ?? "",
+                                ((UpdatePhotoShootEmailTemplateDTO)dto).Url ?? ""
+                            );
                 }
 
                 default:

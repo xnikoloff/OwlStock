@@ -88,9 +88,8 @@ namespace OwlStock.Web.Controllers
                 return View(dto);
             }
 
-            _fileService.Create(dto.FormFiles, _webHostEnvironment.WebRootPath, null);
-            await _fileService.CreatePhotoShootFiles(dto.FormFiles, dto.PhotoShootId, _webHostEnvironment.WebRootPath);
-
+            await _photoShootService.AddFiles(dto.PhotoShootId, dto.FormFiles, _webHostEnvironment.WebRootPath, null);
+            
             return RedirectToAction(nameof(PhotoShootById), new { id = dto.PhotoShootId});
         }
     }
