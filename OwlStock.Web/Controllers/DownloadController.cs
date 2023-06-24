@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Services.Interfaces;
@@ -30,11 +29,11 @@ namespace OwlStock.Web.Controllers
 
         public async Task<FileResult> FreeDownload(Guid id)
         {
-            return await Download(id);
+            return await DownloadOrderedPhoto(id);
         }
 
         [HttpPost]
-        public async Task<FileResult> Download(Guid id)
+        public async Task<FileResult> DownloadOrderedPhoto(Guid id)
         {
             Order order = await _orderService.GetById(id);
 
@@ -47,6 +46,13 @@ namespace OwlStock.Web.Controllers
             }
 
             throw new NullReferenceException($"{nameof(order.Photo.FileType)} is null");
+        }
+
+        [HttpPost]
+        public async Task<FileResult> DownloadPhotoShootPhoto(int photoShootId)
+        {
+            //byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\photoshoots\\{PhotoSize.OriginalSize.ToString() + "_" + order.Photo?.FileName}");
+            throw new NotImplementedException();
         }
     }
 }
