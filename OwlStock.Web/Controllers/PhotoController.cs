@@ -3,7 +3,7 @@ using OwlStock.Domain.Enumerations;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 using System.Security.Claims;
-using OwlStock.Domain.Entities;
+using OwlStock.Services;
 
 namespace OwlStock.Web.Controllers
 {
@@ -11,22 +11,29 @@ namespace OwlStock.Web.Controllers
     {
         private readonly IPhotoService _photoService;
         private readonly IPhotoResizer _photoResizer;
+        private readonly IGalleryService _galleryService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ICategoryService _categoryService;
+        private readonly IPhotoTagService _photoTagService;
+        private readonly IFileService _fileService;
         
         public PhotoController(IPhotoService photoService, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment,
-            ICategoryService categoryService)
+            ICategoryService categoryService, IPhotoTagService photoTagService, IGalleryService galleryService,
+             IFileService fileService)
         {
             _photoService = photoService;
             _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
             _categoryService = categoryService;
+            _photoTagService = photoTagService;
+            _galleryService = galleryService;
+            _fileService = fileService;
         }
 
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            return View(await _photoService.All());
+            return View(await _galleryService.All());
         }
 
         [HttpGet]
@@ -38,14 +45,15 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> AllByCategory(Category category)
         {
-            ViewData["categoryDescription"] = GetCategoryDescription(category);
-            return View(await _photoService.AllByCategory(category));
+            ViewData["categoryDescription"] = _categoryService.GetCategoryDescription(category);
+            return View(await _galleryService.AllByCategory(category));
         }
 
         [HttpGet]
         public async Task<IActionResult> AllByTag(string tag)
         {
-            return View("AllByCategory", await _photoService.AllByTags(tag));
+            ViewData["categoryDescription"] = tag;
+            return View("AllByCategory", await _galleryService.AllByTags(tag));
         }
 
         [HttpGet]
@@ -55,26 +63,36 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreatePhotoDTO? createPhotoDTO)
+        public async Task<IActionResult> Create(CreateGalleryPhotoDTO? dto)
         {
             if (!ModelState.IsValid)
             {
-                return View(createPhotoDTO);
+                return View(dto);
             }
 
-            if(createPhotoDTO is not null)
+            if(dto is not null)
             {
-                createPhotoDTO.WebRootPath = _webHostEnvironment.WebRootPath;
-                createPhotoDTO.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                await _photoService.Create(createPhotoDTO);
+                string webRootPath = _webHostEnvironment.WebRootPath;
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new NullReferenceException("User not signed in");
+                
+                dto.GalleryPhoto.FileName = dto.FormFile.FileName;
+                dto.GalleryPhoto.FileType = dto.FormFile.ContentType;
+                dto.GalleryPhoto.FilePath = Path.Combine(webRootPath);
+
+                using MemoryStream stream = new MemoryStream();
+                dto.FormFile.CopyTo(stream);
+                dto.GalleryPhoto.FileData = stream.ToArray();
+                dto.GalleryPhoto.IdentityUserId = userId;
+
+                Guid photoId = await _photoService.Create(dto.GalleryPhoto);
+                await _categoryService.Create(dto.Categories, photoId);
+
+                await _photoTagService.Add(dto.Tags, photoId);
+
+                _fileService.CreatePhotoFile(dto.GalleryPhoto, webRootPath);
             }
             
             return RedirectToAction(nameof(All));
-        }
-
-        private string GetCategoryDescription(Category category)
-        {
-            return _categoryService.GetCategoryDescription(category);
         }
     }
 }

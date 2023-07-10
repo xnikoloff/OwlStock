@@ -17,16 +17,16 @@ namespace OwlStock.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(List<Category> categories)
         {
-            if(_context.Photos is null)
+            if(_context.GalleryPhotos is null)
             {
-                throw new NullReferenceException($"{nameof(_context.Photos)} is null");
+                throw new NullReferenceException($"{nameof(_context.GalleryPhotos)} is null");
             }
 
-            List<Photo> photos = await _context.Photos
+            List<GalleryPhoto> photos = await _context.GalleryPhotos
                 .OrderByDescending(p => p.Id)
                 .ToListAsync();
 
-            List<Photo> photosByCategory = new();
+            List<GalleryPhoto> photosByCategory = new();
 
             foreach(Category category in categories)
             {

@@ -9,7 +9,7 @@ namespace OwlStock.Domain.Entities
     {
         public PhotoShoot()
         {
-            this.PhotoShootFiles = new HashSet<PhotoShootFile>();
+            this.PhotoShootPhotos = new HashSet<PhotoShootPhoto>();
         }
 
         [Key]
@@ -28,6 +28,6 @@ namespace OwlStock.Domain.Entities
         public string? IdentityUserId { get; set; }
         public IdentityUser? IdentityUser { get; set; }
 
-        public ICollection<PhotoShootFile> PhotoShootFiles { get; set; }
+        public ICollection<PhotoShootPhoto> PhotoShootPhotos { get; set; }
     }
 }

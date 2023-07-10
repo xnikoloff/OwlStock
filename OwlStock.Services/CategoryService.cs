@@ -1,11 +1,20 @@
-﻿using OwlStock.Domain.Enumerations;
+﻿using OwlStock.Domain.Entities;
+using OwlStock.Domain.Enumerations;
+using OwlStock.Infrastructure;
 using OwlStock.Infrastructure.Common;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services
 {
-    internal class CategoryService : ICategoryService
+    public class CategoryService : ICategoryService
     {
+        private readonly OwlStockDbContext _context;
+
+        public CategoryService(OwlStockDbContext context)
+        {
+            _context = context;
+        }
+
         public string GetCategoryDescription(Category category)
         {
             if (string.IsNullOrEmpty(category.ToString()))
@@ -15,7 +24,7 @@ namespace OwlStock.Services
 
             CategoryDescriptions categoryDescriptions = new();
 
-            object field = categoryDescriptions
+            object? field = categoryDescriptions
                 .GetType()
                 .GetFields()
                 .Where(f => f.Name.Contains(category.ToString()))
@@ -27,7 +36,39 @@ namespace OwlStock.Services
                 return field.ToString();
             }
 
-            throw new NullReferenceException($"Member that contains name {category.ToString()} does not exists");
+            throw new NullReferenceException($"Member that contains name {category} does not exists");
+        }
+
+        public async Task<int> Create(IEnumerable<Category> categories, Guid photoId)
+        {
+            IEnumerable<PhotoCategory> photoCategories = BuildPhotoCateoriesList(categories, photoId);
+
+            if(_context.PhotosCategories is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotosCategories)} is null");
+            }
+
+            await _context.PhotosCategories.AddRangeAsync(photoCategories);
+            return await _context.SaveChangesAsync();
+        }
+
+        private IEnumerable<PhotoCategory> BuildPhotoCateoriesList(IEnumerable<Category> categories, Guid photoId)
+        {
+            List<PhotoCategory> photoCategories = new List<PhotoCategory>();
+
+            foreach (Category category in categories)
+            {
+                PhotoCategory photoCategory = new()
+                {
+                    GalleryPhotoId = photoId,
+                    Category = category
+
+                };
+
+                photoCategories.Add(photoCategory);
+            }
+
+            return photoCategories;
         }
     }
 }

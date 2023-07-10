@@ -1,27 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Infrastructure.Common.EmailTemplates.PhotoShoot;
 using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
-using System.Xml;
 
 namespace OwlStock.Services
 {
     public class PhotoShootService : IPhotoShootService
     {
         private readonly OwlStockDbContext _context;
-        private readonly IFileService _fileService;
         private readonly IEmailService _emailService;
 
-        public PhotoShootService(OwlStockDbContext context, IFileService fileService, IEmailService emailService)
+        public PhotoShootService(OwlStockDbContext context, IEmailService emailService)
         {
             _context = context;
-            _fileService = fileService;
             _emailService = emailService;
-
         }
 
         public async Task<List<PhotoShoot>> AllPhotoShoots()
@@ -34,28 +29,17 @@ namespace OwlStock.Services
             return await _context.PhotoShoots.ToListAsync();
         }
 
-        public async Task<PhotoShootByIdDTO> PhotoShootById(Guid id)
+        public async Task<PhotoShoot> PhotoShootById(Guid id)
         { 
             if(_context.PhotoShoots is null)
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
-            List<string> files = await _fileService.GetFilesNamesForPhotoShoot(id);
+            //List<string> files = await _fileService.GetFilesNamesForPhotoShoot(id);
 
-            PhotoShootByIdDTO? dto = await _context.PhotoShoots
-                .Select(phs => new PhotoShootByIdDTO
-                {
-                    Id = phs.Id,
-                    PersonFullName = phs.PersonFullName,
-                    ReservationDate = phs.ReservationDate,
-                    PhotoShootType = phs.PhotoShootType,
-                    PhotoShootTypeDescription = phs.PhotoShootTypeDescription,
-                    CreatedOn = phs.CreatedOn,
-                    IdentityUserId = phs.IdentityUserId,
-                    FileNames = files
-
-                })
+            PhotoShoot? dto = await _context.PhotoShoots
+                .Include(phs => phs.PhotoShootPhotos)
                 .Where(phs => phs.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -133,6 +117,51 @@ namespace OwlStock.Services
 
             return result;
         }
+
+        /*public async Task AddFiles(Guid photoShootId, List<IFormFile> files, string? webRootPath, PhotoSize? size)
+        {
+            string photoShootsFolder = "";
+            if(webRootPath == null)
+            {
+                throw new NullReferenceException($"{nameof(webRootPath)} is null");
+            }
+            
+            foreach (IFormFile file in files)
+            {
+                photoShootsFolder = Path.Combine(webRootPath, size == null ? "images/photoshoots" : "images");
+                string filePath = Path.Combine(photoShootsFolder, size == null ? file.FileName : size.ToString() + "_" + file.FileName);
+
+                //iformfile to byte array
+                byte[] data =  _fileService.ConvertFormFileToByteArray(file);
+                byte[]? resised = null;
+
+                //resize
+                if (size != null)
+                {
+                    byte[] bytes = _photoResizer.Resize(data, size.Value);
+                    resised = bytes;
+                }
+
+                _fileService.Create(resised ?? data, webRootPath, filePath);
+                
+            }
+
+            await _fileService.CreatePhotoShootFiles(files, photoShootId, webRootPath);
+
+            PhotoShoot? photoShoot = await _context.PhotoShoots!
+                .Where(ps => ps.Id == photoShootId).FirstOrDefaultAsync() ?? 
+                    throw new NullReferenceException($"{nameof(PhotoShoot)} with id {photoShootId} cannot be found");
+
+            UpdatePhotoShootEmailTemplateDTO dto = new()
+            {
+                EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
+                PersonFullName = photoShoot.PersonFullName,
+                Recipient = photoShoot.PersonEmail,
+                Url = $"https:///flashstudio.com/photoshoot/{photoShootId}/"
+            };
+
+            await _emailService.Send(dto);
+        }*/
 
         public Task<List<PhotoShoot>> ShowAvailableSlots()
         {

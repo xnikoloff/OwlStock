@@ -19,7 +19,7 @@ namespace OwlStock.Domain.Entities
         [ForeignKey(nameof(Photo))]
         public Guid? PhotoId { get; set; }
 
-        public Photo? Photo { get; set; }
+        public GalleryPhoto? Photo { get; set; }
 
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }

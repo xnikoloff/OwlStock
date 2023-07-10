@@ -16,15 +16,20 @@ namespace OwlStock.Services
 
         public async Task<string> ChooseHomePagePhoto()
         {
-            if(_context.Photos is null)
+            if(_context.GalleryPhotos is null)
             {
-                throw new NullReferenceException($"{nameof(_context.Photos)} is null");
+                throw new NullReferenceException($"{nameof(_context.GalleryPhotos)} is null");
             }
 
-            List<Photo> photos = await _context.Photos.ToListAsync();
+            List<GalleryPhoto> photos = await _context.GalleryPhotos.ToListAsync();
+
+            if(photos.Count == 0)
+            {
+                return string.Empty;
+            }
 
             Random random = new();
-            int randomNumber = random.Next(0, _context.Photos.Count());
+            int randomNumber = random.Next(0, _context.GalleryPhotos.Count());
 
             return photos[randomNumber].FileName;
 

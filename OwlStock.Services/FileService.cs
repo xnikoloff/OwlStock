@@ -9,115 +9,55 @@ namespace OwlStock.Services
 {
     public class FileService : IFileService
     {
-        private readonly IPhotoResizer _photoResizer;
-        private readonly OwlStockDbContext _context;
-
-        public FileService(IPhotoResizer photoResizer, OwlStockDbContext context)
+        //Add CreatePhotoDTO with photobase and filedata props
+        public bool CreatePhotoFile(PhotoBase photo, string webRootPath)
         {
-            _photoResizer = photoResizer;
-            _context = context;
+            List<string> paths = GetPaths(photo, webRootPath);
+
+            foreach(string path in paths)
+            {
+                if (File.Exists(path))
+                {
+                    return false;
+                }
+
+                using FileStream stream = File.OpenWrite(path);
+                stream.Write(photo.FileData, 0,photo.FileData.Length);
+
+            }
+
+            return true;
         }
 
-        public void Create(List<IFormFile> files, string? webRootPath, PhotoSize? size)
+        private static List<string> GetPaths(PhotoBase photo, string webRootPath)
         {
-            string filePath = "";
+            List<string> paths = new();
+            string uploadsFolder = Path.Combine(webRootPath, "images");
 
-            foreach (IFormFile file in files)
+            switch (photo)
             {
-
-                if (file != null && webRootPath != null)
+                case GalleryPhoto:
                 {
-                        
-                    filePath = size != null ? BuildFilePath(file, webRootPath, size.Value) : 
-                        BuildFilePath(file, webRootPath);
-                    
-                    //iformfile to byte array
-                    byte[] data = ConvertFormFileToByteArray(file);
-                    byte[]? resised = null;
+                    string filePathSmall = Path.Combine(uploadsFolder, PhotoSize.Small.ToString() + "_" + photo.FileName);
+                    string filePathOriginal = Path.Combine(uploadsFolder, PhotoSize.OriginalSize.ToString() + "_" + photo.FileName);
 
-                    //resize
-                    if(size != null)
-                    {
-                        byte[] bytes = _photoResizer.Resize(data, size.Value);
-                        resised = bytes;
-                    }
+                    paths.Add(filePathSmall);
+                    paths.Add(filePathOriginal);
 
-                    using FileStream stream = File.OpenWrite(filePath);
+                    break;
+                }
 
-                    if(resised != null)
-                    {
-                        stream.Write(resised, 0, resised.Length);
-                    }
+                case PhotoShootPhoto:
+                {
+                    //Think of a way to save file path to db for both photoshoot photos abd gallery photos
+                    string filePath = Path.Combine(uploadsFolder + "\\photoshoots", photo.FileName);
+                    paths.Add(filePath);
 
-                    else
-                    {
-                        stream.Write(data, 0, data.Length);
-                    }
+                    break;
                 }
             }
-            
-        }
-
-        public async Task<List<string>> GetFilesNamesForPhotoShoot(Guid photoShootId)
-        {
-            if(_context.PhotoShootFiles is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.PhotoShootFiles)} is null");
-            }
-
-            List<string> paths = await _context.PhotoShootFiles
-                .Where(f => f.PhotoShootId == photoShootId)
-                .Select(f => f.FileName ?? "")
-                .ToListAsync();
 
             return paths;
-        }
-
-        public async Task<int> CreatePhotoShootFiles(List<IFormFile> files, Guid photoShootId, string webRootPath)
-        {
-            
-            foreach(IFormFile file in files)
-            {
-                
-                PhotoShootFile photoShootFile = new()
-                {
-                    FileName = file.FileName,
-                    PhotoShootId = photoShootId,
-                    FilePath = ""
-                };
-
-                if(_context.PhotoShootFiles is null)
-                {
-                    throw new NullReferenceException($"{nameof(_context.PhotoShootFiles)} is null");
-                }
-
-                await _context.PhotoShootFiles.AddAsync(photoShootFile);
-            }
-
-            return await _context.SaveChangesAsync();
-        }
-
-        private static string BuildFilePath(IFormFile file, string webRootPath, PhotoSize size)
-        {
-            string uploadsFolder = Path.Combine(webRootPath, "images");
-            string filePath = Path.Combine(uploadsFolder, size.ToString() + "_" + file.FileName);
-
-            return filePath;
-        }
-
-        private static string BuildFilePath(IFormFile file, string webRootPath)
-        {
-            string uploadsFolder = Path.Combine(webRootPath, "images/photoshoots");
-            string filePath = Path.Combine(uploadsFolder,  file.FileName);
-
-            return filePath;
-        }
-
-        private static byte[] ConvertFormFileToByteArray(IFormFile file)
-        {
-            using MemoryStream stream = new();
-            file.CopyTo(stream);
-            return stream.ToArray();
         }
     }
 }

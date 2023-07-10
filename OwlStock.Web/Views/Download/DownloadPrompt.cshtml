@@ -1,4 +1,4 @@
-﻿@model int
+﻿@model GalleryPhoto
 
 <div class="container">
     <div class="row mt-5">
@@ -9,8 +9,11 @@
     </div>
     <div class="row mt-1">
         <div class="col-12 col-md-6 col-lg-4 mx-auto text-center">
-            <form asp-action="Download" method="post">
-                <input name="id" id="id" value="@Model" type="hidden"/>
+            <form asp-action="DownloadOrderedPhoto" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="FileData" />
+                <input type="hidden" asp-for="FileType" />
+                <input type="hidden" asp-for="FilePath" />
+                <input type="hidden" asp-for="FileName" />
                 <button type="submit" class="btn btn-primary btn-lg">Download</button>
             </form>
         </div>

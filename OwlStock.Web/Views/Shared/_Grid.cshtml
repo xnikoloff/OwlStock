@@ -1,4 +1,4 @@
-﻿@model List<AllPhotosDTO>
+﻿@model List<GalleryPhoto>
 
     <div class="row row-gallery">
 
@@ -6,11 +6,11 @@
     {
         
         <div class="col-12 col-md-6 col-lg-3 column">
-                <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[i].Id)">
-                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" +  Model[i]?.FileName)">
-                </a>
+            <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[i].Id)">
+                <img src="~/@Model[i].FilePathSmall">
+            </a>
 
-            </div>
+        </div>
     }
 
     </div>

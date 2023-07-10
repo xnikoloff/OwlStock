@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OwlStock.Domain.Entities;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 
@@ -6,13 +7,13 @@ namespace OwlStock.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IPhotoService _photoService;
+        private readonly IGalleryService _galleryService;
         private readonly IHomeService _homeService;
         private readonly IEmailService _emailService;
 
-        public HomeController(IPhotoService photoService, IHomeService homeService, IEmailService emailService)
+        public HomeController(IGalleryService galleryService, IHomeService homeService, IEmailService emailService)
         {
-            _photoService = photoService;
+            _galleryService = galleryService;
             _homeService = homeService;
             _emailService = emailService;
         }
@@ -20,9 +21,9 @@ namespace OwlStock.Web.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.HomePhoto = await _homeService.ChooseHomePagePhoto();
-            List<AllPhotosDTO> dto = await _photoService.All();
-            //await _emailService.Send();   
-            return View(dto.TakeLast(12).ToList());
+            List<GalleryPhoto> galleryPhotos = await _galleryService.All();
+            
+            return View(galleryPhotos);
         }
     }
 }

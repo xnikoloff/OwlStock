@@ -20,9 +20,9 @@ namespace OwlStock.Tests
         {
             OwlStockDbContext context = BuildDbContext();
 
-            var photos = new List<Photo>
+            var photos = new List<GalleryPhoto>
             {
-                new Photo
+                new GalleryPhoto
                 {
                     Name = "Test Photo 1",
                     Description = null

@@ -11,21 +11,20 @@ namespace OwlStock.Web.Controllers
         private readonly IPhotoResizer _photoResizer;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IOrderService _orderService;
-        private readonly IPhotoService _photoService;
-
-        public DownloadController(IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService, IPhotoService photoService)
+        
+        public DownloadController(IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService)
         {
             _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
             _orderService = orderService;
-            _photoService = photoService;
         }
 
         [HttpGet]
         public async Task<IActionResult> DownloadPrompt(Guid id, List<Category> categories)
         {
+            Order order = await _orderService.GetById(id);
             ViewData["categories"] = categories;
-            return View(id);
+            return View(order.Photo);
         }
 
         public async Task<FileResult> FreeDownload(Guid id)
@@ -40,13 +39,26 @@ namespace OwlStock.Web.Controllers
 
             byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\{PhotoSize.OriginalSize.ToString() + "_" + order.Photo?.FileName}");
             byte[] resized = _photoResizer.Resize(fileData, order.PhotoSize);
-
+            
             if (!string.IsNullOrEmpty(order.Photo?.FileType))
             {
                 return File(resized, order.Photo.FileType, order.Photo?.FileName);
             }
 
             throw new NullReferenceException($"{nameof(order.Photo.FileType)} is null");
+        }
+
+        [HttpPost]
+        public FileResult DownloadPhotoShootPhoto(PhotoShootPhoto photo)
+        {
+            byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\photoshoots\\" + photo?.FileName);
+
+            if (!string.IsNullOrEmpty(photo?.FileType))
+            {
+                return File(fileData, photo.FileType, photo?.FileName);
+            }
+
+            throw new NullReferenceException($"{nameof(photo.FileType)} is null");
         }
     }
 }

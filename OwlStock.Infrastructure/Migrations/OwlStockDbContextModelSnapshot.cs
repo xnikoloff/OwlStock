@@ -17,10 +17,10 @@ namespace OwlStock.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.15")
+                .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -55,7 +55,7 @@ namespace OwlStock.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -145,7 +145,7 @@ namespace OwlStock.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -254,15 +254,11 @@ namespace OwlStock.Infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoBase", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<byte[]>("FileData")
                         .HasColumnType("varbinary(max)");
@@ -270,51 +266,17 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IdentityUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsFree")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("IdentityUserId");
+                    b.ToTable("PhotosBase");
 
-                    b.ToTable("Photos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bcee5ab0-5bf0-440b-a579-b3f00bbcd92b"),
-                            Description = "Description Test Photo 1",
-                            IsFree = false,
-                            Name = "Test Photo 1"
-                        },
-                        new
-                        {
-                            Id = new Guid("993578b9-7a38-45b4-b062-769191f0b628"),
-                            Description = "Description Test Photo 2",
-                            IsFree = false,
-                            Name = "Test Photo 2"
-                        },
-                        new
-                        {
-                            Id = new Guid("d8cc248a-1bd9-43df-b668-dc0def785b74"),
-                            Description = "Description Test Photo 3",
-                            IsFree = false,
-                            Name = "Test Photo 3"
-                        });
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoCategory", b =>
@@ -326,12 +288,12 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("PhotoId")
+                    b.Property<Guid>("GalleryPhotoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PhotoId");
+                    b.HasIndex("GalleryPhotoId");
 
                     b.ToTable("PhotosCategories");
                 });
@@ -379,28 +341,6 @@ namespace OwlStock.Infrastructure.Migrations
                     b.ToTable("PhotoShoots");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShootFile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PhotoShootId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhotoShootId");
-
-                    b.ToTable("PhotoShootFiles");
-                });
-
             modelBuilder.Entity("OwlStock.Domain.Entities.Tag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -418,6 +358,54 @@ namespace OwlStock.Infrastructure.Migrations
                     b.HasIndex("PhotoId");
 
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.GalleryPhoto", b =>
+                {
+                    b.HasBaseType("OwlStock.Domain.Entities.PhotoBase");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("FilePathSmall")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsFree")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("PhotoBaseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("GalleryPhotos");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShootPhoto", b =>
+                {
+                    b.HasBaseType("OwlStock.Domain.Entities.PhotoBase");
+
+                    b.Property<Guid>("PhotoBaseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PhotoShootId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("PhotoShootId");
+
+                    b.ToTable("PhotoShootPhotos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -477,7 +465,7 @@ namespace OwlStock.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
 
-                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
+                    b.HasOne("OwlStock.Domain.Entities.GalleryPhoto", "Photo")
                         .WithMany()
                         .HasForeignKey("PhotoId");
 
@@ -486,24 +474,15 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Navigation("Photo");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("IdentityUserId");
-
-                    b.Navigation("IdentityUser");
-                });
-
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoCategory", b =>
                 {
-                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
+                    b.HasOne("OwlStock.Domain.Entities.GalleryPhoto", "GalleryPhoto")
                         .WithMany("PhotoCategories")
-                        .HasForeignKey("PhotoId")
+                        .HasForeignKey("GalleryPhotoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Photo");
+                    b.Navigation("GalleryPhoto");
                 });
 
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
@@ -515,20 +494,9 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Navigation("IdentityUser");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShootFile", b =>
-                {
-                    b.HasOne("OwlStock.Domain.Entities.PhotoShoot", "PhotoShoot")
-                        .WithMany("PhotoShootFiles")
-                        .HasForeignKey("PhotoShootId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PhotoShoot");
-                });
-
             modelBuilder.Entity("OwlStock.Domain.Entities.Tag", b =>
                 {
-                    b.HasOne("OwlStock.Domain.Entities.Photo", "Photo")
+                    b.HasOne("OwlStock.Domain.Entities.GalleryPhoto", "Photo")
                         .WithMany("Tags")
                         .HasForeignKey("PhotoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -537,16 +505,48 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Navigation("Photo");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.Photo", b =>
+            modelBuilder.Entity("OwlStock.Domain.Entities.GalleryPhoto", b =>
                 {
-                    b.Navigation("PhotoCategories");
+                    b.HasOne("OwlStock.Domain.Entities.PhotoBase", null)
+                        .WithOne()
+                        .HasForeignKey("OwlStock.Domain.Entities.GalleryPhoto", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Tags");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
+
+                    b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShootPhoto", b =>
+                {
+                    b.HasOne("OwlStock.Domain.Entities.PhotoBase", null)
+                        .WithOne()
+                        .HasForeignKey("OwlStock.Domain.Entities.PhotoShootPhoto", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OwlStock.Domain.Entities.PhotoShoot", "PhotoShoot")
+                        .WithMany("PhotoShootPhotos")
+                        .HasForeignKey("PhotoShootId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PhotoShoot");
                 });
 
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>
                 {
-                    b.Navigation("PhotoShootFiles");
+                    b.Navigation("PhotoShootPhotos");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.GalleryPhoto", b =>
+                {
+                    b.Navigation("PhotoCategories");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

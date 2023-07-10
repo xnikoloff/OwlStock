@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Metadata;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
+using OwlStock.Infrastructure.Common.EmailTemplates.PhotoShoot;
 using OwlStock.Services;
 using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
+using OwlStock.Web.DTOs.PhotoShootDTOs;
 using System.Security.Claims;
 
 namespace OwlStock.Web.Controllers
@@ -13,14 +14,22 @@ namespace OwlStock.Web.Controllers
     public class PhotoShootController : Controller
     {
         private readonly IPhotoShootService _photoShootService;
+        private readonly IPhotoService _photoService;
         private readonly IFileService _fileService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEmailService _emailService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public PhotoShootController(IPhotoShootService photoShootService, IFileService fileService, IWebHostEnvironment webHostEnvironment)
+        public PhotoShootController(IPhotoShootService photoShootService, IFileService fileService,
+            IWebHostEnvironment webHostEnvironment, IPhotoService photoService, IEmailService emailService,
+            UserManager<IdentityUser> userManager)
         {
             _photoShootService = photoShootService;
             _fileService = fileService;
             _webHostEnvironment = webHostEnvironment;
+            _photoService = photoService;
+            _emailService = emailService;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -43,7 +52,7 @@ namespace OwlStock.Web.Controllers
                 return View(dto);
             }
 
-            dto.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            dto.IdentityUserId = GetUserId();
             dto.PersonEmail = User.FindFirstValue(ClaimTypes.Email);
 
             await _photoShootService.Add(dto);
@@ -53,10 +62,7 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> MyPhotoShoots()
         {
-            List<MyPhotoShootsDTO> myPhotoShoots = await _photoShootService.MyPhotoShoots(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-            );
-
+            List<MyPhotoShootsDTO> myPhotoShoots = await _photoShootService.MyPhotoShoots(GetUserId());
             return View(myPhotoShoots);
         }
 
@@ -67,31 +73,91 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(Guid id)
+        public async Task<IActionResult> UpdateFiles(Guid id)
         {
-            PhotoShootByIdDTO photoShootById = await _photoShootService.PhotoShootById(id);
+            PhotoShoot photoShootById = await _photoShootService.PhotoShootById(id);
 
-            AddFilesToPhotoShootDTO filesToSPhotoShoot = new()
+            UpdatePhotoShootPhotosDTO filesToSPhotoShoot = new()
             {
                 PersonFullName = photoShootById.PersonFullName,
                 PhotoShootId = photoShootById.Id
             };
-
+            
             return View(filesToSPhotoShoot);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateFiles(AddFilesToPhotoShootDTO dto)
+        public async Task<IActionResult> UpdateFiles(UpdatePhotoShootPhotosDTO dto)
         {
-            if(dto.FormFiles == null)
+            if(!ModelState.IsValid)
             {
                 return View(dto);
             }
 
-            _fileService.Create(dto.FormFiles, _webHostEnvironment.WebRootPath, null);
-            await _fileService.CreatePhotoShootFiles(dto.FormFiles, dto.PhotoShootId, _webHostEnvironment.WebRootPath);
+            string webRootPath = _webHostEnvironment.WebRootPath;
 
+            IEnumerable<PhotoShootPhoto> photos = BuildPhotoShootPhotoList(dto.Files, dto.PhotoShootId);
+
+            foreach(PhotoShootPhoto photo in photos)
+            {
+                bool isSuccesfull = _fileService.CreatePhotoFile(photo, webRootPath);
+
+                if (!isSuccesfull)
+                {
+                    ModelState.AddModelError("Files", "File already exists");
+                    return View(dto);
+                }
+
+                await _photoService.Create(photo);
+            }
+
+            await _emailService.Send(new UpdatePhotoShootEmailTemplateDTO()
+            {
+                PersonFullName = dto.PersonFullName,
+                EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
+                Recipient = await GetUserEmail(),
+                Url = $"https:///flashstudio.com/photoshoot/{dto.PhotoShootId}/"
+            });
+            
             return RedirectToAction(nameof(PhotoShootById), new { id = dto.PhotoShootId});
+        }
+
+        private static IEnumerable<PhotoShootPhoto> BuildPhotoShootPhotoList(IEnumerable<IFormFile> files, Guid photoShootId)
+        {
+            List<PhotoShootPhoto> photoShootPhotos = new();
+
+            foreach(IFormFile file in files)
+            {
+                MemoryStream stream = new();
+                file.CopyTo(stream);
+
+                photoShootPhotos.Add
+                (
+                    new()
+                    {
+                        FileData = stream.ToArray(),
+                        FileName = file.FileName,
+                        FileType = file.ContentType,
+                        PhotoShootId = photoShootId
+                    }
+                );
+            }
+
+            return photoShootPhotos;
+        }
+
+        private string GetUserId()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                throw new NullReferenceException("User not logged in");
+        }
+
+        private async Task<string> GetUserEmail()
+        {
+            
+            var user = await _userManager.FindByIdAsync(GetUserId()) ?? throw new NullReferenceException($"User not logged in");
+            return user.Email ?? throw new NullReferenceException($"{nameof(user.Email)} is null");
+
         }
     }
 }

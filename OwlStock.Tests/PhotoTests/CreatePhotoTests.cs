@@ -8,6 +8,7 @@ using OwlStock.Services.DTOs;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using OwlStock.Domain.Entities;
 
 namespace OwlStock.Tests.PhotoTests
 {
@@ -30,12 +31,8 @@ namespace OwlStock.Tests.PhotoTests
             };
 
 
-            CreatePhotoDTO dto = new()
+            CreateGalleryPhotoDTO dto = new()
             {
-                Name = "Test Photo",
-                Description = "Test Descr",
-                FormFile = formFile,
-                WebRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
             };
 
             IPhotoService service = null;
@@ -43,14 +40,14 @@ namespace OwlStock.Tests.PhotoTests
             //Act
             int recordsCountBefore = 0;
 
-            if(context.Photos is not null)
+            if(context.GalleryPhotos is not null)
             {
-                recordsCountBefore = await context.Photos.CountAsync();
+                recordsCountBefore = await context.GalleryPhotos.CountAsync();
             }
 
-            await service.Create(dto);
+            await service.Create(new PhotoBase());
 
-            int recordsCountAfter = await context.Photos.CountAsync();
+            int recordsCountAfter = await context.GalleryPhotos.CountAsync();
 
             //Assert
             Assert.True(recordsCountAfter == ++recordsCountBefore);

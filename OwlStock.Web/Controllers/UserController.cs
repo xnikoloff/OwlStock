@@ -8,13 +8,11 @@ namespace OwlStock.Web.Controllers
     [Authorize]
     public class UserController : Controller
     {
-        private readonly IPhotoService _photoService;
-        private readonly IOrderService _orderService;
-
-        public UserController(IPhotoService photoService, IOrderService orderService)
+        private readonly IGalleryService _galleryService;
+        
+        public UserController(IGalleryService galleryService)
         {
-            _photoService = photoService;
-            _orderService = orderService;
+            _galleryService = galleryService;
         }
 
         public IActionResult Index()
@@ -28,7 +26,7 @@ namespace OwlStock.Web.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ??
                 throw new NullReferenceException($"User Id not available");
 
-            return View(await _photoService.All(userId));
+            return View(await _galleryService.All(userId));
         }
     }
 }
