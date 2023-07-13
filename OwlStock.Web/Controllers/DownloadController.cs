@@ -51,7 +51,7 @@ namespace OwlStock.Web.Controllers
         [HttpPost]
         public FileResult DownloadPhotoShootPhoto(PhotoShootPhoto photo)
         {
-            byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\photoshoots\\" + photo?.FileName);
+            byte[] fileData = System.IO.File.ReadAllBytes(Path.Combine(_webHostEnvironment.WebRootPath, photo.FilePath));
 
             if (!string.IsNullOrEmpty(photo?.FileType))
             {
