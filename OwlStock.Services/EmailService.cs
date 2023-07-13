@@ -66,6 +66,15 @@ namespace OwlStock.Services
                     );
                 }
 
+                case EmailTemplate.UpdatePhotosForPhotoShoot:
+                    {
+                        return PhotoShootEmailTemplates.UpdatePhotoShootTemplate
+                            (
+                                ((UpdatePhotoShootEmailTemplateDTO)dto).PersonFullName ?? "",
+                                ((UpdatePhotoShootEmailTemplateDTO)dto).Url ?? ""
+                            );
+                    }
+
                 default:
                 {
                     throw new ArgumentException($"{dto.EmailTemplate} is invalid {nameof(EmailTemplate)}");

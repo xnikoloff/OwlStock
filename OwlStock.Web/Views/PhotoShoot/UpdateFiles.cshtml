@@ -9,8 +9,10 @@
     <div class="row mt-3">
         <div class="col-12 col-md-6 col-lg-8">
             <form asp-action="UpdateFiles" method="post" enctype="multipart/form-data">
-                <input type="hidden" asp-for="PhotoShootId"/>
                 <input type="hidden" asp-for="PersonFullName"/>
+                <input type="hidden" asp-for="PersonFullName"/>
+                <input type="hidden" asp-for="PhotoShootId"/>
+
                 <div class="form-control">
                     <label asp-for="Files"></label>
                     <input multiple asp-for="Files" class="form-control"/>

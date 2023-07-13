@@ -62,7 +62,10 @@ namespace OwlStock.Services
 
                 case PhotoShootPhoto:
                 {
-                    photo.FilePath = Path.Combine("\\images\\photoshoots", photo.FileName);
+                    photo.FilePath = ExtractPath(photo.FilePath);
+                    ((PhotoShootPhoto)photo).PhotoShootId = ((PhotoShootPhoto)photo).PhotoShoot.Id;
+                    ((PhotoShootPhoto)photo).PhotoShoot = null;
+
                     await _context.PhotoShootPhotos!.AddAsync((PhotoShootPhoto)photo);
                     break;
                 }
@@ -76,6 +79,46 @@ namespace OwlStock.Services
             await UpdateBasePhotoId(photo);
 
             return photo.Id;
+        }
+
+        private static string ExtractPath(string filePath)
+        {
+            //find word "images" in the path string
+            //check each 5 indexex, 0-5 -- 5-10 -- 10--15 till the end of the array
+            //until word "image" is found
+            //search each 5 chars because image has 5 letters
+            //when word image is found -> save the index of 'i' in word "images"
+            //that's the index where the path should be substringed
+            //the substringed path goes to db as FilePath in PhotoBase
+
+            int position = FindStartIndexPossition(filePath);
+
+            return filePath.Substring(position);
+        }
+
+        private static int FindStartIndexPossition(string filePath)
+        {
+            int position = 0;
+            
+            for (int i = 0; i < filePath.Length; i = i + 6)
+            {
+                string firstChar = filePath[i].ToString();
+
+                for (int j = i + 1; j < i + 6; j++)
+                {
+                    firstChar += filePath[j];
+                }
+
+                if (firstChar.Equals("images"))
+                {
+                    position = i;
+                    break;
+                }
+
+                continue;
+            }
+
+            return position;
         }
 
         private async Task UpdateBasePhotoId(PhotoBase photo)

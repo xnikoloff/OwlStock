@@ -11,11 +11,9 @@ namespace OwlStock.Web.DTOs.PhotoShootDTOs
             Files = new HashSet<IFormFile>();
         }
 
-        [Required]
-        public string? PersonFullName { get; set; }
-
-        [Required]
-        public Guid PhotoShootId { get; set; }
+        public Guid PhotoShootId{ get; set; }
+        
+        public string? PersonFullName{ get; set; }
 
         [Required]
         public IEnumerable<IFormFile> Files { get; set; }

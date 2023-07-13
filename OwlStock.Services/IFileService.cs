@@ -5,6 +5,6 @@ namespace OwlStock.Services
 {
     public interface IFileService
     { 
-        bool CreatePhotoFile(PhotoBase photo, string webRootPath);
+        string CreatePhotoFile(PhotoBase photo, string webRootPath);
     }
 }

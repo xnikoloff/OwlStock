@@ -80,7 +80,7 @@ namespace OwlStock.Web.Controllers
             UpdatePhotoShootPhotosDTO filesToSPhotoShoot = new()
             {
                 PersonFullName = photoShootById.PersonFullName,
-                PhotoShootId = photoShootById.Id
+                PhotoShootId = photoShootById.Id,
             };
             
             return View(filesToSPhotoShoot);
@@ -96,18 +96,19 @@ namespace OwlStock.Web.Controllers
 
             string webRootPath = _webHostEnvironment.WebRootPath;
 
-            IEnumerable<PhotoShootPhoto> photos = BuildPhotoShootPhotoList(dto.Files, dto.PhotoShootId);
+            IEnumerable<PhotoShootPhoto> photos = BuildPhotoShootPhotoList(dto.Files, new () { Id = dto.PhotoShootId, PersonFullName = dto.PersonFullName});
 
             foreach(PhotoShootPhoto photo in photos)
             {
-                bool isSuccesfull = _fileService.CreatePhotoFile(photo, webRootPath);
+                string filePath = _fileService.CreatePhotoFile(photo, webRootPath);
 
-                if (!isSuccesfull)
+                if (string.IsNullOrEmpty(filePath))
                 {
                     ModelState.AddModelError("Files", "File already exists");
                     return View(dto);
                 }
 
+                photo.FilePath = filePath;
                 await _photoService.Create(photo);
             }
 
@@ -122,7 +123,7 @@ namespace OwlStock.Web.Controllers
             return RedirectToAction(nameof(PhotoShootById), new { id = dto.PhotoShootId});
         }
 
-        private static IEnumerable<PhotoShootPhoto> BuildPhotoShootPhotoList(IEnumerable<IFormFile> files, Guid photoShootId)
+        private static IEnumerable<PhotoShootPhoto> BuildPhotoShootPhotoList(IEnumerable<IFormFile> files, PhotoShoot photoShoot)
         {
             List<PhotoShootPhoto> photoShootPhotos = new();
 
@@ -138,7 +139,7 @@ namespace OwlStock.Web.Controllers
                         FileData = stream.ToArray(),
                         FileName = file.FileName,
                         FileType = file.ContentType,
-                        PhotoShootId = photoShootId
+                        PhotoShoot = photoShoot
                     }
                 );
             }
