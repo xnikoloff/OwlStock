@@ -12,5 +12,11 @@
         public const int PersonEmailMaxLength = 200;
         public const int PersonPhoneMaxLenth = 30;
         public const int PhotoShootTypeDescriptionMaxLength = 500;
+
+
+        //Common
+        public const string TagsRequiredErrorMessage = "Tags are required";
+        public const string CategoriesRequiredErrorMessage = "Categories are required";
+        public const string FormFilesRequiredErrorMessage = "Upload a file";
     }
 }

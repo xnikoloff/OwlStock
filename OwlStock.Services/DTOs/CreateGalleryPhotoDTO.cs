@@ -14,10 +14,15 @@ namespace OwlStock.Services.DTOs
         }
 
         public GalleryPhoto? GalleryPhoto { get; set; }
+
+        [Required(ErrorMessage = ModelConstraints.CategoriesRequiredErrorMessage)]
         public IEnumerable<Category> Categories { get; set; }
+
+        [Required(ErrorMessage = ModelConstraints.TagsRequiredErrorMessage)]
         public string? Tags { get; set; }
 
         [Display(Name = ModelConstraints.PhotoFormFileDisplayName)]
+        [Required(ErrorMessage = "Upload a file")]
         public IFormFile? FormFile { get; set; }
     }
 }

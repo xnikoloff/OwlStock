@@ -10,19 +10,17 @@ namespace OwlStock.Web.Controllers
     public class PhotoController : Controller
     {
         private readonly IPhotoService _photoService;
-        private readonly IPhotoResizer _photoResizer;
         private readonly IGalleryService _galleryService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ICategoryService _categoryService;
         private readonly IPhotoTagService _photoTagService;
         private readonly IFileService _fileService;
         
-        public PhotoController(IPhotoService photoService, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment,
+        public PhotoController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment,
             ICategoryService categoryService, IPhotoTagService photoTagService, IGalleryService galleryService,
              IFileService fileService)
         {
             _photoService = photoService;
-            _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
             _categoryService = categoryService;
             _photoTagService = photoTagService;
@@ -75,11 +73,27 @@ namespace OwlStock.Web.Controllers
                 string webRootPath = _webHostEnvironment.WebRootPath;
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new NullReferenceException("User not signed in");
                 
+                if(dto.GalleryPhoto is null)
+                {
+                    throw new NullReferenceException($"{nameof(dto.GalleryPhoto)} is null");
+                }
+
+                if (dto.FormFile is null)
+                {
+
+                    return View(dto);
+                }
+
+                if (dto.Tags is null)
+                {
+                    return View(dto);
+                }
+
                 dto.GalleryPhoto.FileName = dto.FormFile.FileName;
                 dto.GalleryPhoto.FileType = dto.FormFile.ContentType;
                 dto.GalleryPhoto.FilePath = Path.Combine(webRootPath);
 
-                using MemoryStream stream = new MemoryStream();
+                using MemoryStream stream = new();
                 dto.FormFile.CopyTo(stream);
                 dto.GalleryPhoto.FileData = stream.ToArray();
                 dto.GalleryPhoto.IdentityUserId = userId;

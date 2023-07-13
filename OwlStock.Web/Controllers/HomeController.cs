@@ -9,13 +9,11 @@ namespace OwlStock.Web.Controllers
     {
         private readonly IGalleryService _galleryService;
         private readonly IHomeService _homeService;
-        private readonly IEmailService _emailService;
-
-        public HomeController(IGalleryService galleryService, IHomeService homeService, IEmailService emailService)
+        
+        public HomeController(IGalleryService galleryService, IHomeService homeService)
         {
             _galleryService = galleryService;
             _homeService = homeService;
-            _emailService = emailService;
         }
 
         public async Task<IActionResult> Index()
