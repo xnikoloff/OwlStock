@@ -47,7 +47,7 @@ namespace OwlStock.Services
                 GetTemplate(dto)
             );
             
-            await client.SendMailAsync(message);
+            //await client.SendMailAsync(message);
 
         }
 

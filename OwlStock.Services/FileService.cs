@@ -1,7 +1,4 @@
-﻿using Braintree;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using OwlStock.Domain.Entities;
+﻿using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 
 namespace OwlStock.Services
@@ -9,37 +6,55 @@ namespace OwlStock.Services
     public class FileService : IFileService
     {
         //Add CreatePhotoDTO with photobase and filedata props
-        public string CreatePhotoFile(PhotoBase photo, string webRootPath)
+        //File paths are missing
+        public bool CreatePhotoFile(PhotoBase photo)
         {
-            List<string> paths = GetPaths(photo, webRootPath);
-            
-            foreach(string path in paths)
+            if (File.Exists(photo.FilePath))
             {
-                if (!File.Exists(path))
-                {
-                    //Throws an exception when next day comes
-                    
-                    using FileStream stream = File.OpenWrite(path);
-                    stream.Write(photo.FileData, 0, photo.FileData.Length);
-                    return path;
-                }
+                return true;
             }
 
-            return "";
-        }
-
-        private static List<string> GetPaths(PhotoBase photo, string webRootPath)
-        {
-            List<string> paths = new();
-            string uploadsFolder = Path.Combine(webRootPath, "images");
+            if (!Directory.Exists(photo.FilePath))
+            {
+                Directory.CreateDirectory(photo.FilePath);
+            }
 
             switch (photo)
             {
                 case GalleryPhoto:
                 {
-                    string filePathSmall = Path.Combine(uploadsFolder, PhotoSize.Small.ToString() + "_" + photo.FileName);
-                    string filePathOriginal = Path.Combine(uploadsFolder, PhotoSize.OriginalSize.ToString() + "_" + photo.FileName);
+                    using FileStream streamOriginalSize = File.OpenWrite(Path.Combine(photo.FilePath, $"OriginalSize_{photo.FileName}"));
+                    using FileStream streamSmallSize = File.OpenWrite(Path.Combine(photo.FilePath, $"Small_{photo.FileName}"));
+                    
+                    streamOriginalSize.Write(photo.FileData, 0, photo.FileData.Length);
+                    streamSmallSize.Write(photo.FileData, 0, photo.FileData.Length);
+                    
+                    break;
+                }
 
+                case PhotoShootPhoto:
+                {
+                    using FileStream streamOriginalSize = File.OpenWrite(Path.Combine(photo.FilePath, photo.FileName));
+                    streamOriginalSize.Write(photo.FileData, 0, photo.FileData.Length);
+                    
+                    break;
+                }
+            }
+            
+            return false;
+        }
+
+        /*private static List<string> GetPaths(PhotoBase photo)
+        {
+            List<string> paths = new();
+            
+            switch (photo)
+            {
+                case GalleryPhoto:
+                {
+                    string filePathSmall = Path.Combine(webRootPath, ((GalleryPhoto)photo).FilePathSmall);
+                    string filePathOriginal = Path.Combine(webRootPath, ((GalleryPhoto)photo).FilePath);
+                    
                     paths.Add(filePathSmall);
                     paths.Add(filePathOriginal);
 
@@ -58,47 +73,24 @@ namespace OwlStock.Services
                         throw new NullReferenceException($"{((PhotoShootPhoto)photo).PhotoShoot} is null");
                     }
 
+                    //Filepath problem
                     string photoShootId = ((PhotoShootPhoto)photo).PhotoShoot.Id.ToString();
-                    string personFullName = ((PhotoShootPhoto)photo).PhotoShoot.PersonFullName.ToString();
-                    string[] photoShootSubDirectories = Directory.GetDirectories(uploadsFolder + "\\photoshoots");
-                    string directoryPath = uploadsFolder + "\\photoshoots\\" + personFullName + '_' + photoShootId;
-                    string filePath = Path.Combine(directoryPath, photo.FileName);
 
-                    if (!DirectoryExists(photoShootSubDirectories, photoShootId))
+                    if (!DirectoryExists(photo.FilePath, photoShootId))
                     {
-                        Directory.CreateDirectory(Path.Combine(directoryPath));
+                        string[] directorySplit = photo.FilePath.Split('\\');
+
+                        string newDirectory = directorySplit[0] + directorySplit[1] + directorySplit[2];
+                        Directory.CreateDirectory(Path.Combine(webRootPath, newDirectory));
                     }
 
-                    paths.Add(filePath);
+                    paths.Add(photo.FilePath);
 
                     break;
                 }
             }
 
             return paths;
-        }
-
-        private static bool DirectoryExists(string[] photoShootSubDirectories, string photoShootId)
-        {
-            for(int i = 0; i < photoShootSubDirectories.Length; i++) 
-            {
-                string[] subdirectoryPathSplit = photoShootSubDirectories[i].Split('\\');
-
-                //[^1] is index operator for array.Length - 1
-                string[] subdirectoryNameSplit = subdirectoryPathSplit[^1].Split('_');
-
-                if(subdirectoryNameSplit.Length < 2)
-                {
-                    continue;
-                }
-
-                if (subdirectoryNameSplit[1].Contains(photoShootId))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        }*/
     }
 }

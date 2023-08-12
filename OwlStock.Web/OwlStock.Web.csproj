@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\images\NewFolder\**" />
-    <Content Remove="wwwroot\images\NewFolder\**" />
-    <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
-    <None Remove="wwwroot\images\NewFolder\**" />
+    <Compile Remove="wwwroot\images\**" />
+    <Content Remove="wwwroot\images\**" />
+    <EmbeddedResource Remove="wwwroot\images\**" />
+    <None Remove="wwwroot\images\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,11 +31,6 @@
     <ProjectReference Include="..\OwlStock.Domain\OwlStock.Domain.csproj" />
     <ProjectReference Include="..\OwlStock.Infrastructure\OwlStock.Infrastructure.csproj" />
     <ProjectReference Include="..\OwlStock.Services\OwlStock.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\images\photoshoots\" />
-    <Folder Include="wwwroot\images\photoshoots\" />
   </ItemGroup>
 
 </Project>

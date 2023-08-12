@@ -31,7 +31,7 @@ namespace OwlStock.Services
             Random random = new();
             int randomNumber = random.Next(0, _context.GalleryPhotos.Count());
 
-            return photos[randomNumber].FileName;
+            return photos[randomNumber].FilePath;
 
         }
     }

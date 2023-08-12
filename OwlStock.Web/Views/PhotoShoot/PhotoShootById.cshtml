@@ -55,7 +55,7 @@
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card">
                         <div class="card-body">
-                            <img src="~/@photo.FilePath">
+                            <img src="~/@(photo.FilePath + '/' + photo.FileName)">
                         </div>
                         <div class="card-footer">
                             <form asp-action="DownloadPhotoShootPhoto" asp-controller="Download">

@@ -62,7 +62,7 @@ namespace OwlStock.Services
 
                 case PhotoShootPhoto:
                 {
-
+                        //photoshootId is 0000-0000-0000
                     photo.FilePath = ExtractPath(photo.FilePath);
                     ((PhotoShootPhoto)photo).PhotoShootId = ((PhotoShootPhoto)photo).PhotoShoot.Id;
                     ((PhotoShootPhoto)photo).PhotoShoot = null;

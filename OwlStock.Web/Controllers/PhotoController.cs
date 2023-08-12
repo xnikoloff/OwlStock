@@ -4,6 +4,7 @@ using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 using System.Security.Claims;
 using OwlStock.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OwlStock.Web.Controllers
 {
@@ -55,6 +56,7 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -91,19 +93,20 @@ namespace OwlStock.Web.Controllers
 
                 dto.GalleryPhoto.FileName = dto.FormFile.FileName;
                 dto.GalleryPhoto.FileType = dto.FormFile.ContentType;
-                dto.GalleryPhoto.FilePath = Path.Combine(webRootPath);
+                dto.GalleryPhoto.FilePath = Path.Combine(webRootPath, "images");
 
                 using MemoryStream stream = new();
                 dto.FormFile.CopyTo(stream);
                 dto.GalleryPhoto.FileData = stream.ToArray();
                 dto.GalleryPhoto.IdentityUserId = userId;
 
+                _fileService.CreatePhotoFile(dto.GalleryPhoto);
+
                 Guid photoId = await _photoService.Create(dto.GalleryPhoto);
                 await _categoryService.Create(dto.Categories, photoId);
 
                 await _photoTagService.Add(dto.Tags, photoId);
 
-                _fileService.CreatePhotoFile(dto.GalleryPhoto, webRootPath);
             }
             
             return RedirectToAction(nameof(All));

@@ -96,19 +96,18 @@ namespace OwlStock.Web.Controllers
 
             string webRootPath = _webHostEnvironment.WebRootPath;
 
-            IEnumerable<PhotoShootPhoto> photos = BuildPhotoShootPhotoList(dto.Files, new () { Id = dto.PhotoShootId, PersonFullName = dto.PersonFullName});
+            IEnumerable<PhotoShootPhoto> photos = BuildPhotoShootPhotoList(dto.Files, new () { Id = dto.PhotoShootId, PersonFullName = dto.PersonFullName }, webRootPath);
 
             foreach(PhotoShootPhoto photo in photos)
             {
-                string filePath = _fileService.CreatePhotoFile(photo, webRootPath);
+                bool exists = _fileService.CreatePhotoFile(photo);
 
-                if (string.IsNullOrEmpty(filePath))
+                if (exists)
                 {
                     ModelState.AddModelError("Files", "File already exists");
                     return View(dto);
                 }
 
-                photo.FilePath = filePath;
                 await _photoService.Create(photo);
             }
 
@@ -123,7 +122,7 @@ namespace OwlStock.Web.Controllers
             return RedirectToAction(nameof(PhotoShootById), new { id = dto.PhotoShootId});
         }
 
-        private static IEnumerable<PhotoShootPhoto> BuildPhotoShootPhotoList(IEnumerable<IFormFile> files, PhotoShoot photoShoot)
+        private static IEnumerable<PhotoShootPhoto> BuildPhotoShootPhotoList(IEnumerable<IFormFile> files, PhotoShoot photoShoot, string webRootPath)
         {
             List<PhotoShootPhoto> photoShootPhotos = new();
 
@@ -139,7 +138,8 @@ namespace OwlStock.Web.Controllers
                         FileData = stream.ToArray(),
                         FileName = file.FileName,
                         FileType = file.ContentType,
-                        PhotoShoot = photoShoot
+                        PhotoShoot = photoShoot,
+                        FilePath = Path.Combine(webRootPath, $"images/photoshoots/{photoShoot.PersonFullName}_{photoShoot.Id}")
                     }
                 );
             }
