@@ -139,7 +139,7 @@ namespace OwlStock.Web.Controllers
                         FileName = file.FileName,
                         FileType = file.ContentType,
                         PhotoShoot = photoShoot,
-                        FilePath = Path.Combine(webRootPath, $"images/photoshoots/{photoShoot.PersonFullName}_{photoShoot.Id}")
+                        FilePath = Path.Combine(webRootPath, $"images/photoshoots/{photoShoot.PersonFullName}_{photoShoot.Id}").Replace('\\', '/')
                     }
                 );
             }

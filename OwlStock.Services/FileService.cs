@@ -23,8 +23,8 @@ namespace OwlStock.Services
             {
                 case GalleryPhoto:
                 {
-                    using FileStream streamOriginalSize = File.OpenWrite(Path.Combine(photo.FilePath, $"OriginalSize_{photo.FileName}"));
-                    using FileStream streamSmallSize = File.OpenWrite(Path.Combine(photo.FilePath, $"Small_{photo.FileName}"));
+                    using FileStream streamOriginalSize = File.OpenWrite(Path.Combine(photo.FilePath, $"OriginalSize_{photo.FileName}").Replace('\\', '/'));
+                    using FileStream streamSmallSize = File.OpenWrite(Path.Combine(photo.FilePath, $"Small_{photo.FileName}").Replace('\\', '/'));
                     
                     streamOriginalSize.Write(photo.FileData, 0, photo.FileData.Length);
                     streamSmallSize.Write(photo.FileData, 0, photo.FileData.Length);
@@ -34,7 +34,7 @@ namespace OwlStock.Services
 
                 case PhotoShootPhoto:
                 {
-                    using FileStream streamOriginalSize = File.OpenWrite(Path.Combine(photo.FilePath, photo.FileName));
+                    using FileStream streamOriginalSize = File.OpenWrite(Path.Combine(photo.FilePath, photo.FileName).Replace('\\', '/'));
                     streamOriginalSize.Write(photo.FileData, 0, photo.FileData.Length);
                     
                     break;

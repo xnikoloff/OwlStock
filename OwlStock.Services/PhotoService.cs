@@ -54,8 +54,8 @@ namespace OwlStock.Services
             {
                 case GalleryPhoto:
                 {
-                    photo.FilePath = Path.Combine("images", PhotoSize.OriginalSize.ToString() + "_" + photo.FileName);
-                    ((GalleryPhoto)photo).FilePathSmall = Path.Combine("images", PhotoSize.Small.ToString() + "_" + photo.FileName);
+                    photo.FilePath = Path.Combine("images", PhotoSize.OriginalSize.ToString() + "_" + photo.FileName).Replace('\\', '/');
+                    ((GalleryPhoto)photo).FilePathSmall = Path.Combine("images", PhotoSize.Small.ToString() + "_" + photo.FileName).Replace('\\', '/');
                         await _context.GalleryPhotos!.AddAsync((GalleryPhoto)photo);
                     break;
                 }

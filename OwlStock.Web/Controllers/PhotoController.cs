@@ -93,7 +93,7 @@ namespace OwlStock.Web.Controllers
 
                 dto.GalleryPhoto.FileName = dto.FormFile.FileName;
                 dto.GalleryPhoto.FileType = dto.FormFile.ContentType;
-                dto.GalleryPhoto.FilePath = Path.Combine(webRootPath, "images");
+                dto.GalleryPhoto.FilePath = Path.Combine(webRootPath, "images").Replace('\\', '/');
 
                 using MemoryStream stream = new();
                 dto.FormFile.CopyTo(stream);
