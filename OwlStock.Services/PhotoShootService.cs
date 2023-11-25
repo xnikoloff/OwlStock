@@ -86,7 +86,7 @@ namespace OwlStock.Services
                 PersonFullName = dto.PersonFirstName + " " + dto.PersonLastName,
                 PersonEmail = dto.PersonEmail,
                 PersonPhone = dto.PersonPhone,
-                ReservationDate = dto.ReservationDate.Add(dto.ReservationTime.ToTimeSpan()),
+                ReservationDate = new DateTime(dto.ReservationDate.Year, dto.ReservationDate.Month, dto.ReservationDate.Day, dto.ReservationTime.Hour, dto.ReservationTime.Minute, 0),
                 PhotoShootType = dto.PhotoShootType,
                 PhotoShootTypeDescription = dto.PhotoShootTypeDescription,
                 CreatedOn = DateTime.Now,
@@ -99,7 +99,7 @@ namespace OwlStock.Services
 
             PhotoShootEmailTemplateDTO emailDto = new()
             {
-                Date = dto.ReservationDate.Add(dto.ReservationTime.ToTimeSpan()),
+                Date = new DateTime(dto.ReservationDate.Year, dto.ReservationDate.Month, dto.ReservationDate.Day, dto.ReservationTime.Hour, dto.ReservationTime.Minute, 0),
                 Recipient = dto.PersonEmail,
                 Type = dto.PhotoShootType,
                 PersonFullName = dto.PersonFirstName + " " + dto.PersonLastName,
