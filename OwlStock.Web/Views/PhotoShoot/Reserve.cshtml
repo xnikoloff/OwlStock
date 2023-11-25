@@ -67,7 +67,7 @@
         </div>
     </div>
     <div class="row mt-5">
-        <div class="col-12 scrollmenu">
+        <div class="col-12 scrollmenu" id="dates-list">
             @for (int i = 0; i < remainingDates.Count; i++)
             {
                 <button type="button" class="btn btn-secondary btn-sm btn-date">@remainingDates[i].ToString("dd.MM")</button>
@@ -117,20 +117,17 @@
 
 <script>
     $(document).ready(function(){
+        showTimeSlots($("#dates-list button:first-child").html());
         
-        //TODO: call function on page load passing the current date
-        //showTimeSlots(getFirstDate());
-
         $(".btn-date").click(function(){
             showTimeSlots($(this).html());
         });
 
         $(document).on("click", ".btn-time-slot", function () {
-            console.log($(this).html());
             $("#ReservationTime").val($(this).html());
 
             let classes = $(this).attr("class");
-            console.log(classes);
+            
             if (classes.includes("btn-success")) {
                 $("#btn-book").prop("disabled", false);
             }
@@ -192,10 +189,6 @@
             
             $('#hours-container').append(`<button class='btn btn-${isAvailable ? 'success' : 'danger'} btn-sm btn-time-slot'>${timeSubstring}</button>`);
         }
-    }
-
-    function getFirstDate() {
-        //TODO
     }
 
     function formatTimeOnly(timeOnlyList){
