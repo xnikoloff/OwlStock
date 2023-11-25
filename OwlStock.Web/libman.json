@@ -5,6 +5,10 @@
     {
       "library": "bootstrap@5.2.3",
       "destination": "wwwroot/bootstrap/"
+    },
+    {
+      "library": "jqueryui@1.13.2",
+      "destination": "wwwroot/jqueryui/"
     }
   ]
 }

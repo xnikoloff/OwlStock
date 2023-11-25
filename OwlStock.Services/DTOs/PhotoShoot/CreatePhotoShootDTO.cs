@@ -1,5 +1,6 @@
 ﻿using OwlStock.Domain.Common;
 using OwlStock.Domain.Enumerations;
+using OwlStock.Services.Common.HelperClasses;
 using System.ComponentModel.DataAnnotations;
 
 namespace OwlStock.Services.DTOs.PhotoShoot
@@ -26,7 +27,11 @@ namespace OwlStock.Services.DTOs.PhotoShoot
 
         [Required]
         [Display(Name = "Date")]
-        public DateTime ReservationDate { get; set; }
+        public DateTime ReservationDate { get; set; } = DateTime.Now;
+
+        [Required]
+        [Display(Name = "Time")]
+        public TimeOnly ReservationTime { get; set; }
 
         [Required]
         [Display(Name = "Type")]
@@ -35,6 +40,11 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         [Display(Name = "Photo Shoot Type Description")]
         [MaxLength(ModelConstraints.PhotoShootTypeDescriptionMaxLength)]
         public string? PhotoShootTypeDescription { get; set; }
+
+        public Dictionary<DateOnly, IEnumerable<TimeSlot>>? Calendar { get; set; }
+        public List<DateTime>? RemainingDates { get; set; }
+
+        public TimeSlot[]? AllTimeSlots { get; set; }
 
         public string? IdentityUserId { get; set; }
     }

@@ -3,6 +3,7 @@ using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Infrastructure.Common.EmailTemplates.PhotoShoot;
+using OwlStock.Services.Common.HelperClasses;
 using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
 
@@ -12,26 +13,18 @@ namespace OwlStock.Services
     {
         private readonly OwlStockDbContext _context;
         private readonly IEmailService _emailService;
+        private readonly ICalendarService _calendarService;
 
-        public PhotoShootService(OwlStockDbContext context, IEmailService emailService)
+        public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService)
         {
             _context = context;
             _emailService = emailService;
-        }
-
-        public async Task<List<PhotoShoot>> AllPhotoShoots()
-        {
-            if(_context.PhotoShoots is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
-            }
-            
-            return await _context.PhotoShoots.ToListAsync();
+            _calendarService = calendarService;
         }
 
         public async Task<PhotoShoot> PhotoShootById(Guid id)
-        { 
-            if(_context.PhotoShoots is null)
+        {
+            if (_context.PhotoShoots is null)
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
@@ -43,7 +36,7 @@ namespace OwlStock.Services
                 .Where(phs => phs.Id == id)
                 .FirstOrDefaultAsync();
 
-            if(dto == null) 
+            if (dto == null)
             {
                 throw new NullReferenceException($"{nameof(dto)} is null");
             }
@@ -53,12 +46,12 @@ namespace OwlStock.Services
 
         public async Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId)
         {
-            if(userId == null)
+            if (userId == null)
             {
                 throw new ArgumentNullException(nameof(userId));
             }
 
-            if(_context.PhotoShoots is null)
+            if (_context.PhotoShoots is null)
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
@@ -72,7 +65,7 @@ namespace OwlStock.Services
                     PhotoShootType = phs.PhotoShootType,
                     ReservationDate = phs.ReservationDate,
                     ReservationFor = phs.PersonFullName
-                    
+
                 })
                 .ToListAsync();
 
@@ -81,7 +74,7 @@ namespace OwlStock.Services
 
         public async Task<int> Add(CreatePhotoShootDTO dto)
         {
-            if(dto == null)
+            if (dto == null)
             {
                 throw new ArgumentNullException(nameof(dto));
             }
@@ -93,7 +86,7 @@ namespace OwlStock.Services
                 PersonFullName = dto.PersonFirstName + " " + dto.PersonLastName,
                 PersonEmail = dto.PersonEmail,
                 PersonPhone = dto.PersonPhone,
-                ReservationDate = dto.ReservationDate,
+                ReservationDate = dto.ReservationDate.Add(dto.ReservationTime.ToTimeSpan()),
                 PhotoShootType = dto.PhotoShootType,
                 PhotoShootTypeDescription = dto.PhotoShootTypeDescription,
                 CreatedOn = DateTime.Now,
@@ -106,7 +99,7 @@ namespace OwlStock.Services
 
             PhotoShootEmailTemplateDTO emailDto = new()
             {
-                Date = dto.ReservationDate,
+                Date = dto.ReservationDate.Add(dto.ReservationTime.ToTimeSpan()),
                 Recipient = dto.PersonEmail,
                 Type = dto.PhotoShootType,
                 PersonFullName = dto.PersonFirstName + " " + dto.PersonLastName,
@@ -118,55 +111,21 @@ namespace OwlStock.Services
             return result;
         }
 
-        /*public async Task AddFiles(Guid photoShootId, List<IFormFile> files, string? webRootPath, PhotoSize? size)
+        public async Task<Dictionary<DateOnly, IEnumerable<TimeSlot>>> GetPhotoShootsCalendar()
         {
-            string photoShootsFolder = "";
-            if(webRootPath == null)
+            if (_context.PhotoShoots is null)
             {
-                throw new NullReferenceException($"{nameof(webRootPath)} is null");
-            }
-            
-            foreach (IFormFile file in files)
-            {
-                photoShootsFolder = Path.Combine(webRootPath, size == null ? "images/photoshoots" : "images");
-                string filePath = Path.Combine(photoShootsFolder, size == null ? file.FileName : size.ToString() + "_" + file.FileName);
-
-                //iformfile to byte array
-                byte[] data =  _fileService.ConvertFormFileToByteArray(file);
-                byte[]? resised = null;
-
-                //resize
-                if (size != null)
-                {
-                    byte[] bytes = _photoResizer.Resize(data, size.Value);
-                    resised = bytes;
-                }
-
-                _fileService.Create(resised ?? data, webRootPath, filePath);
-                
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
-            await _fileService.CreatePhotoShootFiles(files, photoShootId, webRootPath);
+            //Get reservation dates from today's date forward
+            List<DateTime> reservationDates = await _context.PhotoShoots
+                .Where(p => p.ReservationDate.Date >= DateTime.Now.Date)
+                .Select(ph => ph.ReservationDate)
+                .OrderBy(p => p.Date)
+                .ToListAsync();
 
-            PhotoShoot? photoShoot = await _context.PhotoShoots!
-                .Where(ps => ps.Id == photoShootId).FirstOrDefaultAsync() ?? 
-                    throw new NullReferenceException($"{nameof(PhotoShoot)} with id {photoShootId} cannot be found");
-
-            UpdatePhotoShootEmailTemplateDTO dto = new()
-            {
-                EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
-                PersonFullName = photoShoot.PersonFullName,
-                Recipient = photoShoot.PersonEmail,
-                Url = $"https:///flashstudio.com/photoshoot/{photoShootId}/"
-            };
-
-            await _emailService.Send(dto);
-        }*/
-
-        public Task<List<PhotoShoot>> ShowAvailableSlots()
-        {
-            //TODO
-            throw new NotImplementedException();
+            return _calendarService.GetPhotoShootsCalendar(reservationDates);
         }
     }
 }

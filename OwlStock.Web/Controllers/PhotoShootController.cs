@@ -18,17 +18,19 @@ namespace OwlStock.Web.Controllers
         private readonly IFileService _fileService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailService _emailService;
+        private readonly ICalendarService _calendarService;
         private readonly UserManager<IdentityUser> _userManager;
 
         public PhotoShootController(IPhotoShootService photoShootService, IFileService fileService,
-            IWebHostEnvironment webHostEnvironment, IPhotoService photoService, IEmailService emailService,
-            UserManager<IdentityUser> userManager)
+            IWebHostEnvironment webHostEnvironment, IPhotoService photoService, IEmailService emailService, 
+            ICalendarService calendarService, UserManager<IdentityUser> userManager)
         {
             _photoShootService = photoShootService;
             _fileService = fileService;
             _webHostEnvironment = webHostEnvironment;
             _photoService = photoService;
             _emailService = emailService;
+            _calendarService = calendarService;
             _userManager = userManager;
         }
 
@@ -39,9 +41,16 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Reserve()
+        public async Task<IActionResult> Reserve()
         {
-            return View();
+            CreatePhotoShootDTO dto = new()
+            {
+                Calendar = await _photoShootService.GetPhotoShootsCalendar(),
+                AllTimeSlots = _calendarService.GetTimeSlots(),
+                RemainingDates = _calendarService.GetRemainingDates().ToList()
+            };
+            
+            return View(dto);
         }
 
         [HttpPost]

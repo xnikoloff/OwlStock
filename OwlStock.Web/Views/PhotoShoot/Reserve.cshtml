@@ -1,63 +1,137 @@
 ﻿@model CreatePhotoShootDTO
 
+@{
+
+    List<DateTime> remainingDates = Model.RemainingDates ?? new();
+    Dictionary<DateOnly, IEnumerable<TimeSlot>> calendar = Model.Calendar ?? new();
+}
+
 <div class="container">
+    <div class="row bg-light mt-3">
+        <div class="col-12 p-2 text-center">
+            <h1>Your Details</h1>
+        </div>
+    </div>
     <form asp-action="Reserve" method="post">
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-2">
+        <input type="hidden" asp-for="IdentityUserId" />
+        <input type="hidden" asp-for="ReservationDate" />
+        <input type="hidden" asp-for="ReservationTime" />
+
+        <div class="row mt-3">
+            <div class="col-12 col-md-6 col-lg-3 form-group">
                 <label asp-for="PersonFirstName"></label>
-                <input asp-for="PersonFirstName" class="form-control" required/>
+                <input asp-for="PersonFirstName" class="form-control" required />
                 <span asp-validation-for="PersonFirstName" class="text-danger"></span>
             </div>
-            <div class="col-12 col-md-6 col-lg-2">
+            <div class="col-12 col-md-6 col-lg-3 form-group">
                 <label asp-for="PersonLastName"></label>
-                <input asp-for="PersonLastName" class="form-control" required/>
+                <input asp-for="PersonLastName" class="form-control" required />
                 <span asp-validation-for="PersonLastName" class="text-danger"></span>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-4">
+            <div class="col-12 col-md-6 col-lg-3 form-group">
                 <label asp-for="PersonPhone"></label>
-                <input asp-for="PersonPhone" class="form-control" required/>
+                <input asp-for="PersonPhone" class="form-control" required />
                 <span asp-validation-for="PersonPhone" class="text-danger"></span>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-4">
-                <label asp-for="ReservationDate"></label>
-                <input asp-for="ReservationDate" class="form-control" required/>
-                <span asp-validation-for="ReservationDate" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-4">
+            <div class="col-12 col-md-6 col-lg-3 form-group">
                 <label asp-for="PhotoShootType"></label>
                 <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control" required></select>
                 <span asp-validation-for="PhotoShootType" class="text-danger"></span>
             </div>
         </div>
-        <div class="row" id="photo-shoot-type-description">
-            <div class="col-12 col-md-6 col-lg-4">
+        <div class="row">
+            <!--<div class="col-12 col-md-6 col-lg-3 form-group">
+                <label asp-for="ReservationDate"></label>
+                <input asp-for="ReservationDate" class="form-control" />
+                <span asp-validation-for="ReservationDate" class="text-danger"></span>
+            </div>-->
+        </div>
+        <div class="row">
+            <div class="col-12" id="photo-shoot-type-description">
                 <label asp-for="PhotoShootTypeDescription"></label>
                 <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
                 <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-4">
+        <div class="row mt-3">
+            <div class="col-12">
                 <button type="submit" class="btn btn-primary">Reserve</button>
             </div>
         </div>
     </form>
 </div>
+<div class="container">
+    <div class="row mt-3">
+        <div class="col-12 p-2 bg-light text-center">
+            <h2>Pick Date and Time</h2>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12 scrollmenu">
+            @for (int i = 0; i < remainingDates.Count; i++)
+            {
+                <button type="button" class="btn btn-secondary btn-sm btn-date">@remainingDates[i].ToString("dd.MM")</button>
+            }
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12 hours-container" id="hours-container">
+            <hr />
+            @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
+            {
+                <button class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
+                    @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30")
+                </button>
+            }
+
+        </div>
+    </div>
+</div>
+    
 
 <style>
-    label{
-        margin-top: 10px;
+
+    div.scrollmenu {
+        background-color: #333;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+    div.scrollmenu button {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 14px;
+        text-decoration: none;
+    }
+
+    .hours-container{
+        padding: 20px;
+    }
+
+    .hours-container button {
+        margin: 5px;
     }
 </style>
 
 <script>
     $(document).ready(function(){
+        //TODO: call function on page load passing the current date
+        //showTimeSlots(getFirstDate());
+
+        $(".btn-date").click(function(){
+            showTimeSlots($(this).html());
+        });
+
+        $(document).on("click", ".btn-time-slot", function () {
+            console.log($(this).html());
+            $("#ReservationTime").val($(this).html())
+        });
+
+        
+        setDate();
+        
         //hide description
         $("#photo-shoot-type-description").css("display", "none");
 
@@ -73,5 +147,56 @@
                 $("#photo-shoot-type-description").css("display", "none");
             }
         });
-    });
+
+    });;
+
+    
+
+    function setDate(){
+        $(".btn-date").click(function () {
+            let currentDate = new Date();
+            let selectedDay = formatSelectedDate($(this).text());
+            $('input[name="ReservationDate"]').val(selectedDay);
+
+        });
+    }
+
+    function formatSelectedDate(selectedDate) {
+        let selectedDateSplit = selectedDate.split('.');
+        return `${new Date().getUTCFullYear()}-${selectedDateSplit[1]}-${selectedDateSplit[0]}`;
+    }
+
+    function showTimeSlots(selectedDate){
+        let selectedDateFormated = formatSelectedDate(selectedDate);
+        let calendar = @Html.Raw(Json.Serialize(calendar));
+        let timeSlots = $(".btn-time-slot");
+        let isAvailable = false;
+        let time = '';
+        let timeSubstring = '';
+
+        $('#hours-container').empty();
+        for (let i = 0; i < calendar[selectedDateFormated]?.length; i++) {
+            isAvailable = calendar[selectedDateFormated][i]?.isAvailable;
+            time = calendar[selectedDateFormated][i]?.time;
+            timeSubstring = time.substring(0, time.length - 3);
+            
+            $('#hours-container').append(`<button class='btn btn-${isAvailable ? 'success' : 'danger'} btn-sm btn-time-slot'>${timeSubstring}</button>`);
+        }
+    }
+
+    function getFirstDate() {
+        //TODO
+    }
+
+    function formatTimeOnly(timeOnlyList){
+        let timeOnlyListFormated = [];
+
+        for(let i = 0; i < timeOnlyList.length; i++){
+            timeOnlyListFormated.push(timeOnlyList[i].slice(0, -3))
+        }
+
+        return timeOnlyListFormated;
+    }
+
+    
 </script>
