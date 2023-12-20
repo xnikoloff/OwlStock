@@ -34,7 +34,7 @@ namespace OwlStock.Services
             return new PhotoByIdDTO
             {
                 Photo = photo,
-                PhotoSize = PhotoSize.Large
+                PhotoSize = PhotoSize.Large //set default size to large
             };
         }
 

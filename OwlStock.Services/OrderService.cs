@@ -47,7 +47,7 @@ namespace OwlStock.Services
             return await _context.Orders
                 .Include(o => o.Photo)
                 .Where(o => o.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException($"{nameof(Order)} with id {id} cannot be found");
         }
 
         public async Task<Order> CreateOrder(Order order)
@@ -71,7 +71,7 @@ namespace OwlStock.Services
                 .Include(o => o.Photo)
                     .ThenInclude(p => p.PhotoCategories)
                 .OrderByDescending(o => o.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException("No orders found");
         }
     }
 }

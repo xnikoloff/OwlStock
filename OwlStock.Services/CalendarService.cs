@@ -126,10 +126,10 @@ namespace OwlStock.Services
         public IEnumerable<DateTime> GetRemainingDates()
         {
             List<DateTime> remainingDates = new();
-            int totalDays = DateTime.IsLeapYear(_currentDateTime.Year) ? 366 : 355;
+            int totalDays = DateTime.IsLeapYear(_currentDateTime.Year) ? 366 : 365;
             int difference = totalDays - _currentDateTime.DayOfYear;
 
-            for(int i = 0; i < difference; i++)
+            for(int i = 0; i <= difference; i++)
             {
                 remainingDates.Add(_currentDateTime.AddDays(i));
             }

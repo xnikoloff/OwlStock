@@ -10,7 +10,7 @@ namespace OwlStock.Services
 {
     public class EmailService : IEmailService
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         private readonly string _smtpHost;
         private readonly int _smtpPort;
@@ -30,7 +30,7 @@ namespace OwlStock.Services
         {
             
 
-            SmtpClient client = new SmtpClient(_smtpHost)
+            SmtpClient client = new(_smtpHost)
             {
                 Port = _smtpPort,
                 UseDefaultCredentials = false,

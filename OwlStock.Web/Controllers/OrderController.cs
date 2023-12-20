@@ -42,6 +42,11 @@ namespace OwlStock.Web.Controllers
                 Nonce = ""
             };
 
+            if(dto.Photo is null)
+            {
+                throw new NullReferenceException($"{nameof(dto.Photo)} is null");
+            }
+
             if (dto.Photo.IsFree)
             {
                 await _orderService.CreateOrder(order);
@@ -69,6 +74,11 @@ namespace OwlStock.Web.Controllers
 
             var gateway = _braintreeService.GetGateway();
             
+            if(order.Photo.Price is null)
+            {
+                throw new NullReferenceException($"{nameof(order.Photo.Price)} is null");
+            }
+
             var request = new TransactionRequest
             {
                 
@@ -86,6 +96,11 @@ namespace OwlStock.Web.Controllers
             {
                 order.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 order = await _orderService.CreateOrder(order);
+
+                if (order.Photo is null)
+                {
+                    throw new NullReferenceException($"{nameof(order.Photo)} is null");
+                }
 
                 List<Category> categories = order.Photo.PhotoCategories.Select(pc => pc.Category).ToList();
                 return RedirectToAction(nameof(DownloadController.DownloadPrompt),"Download", 

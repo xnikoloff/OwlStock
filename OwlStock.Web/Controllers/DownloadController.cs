@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Services.Interfaces;
@@ -51,6 +50,10 @@ namespace OwlStock.Web.Controllers
         [HttpPost]
         public FileResult DownloadPhotoShootPhoto(PhotoShootPhoto photo)
         {
+            if(photo.FilePath is null)
+            {
+                throw new NullReferenceException($"{nameof(photo.FilePath)} is null");
+            }
             byte[] fileData = System.IO.File.ReadAllBytes(Path.Combine(_webHostEnvironment.WebRootPath, photo.FilePath).Replace('\\', '/'));
 
             if (!string.IsNullOrEmpty(photo?.FileType))

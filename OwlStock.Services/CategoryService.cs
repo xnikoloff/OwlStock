@@ -24,19 +24,14 @@ namespace OwlStock.Services
 
             CategoryDescriptions categoryDescriptions = new();
 
-            object? field = categoryDescriptions
+            object field = categoryDescriptions
                 .GetType()
                 .GetFields()
                 .Where(f => f.Name.Contains(category.ToString()))
                 .Select(f => f.GetValue(categoryDescriptions))
-                .FirstOrDefault();
+                .FirstOrDefault() ?? throw new NullReferenceException($"Member that contains name {category} does not exists");
 
-            if(field != null)
-            {
-                return field.ToString();
-            }
-
-            throw new NullReferenceException($"Member that contains name {category} does not exists");
+            return field.ToString();
         }
 
         public async Task<int> Create(IEnumerable<Category> categories, Guid photoId)
@@ -52,9 +47,9 @@ namespace OwlStock.Services
             return await _context.SaveChangesAsync();
         }
 
-        private IEnumerable<PhotoCategory> BuildPhotoCateoriesList(IEnumerable<Category> categories, Guid photoId)
+        private static IEnumerable<PhotoCategory> BuildPhotoCateoriesList(IEnumerable<Category> categories, Guid photoId)
         {
-            List<PhotoCategory> photoCategories = new List<PhotoCategory>();
+            List<PhotoCategory> photoCategories = new();
 
             foreach (Category category in categories)
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
@@ -11,6 +12,7 @@ using System.Security.Claims;
 
 namespace OwlStock.Web.Controllers
 {
+    [Authorize]
     public class PhotoShootController : Controller
     {
         private readonly IPhotoShootService _photoShootService;
@@ -125,7 +127,7 @@ namespace OwlStock.Web.Controllers
                 PersonFullName = dto.PersonFullName,
                 EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
                 Recipient = await GetUserEmail(),
-                Url = $"https:///flashstudio.com/photoshoot/{dto.PhotoShootId}/"
+                Url = $"http:///flash-studio.co/photoshoot/{dto.PhotoShootId}/"
             });
             
             return RedirectToAction(nameof(PhotoShootById), new { id = dto.PhotoShootId});

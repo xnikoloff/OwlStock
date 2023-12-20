@@ -32,12 +32,6 @@ namespace OwlStock.Services
             throw new NullReferenceException($"{_context.GalleryPhotos} is null");
         }
 
-        public async Task<List<GalleryPhoto>> All(string? userId)
-        {
-            List<GalleryPhoto> allPhotosDTO = await All();
-            return allPhotosDTO.Where(dto => dto.IdentityUserId == userId).ToList();
-        }
-
         public async Task<List<GalleryPhoto>> AllByCategory(Category category)
         {
             List<GalleryPhoto> galleryPhotos = await All();

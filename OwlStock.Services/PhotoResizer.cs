@@ -1,5 +1,4 @@
-﻿using OwlStock.Domain;
-using OwlStock.Domain.Enumerations;
+﻿using OwlStock.Domain.Enumerations;
 using OwlStock.Services.Interfaces;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -45,22 +44,22 @@ namespace OwlStock.Services
             return memoryStream.ToArray();
         }
 
-        private Size GetSize(Size originalSize, PhotoSize newSize)
+        private static Size GetSize(Size originalSize, PhotoSize newSize)
         {
             switch (newSize)
             {
                 case PhotoSize.Small:
                 {
-                    originalSize.Width = originalSize.Width / 3;
-                    originalSize.Height = originalSize.Height / 3;
+                    originalSize.Width /= 3;
+                    originalSize.Height /= 3;
 
                     return originalSize;
                 }
 
                 case PhotoSize.Medium:
                 {
-                    originalSize.Width = originalSize.Width / 2;
-                    originalSize.Height = originalSize.Height / 2;
+                    originalSize.Width /= 2;
+                    originalSize.Height /= 2;
 
                     return originalSize;
                 }
