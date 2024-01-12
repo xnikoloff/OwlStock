@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.ObjectPool;
 using OwlStock.Infrastructure;
 using OwlStock.Services;
 using System.Text.Json.Serialization;
@@ -13,7 +14,9 @@ builder.Services.AddDbContext<OwlStockDbContext>(options =>
         throw new NullReferenceException($"{connectionString} is null")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services
+    .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<OwlStockDbContext>();
 
 builder.Services.AddMvc().
@@ -27,9 +30,9 @@ builder.Services.AddMvc().
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequiredLength = 8;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireDigit = true;
     options.Password.RequireNonAlphanumeric = false;
 });
 
@@ -70,5 +73,21 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapDefaultControllerRoute();
+
+using (var scope = app.Services.CreateScope())
+{
+    RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "Administrator", "User" };
+
+    for(int i = 0; i < roles.Length; i++)
+    {
+        if(!await roleManager.RoleExistsAsync(roles[i]))
+        {
+            await roleManager.CreateAsync(new (roles[i]));
+        }
+    }
+
+}
 
 app.Run();
