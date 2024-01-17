@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using OwlStock.Services.DTOs;
 using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain.Entities;
+using OwlStock.Services;
+using OwlStock.Domain.Enumerations;
 
 namespace OwlStock.Tests.PhotoTests
 {
@@ -26,12 +28,18 @@ namespace OwlStock.Tests.PhotoTests
                 ContentType = "image/jpeg"
             };
 
-
-            CreateGalleryPhotoDTO dto = new()
+            GalleryPhoto galleryPhoto = new()
             {
+                Name = "test",
+                Description = "test",
+                FileName = "success",
+                FileData = stream.ToArray(),
+                IdentityUserId = "1",
+                IsFree = true,
+                Tags = new List<Tag>() { new(){ Id = new Guid(), PhotoId = new Guid(), Text = "tag" } },
             };
 
-            IPhotoService service = null;
+            PhotoService service = new(context);
 
             //Act
             int recordsCountBefore = 0;
@@ -41,7 +49,7 @@ namespace OwlStock.Tests.PhotoTests
                 recordsCountBefore = await context.GalleryPhotos.CountAsync();
             }
 
-            await service.Create(new PhotoBase());
+            await service.Create(galleryPhoto);
 
             int recordsCountAfter = await context.GalleryPhotos.CountAsync();
 
