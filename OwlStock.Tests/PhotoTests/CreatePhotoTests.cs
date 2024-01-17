@@ -1,13 +1,9 @@
-﻿using OwlStock.Services;
-using OwlStock.Services.Interfaces;
+﻿using OwlStock.Services.Interfaces;
 using Xunit;
-using OwlStock.Domain;
 using OwlStock.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using OwlStock.Services.DTOs;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 using OwlStock.Domain.Entities;
 
 namespace OwlStock.Tests.PhotoTests

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure.Common.EmailTemplates.PhotoShoot;
@@ -60,6 +61,17 @@ namespace OwlStock.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                return View(dto);
+            }
+
+            if(dto.PhotoShootType == PhotoShootType.Other && dto.PhotoShootTypeDescription.IsNullOrEmpty())
+            {
+                ModelState.AddModelError(string.Empty, "Provide photoshoot type description");
+
+                dto.Calendar = await _photoShootService.GetPhotoShootsCalendar();
+                dto.AllTimeSlots = _calendarService.GetTimeSlots();
+                dto.RemainingDates = _calendarService.GetRemainingDates().ToList();
+
                 return View(dto);
             }
 

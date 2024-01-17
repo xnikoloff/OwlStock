@@ -13,6 +13,8 @@
         </div>
     </div>
     <form asp-action="Reserve" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
         <input type="hidden" asp-for="IdentityUserId" />
         <input type="hidden" asp-for="ReservationDate" />
         <input type="hidden" asp-for="ReservationTime" />
@@ -155,6 +157,9 @@
             }
         });
 
+        $("#PhotoShootType").change(function () {
+            checkPhotoShootTypeDescriptionEmpty();
+        });
     });;
 
     
@@ -201,5 +206,12 @@
         return timeOnlyListFormated;
     }
 
-    
+    function checkPhotoShootTypeDescriptionEmpty(){
+        let selected = $('#PhotoShootType').find(":selected").val();
+
+        //7 is "Other"
+        if (selected == 7) {
+            $("#PhotoShootTypeDescription").prop("required", true);
+        }
+    }
 </script>

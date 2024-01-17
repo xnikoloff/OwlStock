@@ -72,11 +72,16 @@ namespace OwlStock.Services
             return myPhotoShoots;
         }
 
-        public async Task<int> Add(CreatePhotoShootDTO dto)
+        public async Task<PhotoShoot> Add(CreatePhotoShootDTO dto)
         {
             if (dto == null)
             {
                 throw new ArgumentNullException(nameof(dto));
+            }
+
+            if(_context.PhotoShoots is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
             PhotoShoot photoShoot = new()
@@ -94,8 +99,9 @@ namespace OwlStock.Services
             };
 
             await _context.AddAsync(photoShoot);
+            await _context.SaveChangesAsync();
 
-            int result = await _context.SaveChangesAsync();
+            PhotoShoot? photoShootResult = await _context.PhotoShoots.LastOrDefaultAsync() ?? throw new NullReferenceException($"No records found");
 
             PhotoShootEmailTemplateDTO emailDto = new()
             {
@@ -108,7 +114,7 @@ namespace OwlStock.Services
 
             await _emailService.Send(emailDto);
 
-            return result;
+            return photoShootResult;
         }
 
         public async Task<Dictionary<DateOnly, IEnumerable<TimeSlot>>> GetPhotoShootsCalendar()
