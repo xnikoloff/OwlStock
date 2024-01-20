@@ -10,6 +10,13 @@
                     <button type="submit" class="btn btn-warning text-white">@(Model.Photo.IsDownloadable ? "Non-downloadble" : "Downloadable")</button>
                </form>
             </div>
+            <div class="col-12 col-md-6 col-lg-2">
+                <form asp-controller="Photo" asp-action="Delete" method="POST">
+                    <input type="hidden" asp-for="Photo.Id" />
+                    <input type="hidden" asp-for="Photo.Name" />
+                    <button type="submit" class="btn btn-danger text-white">Delete</button>
+                </form>
+            </div>
         }
     </div>
     <form asp-controller="Order" asp-action="OrderInfo" method="GET" enctype="multipart/form-data">

@@ -8,6 +8,8 @@ namespace OwlStock.Domain.Entities
         [Key]
         public Guid Id { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public string? FileName { get; set; }
 
         public string? FileType { get; set; }

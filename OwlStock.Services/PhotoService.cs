@@ -85,6 +85,27 @@ namespace OwlStock.Services
             return photo.Id;
         }
 
+        public async Task<PhotoBase> Delete(PhotoBase photo)
+        {
+            if (photo is null)
+            {
+                throw new NullReferenceException($"{nameof(photo)} is null");
+            }
+
+            if(_context.PhotosBase is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotosBase)} is null");
+            }
+
+            PhotoBase? photoBase = await _context.PhotosBase.FindAsync(photo.Id) ?? 
+                throw new NullReferenceException($"{nameof(PhotoBase)} with Id {photo.Id} cannot be found");
+
+            photoBase.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return photoBase;
+        }
+
         public async Task<Guid> ChangeDownloadPermissions(Guid photoId)
         {
             if(_context.GalleryPhotos is null)

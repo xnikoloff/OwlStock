@@ -56,13 +56,14 @@ namespace OwlStock.Web.Controllers
             return View("AllByCategory", await _galleryService.AllByTags(tag));
         }
 
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateGalleryPhotoDTO? dto)
         {
@@ -110,6 +111,29 @@ namespace OwlStock.Web.Controllers
 
             }
             
+            return RedirectToAction(nameof(All));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(PhotoByIdDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(PhotoById), new { dto?.Photo?.Id });
+            }
+
+            if (dto is not null)
+            {
+                if (dto.Photo is null)
+                {
+                    throw new NullReferenceException($"{nameof(dto.Photo)} is null");
+                }
+
+                await _photoService.Delete(dto.Photo);
+
+            }
+
             return RedirectToAction(nameof(All));
         }
 
