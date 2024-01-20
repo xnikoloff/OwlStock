@@ -82,6 +82,23 @@ namespace OwlStock.Services
             return photo.Id;
         }
 
+        public async Task<Guid> ChangeDownloadPermissions(Guid photoId)
+        {
+            if(_context.GalleryPhotos is null)
+            {
+                throw new NullReferenceException($"{_context.GalleryPhotos} is null");
+            }
+
+            GalleryPhoto? photo = await _context.GalleryPhotos.FindAsync(photoId) ?? 
+                throw new NullReferenceException($"{nameof(GalleryPhoto)} with Id {photoId} cannot be found");
+
+            photo.IsDownloadable = !photo.IsDownloadable;
+
+            await _context.SaveChangesAsync();
+
+            return photoId;
+        }
+
         private static string ExtractPath(string filePath)
         {
             //find word "images" in the path string

@@ -1,67 +1,90 @@
 ﻿@model PhotoByIdDTO
 
 <div class="container">
-    <div class="row mt-4">
-        <div class="col-12 col-md-6 col-lg-8">
-        <div class="photo-container">
-            <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
+    <div class="row">
+        @if (User.IsInRole("Administrator"))
+        {
+            <form asp-controller="Photo" asp-action="ChangeDownloadPermissions" method="POST">
+                <input type="hidden" asp-for="Photo.Id" />
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-warning text-white">@(Model.Photo.IsDownloadable ? "Non-downloadble" : "Downloadable")</button>
+                </div>
+            </form>
+        }
+    </div>
+    <form asp-controller="Order" asp-action="OrderInfo" method="GET" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Photo.Id" />
+        <input type="hidden" asp-for="Photo.FileData" />
+        <input type="hidden" asp-for="Photo.FileName" />
+        <input type="hidden" asp-for="Photo.FileType" />
+        <input type="hidden" asp-for="Photo.Name" />
+        <input type="hidden" asp-for="Photo.IsFree" />
+
+        <div class="row mt-2">
+            <div class="col-12 col-md-6">
+                <h4>@Model?.Photo?.Name</h4>
+            </div>
+            <div class="col-12 col-md-6 text-end">
+
+                @if(Model.Photo.IsDownloadable)
+                {
+                    <label asp-for="PhotoSize"></label>
+                    <select asp-for="PhotoSize" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
+                        
+                    @if (Model.Photo.IsFree)
+                    {
+                        <button class="download-btn" type="submit"><i class="fa-solid fa-download"></i></button>
+                    }
+
+                    else
+                    {
+                        <input type="hidden" asp-for="Photo.Price" />
+                        <h2><span id="price-text"></span> BGN</h2>
+
+                        <button class="download-btn" type="submit"><b><i class="fa-solid fa-download"></i></b></button>
+                        
+                    }
+                }
+            </div>
+        </div>
+        <hr />
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="photo">
+                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+    <div class="row mt-3">
+        <hr />
+        <div class="mt-5">    
+            <h5>@Model?.Photo?.Description</h5>
         </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-4 mt-3">
-        <form asp-controller="Order" asp-action="OrderInfo" method="GET" enctype="multipart/form-data">
-
-                <input type="hidden" asp-for="Photo.Id" />
-                <input type="hidden" asp-for="Photo.FileData" />
-                <input type="hidden" asp-for="Photo.FileName" />
-                <input type="hidden" asp-for="Photo.FileType" />
-                <input type="hidden" asp-for="Photo.Name" />
-                <input type="hidden" asp-for="Photo.IsFree" />
-
-            <div class="row title-row">
-                <div class="mt-4">    
-                    <h4>@Model?.Photo?.Name</h4>
-                    <hr />
-                </div>
-            </div>
-            <div class="row size-row mt-3">
-                <div class="form-group">
-                    <label asp-for="PhotoSize"></label>
-                    <select asp-for="PhotoSize" class="form-control" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
-                    @if (!Model.Photo.IsFree)
-                    {
-                        <span class="text-secondary"><i>*Price will vary based on the size</i></span>
-                    }
-                </div>
-            </div>
-              @if (Model.Photo.IsFree)
-                {
-                    <div class="row cto-row">
-                        <button type="submit" class="btn btn-primary mt-3"><b>Download Free</b></button>
-                    </div>
-                }
-
-                else
-                {
-                        <div class="row price-row">
-                            <input type="hidden" asp-for="Photo.Price"/>
-                            <h2><span id="price-text"></span> BGN</h2>
-                        </div>
-
-                            <div class="row cto-row">
-                            <button type="submit" class="btn btn-primary mt-3"><b>Download</b></button>
-                        </div>
-                }
-        </form>
-    </div>
-</div>
-<div class="row">
-    <div class="mt-4">    
-        <p>@Model?.Photo?.Description</p>
-    </div>
-</div>
 </div>
 
 <style>
+    .download-btn{
+        padding: 5px 10px;
+        border: none;
+        border-radius: 10px;
+        background: #123456;
+        color: #fff;
+    }
+    select{
+        padding: 5px;
+        border-radius: 10px;
+    }
+
+    .photo img{
+        max-height: 100%;
+        max-width: 100%;
+    }
+
     .info-container{
         background: #fafafa;
         padding: 10px 20px;

@@ -38,6 +38,7 @@ namespace OwlStock.Tests
             {
                 new GalleryPhoto
                 {
+                    Id = new Guid("e7ebb634-4b17-4c64-98a7-1dc08d0b120b"),
                     Name = "Test Photo 1",
                     Description = null
                 }

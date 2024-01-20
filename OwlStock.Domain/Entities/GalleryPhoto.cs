@@ -24,6 +24,8 @@ namespace OwlStock.Domain.Entities
 
         public bool IsFree { get; set; }
 
+        public bool IsDownloadable { get; set; }
+
         public string? FilePathSmall { get; set; }
 
         [Required]

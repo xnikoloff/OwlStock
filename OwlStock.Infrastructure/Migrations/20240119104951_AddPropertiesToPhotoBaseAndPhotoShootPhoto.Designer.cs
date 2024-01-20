@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OwlStock.Infrastructure;
 
@@ -11,9 +12,11 @@ using OwlStock.Infrastructure;
 namespace OwlStock.Infrastructure.Migrations
 {
     [DbContext(typeof(OwlStockDbContext))]
-    partial class OwlStockDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240119104951_AddPropertiesToPhotoBaseAndPhotoShootPhoto")]
+    partial class AddPropertiesToPhotoBaseAndPhotoShootPhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,6 +272,9 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Property<string>("FileType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDownloadable")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("PhotosBase");
@@ -370,9 +376,6 @@ namespace OwlStock.Infrastructure.Migrations
 
                     b.Property<string>("IdentityUserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsDownloadable")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsFree")
                         .HasColumnType("bit");

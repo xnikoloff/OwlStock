@@ -7,5 +7,6 @@ namespace OwlStock.Services.Interfaces
     {
         Task<PhotoByIdDTO> GetById(Guid? id);
         Task<Guid> Create(PhotoBase? photo);
+        Task<Guid> ChangeDownloadPermissions(Guid id);
     }
 }

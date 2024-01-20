@@ -7,7 +7,7 @@ namespace OwlStock.Services.DTOs
     public class PhotoByIdDTO
     {
         public GalleryPhoto? Photo { get; set; }
-        [Display(Name = "Select Size")]
+        [Display(Name = "Size")]
         public PhotoSize PhotoSize { get; set; }
     }
 }

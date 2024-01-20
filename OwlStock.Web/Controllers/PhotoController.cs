@@ -5,6 +5,7 @@ using OwlStock.Services.Interfaces;
 using System.Security.Claims;
 using OwlStock.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OwlStock.Web.Controllers
 {
@@ -110,6 +111,32 @@ namespace OwlStock.Web.Controllers
             }
             
             return RedirectToAction(nameof(All));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangeDownloadPermissions(PhotoByIdDTO dto)
+        {
+            if(dto.Photo == null)
+            {
+                //return to All() if there is a problem with the model
+                return await All();
+            }
+
+            if (dto.Photo.Id == default)
+            {
+                ModelState.AddModelError(string.Empty, "Incorrect Id");
+                return await PhotoById(dto?.Photo?.Id);
+            }
+
+            Guid changePhotoId = await _photoService.ChangeDownloadPermissions(dto.Photo.Id);
+
+            if (changePhotoId.ToString().Equals(dto?.Photo?.Id.ToString()))
+            {
+                return RedirectToAction(nameof(PhotoById), new { id = dto?.Photo?.Id });
+            }
+
+            return await All();
         }
     }
 }

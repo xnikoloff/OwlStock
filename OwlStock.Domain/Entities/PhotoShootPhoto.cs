@@ -6,6 +6,8 @@ namespace OwlStock.Domain.Entities
 {
     public class PhotoShootPhoto : PhotoBase
     {
+        public bool IsPublic { get; set; }
+
         [ForeignKey(nameof(PhotoShoot))]
         public Guid PhotoShootId { get; set; }
 
