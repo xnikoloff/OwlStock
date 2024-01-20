@@ -4,13 +4,12 @@
     <div class="row">
         @if (User.IsInRole("Administrator"))
         {
-            <form asp-controller="Photo" asp-action="ChangeDownloadPermissions" method="POST">
-                <input type="hidden" asp-for="Photo.Id" />
-
-                <div class="col-12">
+            <div class="col-12 col-md-6 col-lg-2">
+                <form asp-controller="Photo" asp-action="ChangeDownloadPermissions" method="POST">
+                    <input type="hidden" asp-for="Photo.Id" />
                     <button type="submit" class="btn btn-warning text-white">@(Model.Photo.IsDownloadable ? "Non-downloadble" : "Downloadable")</button>
-                </div>
-            </form>
+               </form>
+            </div>
         }
     </div>
     <form asp-controller="Order" asp-action="OrderInfo" method="GET" enctype="multipart/form-data">
@@ -59,10 +58,29 @@
             
         </div>
     </form>
-    <div class="row mt-3">
+    <div class="row mt-4">
         <hr />
-        <div class="mt-5">    
-            <h5>@Model?.Photo?.Description</h5>
+        <div class="col-12 col-md-6 mt-3">
+            <h6>Description</h6>
+            <p>@Model?.Photo?.Description</p>
+        </div>
+        <div class="col-12 col-md-3 mt-3">
+            <h6>Featured In</h6>
+            
+            @foreach (PhotoCategory photoCategory in Model.Photo.PhotoCategories)
+            {
+                <a asp-controller="Photo" asp-action="AllByCategory" asp-route-category="@photoCategory.Category">@photoCategory.Category</a>
+            }
+
+        </div>
+        <div class="col-12 col-md-3 mt-3">
+            <h6>Tags</h6>
+
+            @foreach (Tag tag in Model.Photo.Tags)
+            {
+                <a asp-controller="Photo" asp-action="AllByTag" asp-route-tag="@tag.Text">#@tag.Text</a>
+            }
+
         </div>
     </div>
 </div>

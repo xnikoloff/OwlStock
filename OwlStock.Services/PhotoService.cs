@@ -28,7 +28,10 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.GalleryPhotos)} is null");
             }
 
-            GalleryPhoto? photo = await _context.GalleryPhotos.FindAsync(id) ?? 
+            GalleryPhoto? photo = await _context.GalleryPhotos
+                .Include(gf => gf.Tags)
+                .Include(gf => gf.PhotoCategories)
+                .FirstOrDefaultAsync(gf => gf.Id == id) ?? 
                 throw new NullReferenceException($"{nameof(photo)} is null");
             
             return new PhotoByIdDTO
