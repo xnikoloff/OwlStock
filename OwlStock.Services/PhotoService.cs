@@ -31,6 +31,7 @@ namespace OwlStock.Services
             GalleryPhoto? photo = await _context.GalleryPhotos
                 .Include(gf => gf.Tags)
                 .Include(gf => gf.PhotoCategories)
+                .Include(gf => gf.Gear)
                 .FirstOrDefaultAsync(gf => gf.Id == id) ?? 
                 throw new NullReferenceException($"{nameof(photo)} is null");
             

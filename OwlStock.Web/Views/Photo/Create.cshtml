@@ -33,6 +33,26 @@
                     <input asp-for="Tags" class="form-control" />
                     <span><i>Separate tags with commas (,)</i></span>
                 </div>
+                <div class="form-group">
+                    <label asp-for="GalleryPhoto.GeoLocation"></label>
+                    <input asp-for="GalleryPhoto.GeoLocation" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="GalleryPhoto.Gear.CameraBrand"></label>
+                    <input asp-for="GalleryPhoto.Gear.CameraBrand" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="GalleryPhoto.Gear.CameraModel"></label>
+                    <input asp-for="GalleryPhoto.Gear.CameraModel" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="GalleryPhoto.Gear.CameraLens"></label>
+                    <input asp-for="GalleryPhoto.Gear.CameraLens" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="GalleryPhoto.Gear.AdditionalInformation"></label>
+                    <input asp-for="GalleryPhoto.Gear.AdditionalInformation" class="form-control" />
+                </div>
                 <button type="submit" class="btn btn-success">Create</button>
             </form>
         </div>

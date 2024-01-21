@@ -101,7 +101,10 @@ namespace OwlStock.Services
             await _context.AddAsync(photoShoot);
             await _context.SaveChangesAsync();
 
-            PhotoShoot? photoShootResult = await _context.PhotoShoots.LastOrDefaultAsync() ?? throw new NullReferenceException($"No records found");
+            PhotoShoot? photoShootResult = await _context.PhotoShoots
+                .OrderByDescending(ph => ph.Id)
+                .LastOrDefaultAsync() ?? 
+                    throw new NullReferenceException($"No records found");
 
             PhotoShootEmailTemplateDTO emailDto = new()
             {

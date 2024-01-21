@@ -18,6 +18,7 @@ namespace OwlStock.Infrastructure
         public DbSet<Order>? Orders { get; set; }
         public DbSet<Tag>? Tags { get; set; }
         public DbSet<PhotoShoot>? PhotoShoots { get; set; }
+        public DbSet<Gear>? Gear { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

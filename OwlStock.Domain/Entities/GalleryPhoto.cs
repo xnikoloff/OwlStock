@@ -20,6 +20,9 @@ namespace OwlStock.Domain.Entities
         [MaxLength(ModelConstraints.PictureDescriptionMaxLength)]
         public string? Description { get; set; }
 
+        [MaxLength(ModelConstraints.PictureGeoLocationMaxLength)]
+        public string? GeoLocation { get; set; }
+        
         public decimal? Price { get; set; }
 
         public bool IsFree { get; set; }
@@ -32,6 +35,11 @@ namespace OwlStock.Domain.Entities
         public ICollection<PhotoCategory> PhotoCategories { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
+
+        [ForeignKey(nameof(Gear))]
+        public Guid? GearId { get; set; }
+
+        public Gear? Gear { get; set; }
 
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }

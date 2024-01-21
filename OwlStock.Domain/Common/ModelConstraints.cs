@@ -5,6 +5,8 @@
         //Photo
         public const int PictureNameMaxLength = 500;
         public const int PictureDescriptionMaxLength = 2000;
+        public const int PictureGeoLocationMaxLength = 100;
+        public const int PictureGearMaxLength = 1000;
         public const string PhotoFormFileDisplayName = "File";
 
         //PhotoShoot

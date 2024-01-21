@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OwlStock.Infrastructure;
 
@@ -11,9 +12,11 @@ using OwlStock.Infrastructure;
 namespace OwlStock.Infrastructure.Migrations
 {
     [DbContext(typeof(OwlStockDbContext))]
-    partial class OwlStockDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240121092921_AddIGeoLocationAndGearProperties")]
+    partial class AddIGeoLocationAndGearProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,29 +227,6 @@ namespace OwlStock.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.Gear", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AdditionalInformation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CameraBrand")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CameraLens")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CameraModel")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Gear");
-                });
-
             modelBuilder.Entity("OwlStock.Domain.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -394,8 +374,9 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Property<string>("FilePathSmall")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("GearId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Gear")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("GeoLocation")
                         .HasMaxLength(100)
@@ -420,8 +401,6 @@ namespace OwlStock.Infrastructure.Migrations
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.HasIndex("GearId");
 
                     b.HasIndex("IdentityUserId");
 
@@ -545,10 +524,6 @@ namespace OwlStock.Infrastructure.Migrations
 
             modelBuilder.Entity("OwlStock.Domain.Entities.GalleryPhoto", b =>
                 {
-                    b.HasOne("OwlStock.Domain.Entities.Gear", "Gear")
-                        .WithMany()
-                        .HasForeignKey("GearId");
-
                     b.HasOne("OwlStock.Domain.Entities.PhotoBase", null)
                         .WithOne()
                         .HasForeignKey("OwlStock.Domain.Entities.GalleryPhoto", "Id")
@@ -558,8 +533,6 @@ namespace OwlStock.Infrastructure.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
-
-                    b.Navigation("Gear");
 
                     b.Navigation("IdentityUser");
                 });
