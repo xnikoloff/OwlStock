@@ -142,23 +142,22 @@ namespace OwlStock.Services
         private static int FindStartIndexPossition(string filePath)
         {
             int position = 0;
-            
-            for (int i = 0; i < filePath.Length; i = i + 6)
-            {
-                string firstChar = filePath[i].ToString();
 
-                for (int j = i + 1; j < i + 6; j++)
+            for (int i = 0; i < filePath.Length; i++)
+            {
+                string word = "";
+
+                for (int j = i; j < i + 6; j++)
                 {
-                    firstChar += filePath[j];
+                    word += filePath[j];
                 }
 
-                if (firstChar.Equals("images"))
+                if (word.Equals("images"))
                 {
                     position = i;
                     break;
                 }
 
-                continue;
             }
 
             return position;

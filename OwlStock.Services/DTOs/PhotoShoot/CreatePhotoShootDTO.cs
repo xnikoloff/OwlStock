@@ -1,4 +1,5 @@
 ﻿using OwlStock.Domain.Common;
+using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Services.Common.HelperClasses;
 using System.ComponentModel.DataAnnotations;
@@ -43,6 +44,8 @@ namespace OwlStock.Services.DTOs.PhotoShoot
 
         public Dictionary<DateOnly, IEnumerable<TimeSlot>>? Calendar { get; set; }
         public List<DateTime>? RemainingDates { get; set; }
+
+        public List<Region>? ServicedRegions { get; set; }
 
         public TimeSlot[]? AllTimeSlots { get; set; }
 

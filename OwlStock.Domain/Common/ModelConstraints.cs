@@ -20,5 +20,10 @@
         public const string TagsRequiredErrorMessage = "Tags are required";
         public const string CategoriesRequiredErrorMessage = "Categories are required";
         public const string FormFilesRequiredErrorMessage = "Upload a file";
+
+        //City
+        internal const int SettlementNameMaxLength = 100;
+        internal const int PostCodeMaxLength = 10;
+        internal const int LatLongMaxLength = 25;
     }
 }

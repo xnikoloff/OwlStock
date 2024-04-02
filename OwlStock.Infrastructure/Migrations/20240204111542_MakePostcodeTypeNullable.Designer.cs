@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OwlStock.Infrastructure;
 
@@ -11,9 +12,11 @@ using OwlStock.Infrastructure;
 namespace OwlStock.Infrastructure.Migrations
 {
     [DbContext(typeof(OwlStockDbContext))]
-    partial class OwlStockDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240204111542_MakePostcodeTypeNullable")]
+    partial class MakePostcodeTypeNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,9 +254,8 @@ namespace OwlStock.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("PostCode")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int?>("PostCodeId")
+                        .HasColumnType("int");
 
                     b.Property<int>("RegionId")
                         .HasColumnType("int");
@@ -268,6 +270,8 @@ namespace OwlStock.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MunicipalityId");
+
+                    b.HasIndex("PostCodeId");
 
                     b.HasIndex("RegionId");
 
@@ -627,6 +631,10 @@ namespace OwlStock.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OwlStock.Domain.Entities.PostCode", "PostCode")
+                        .WithMany()
+                        .HasForeignKey("PostCodeId");
+
                     b.HasOne("OwlStock.Domain.Entities.Region", "Region")
                         .WithMany()
                         .HasForeignKey("RegionId")
@@ -634,6 +642,8 @@ namespace OwlStock.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Municipality");
+
+                    b.Navigation("PostCode");
 
                     b.Navigation("Region");
                 });

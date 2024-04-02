@@ -11,9 +11,9 @@ namespace OwlStock.Services.Interfaces
         Dictionary<DateOnly, IEnumerable<TimeSlot>> GetDefaultCalendar();
         Dictionary<DateOnly, IEnumerable<TimeSlot>> GetPhotoShootsCalendar(List<DateTime> resevationDates);
         TimeSlot[] GetTimeSlots();
-        int GetStartingDayOfWeek();
+        //int GetStartingDayOfWeek();
         IEnumerable<DateTime> GetRemainingDates();
-        IEnumerable<TimeSlot> ConvertToTimeSlot(IEnumerable<DateTime> dateTimes, bool isAvailalbe);
+        //IEnumerable<TimeSlot> ConvertToTimeSlot(IEnumerable<DateTime> dateTimes, bool isAvailalbe);
         
         
     }

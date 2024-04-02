@@ -143,8 +143,8 @@
     });
 
     function calculatePrice(){
-        let priceInt = @(Model.Photo.Price.ToString().Split(',')[0]);
-        let priceDecimal = @(Model.Photo.Price.ToString().Split(',')[1]);
+        let priceInt = @(Model?.Photo?.Price?.ToString().Split(',')[0]);
+        let priceDecimal = @(Model?.Photo?.Price?.ToString().Split(',')[1]);
         let priceCalculated = $("#price-text");
         let price = $("#Photo_Price");
         let priceValue = priceInt + ',' + priceDecimal;

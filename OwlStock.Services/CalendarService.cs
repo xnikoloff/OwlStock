@@ -6,6 +6,8 @@ namespace OwlStock.Services
 {
     public class CalendarService : ICalendarService
     {
+        private readonly int _daysCount = 366;
+
         private readonly DateTime _currentDateTime;
         private readonly IEnumerable<DateTime> _remainingDates;
 
@@ -49,7 +51,7 @@ namespace OwlStock.Services
             Dictionary<DateOnly, IEnumerable<TimeSlot>> calendar = GetDefaultCalendar();
             List<DateTime> modifiedDates = new();
             TimeSlot[] timeSlots = GetTimeSlots().ToArray();
-            TimeSlot? timeSlot = new(new TimeOnly(), true);
+            List<TimeSlot> timeSlot = new();
 
             for (int i = 0; i < reservationDates.Count; i++)
             {
@@ -80,11 +82,15 @@ namespace OwlStock.Services
 
                 //find the timeslot that has to be modified
                 timeSlot = modifiedTimeSlots
-                    .Where(t => t.Time == new TimeOnly(reservationDates[i].Hour, reservationDates[i].Minute))
-                    .FirstOrDefault() ?? throw new NullReferenceException($"{nameof(TimeSlot)} with time {reservationDates[i].Hour}:{reservationDates[i].Minute} cannot be found");
+                    .Where(t => t.Time > new TimeOnly(reservationDates[i].Hour - 1, reservationDates[i].Minute + 30) && t.Time < new TimeOnly(reservationDates[i].Hour + 2, reservationDates[i].Minute + 30))
+                    .ToList() ?? throw new NullReferenceException($"{nameof(TimeSlot)} with time {reservationDates[i].Hour}:{reservationDates[i].Minute} cannot be found");
 
                 //make it not available
-                timeSlot.IsAvailable = false;
+                for (int j = 0; j < timeSlot.Count; j++)
+                {
+
+                    timeSlot[j].IsAvailable = false;
+                }
 
                 //assign the modified timeslots to the key for the current reservation
                 calendar[DateOnly.FromDateTime(reservationDates[i].Date)] = modifiedTimeSlots;
@@ -96,6 +102,7 @@ namespace OwlStock.Services
             return calendar;
         }
 
+        //remove, it's the same as the readonly {_timeSlots} array
         public TimeSlot[] GetTimeSlots()
         {
             TimeSlot[] timeSlots = new TimeSlot[_timeSlots.Length];
@@ -123,13 +130,15 @@ namespace OwlStock.Services
             return calendar;
         }
 
+        /// <summary>
+        /// Gets the remaing {_daysCount} days from the current date on
+        /// </summary>
+        /// <returns>IEnumerable<DateTime></returns>
         public IEnumerable<DateTime> GetRemainingDates()
         {
             List<DateTime> remainingDates = new();
-            int totalDays = DateTime.IsLeapYear(_currentDateTime.Year) ? 366 : 365;
-            int difference = totalDays - _currentDateTime.DayOfYear;
-
-            for(int i = 0; i <= difference; i++)
+            
+            for(int i = 0; i < _daysCount; i++)
             {
                 remainingDates.Add(_currentDateTime.AddDays(i));
             }
@@ -137,13 +146,13 @@ namespace OwlStock.Services
             return remainingDates;
         }
 
-        public int GetStartingDayOfWeek()
+        /*public int GetStartingDayOfWeek()
         {
             DateTime dateTime = new(_currentDateTime.Year, _currentDateTime.Month, 1);
             return (int)dateTime.DayOfWeek;
-        }
+        }*/
 
-        public IEnumerable<TimeSlot> ConvertToTimeSlot(IEnumerable<DateTime> dateTimes, bool isAvaialble)
+        /*public IEnumerable<TimeSlot> ConvertToTimeSlot(IEnumerable<DateTime> dateTimes, bool isAvaialble)
         {
             List<TimeSlot> timeOnlies = new();
 
@@ -153,6 +162,6 @@ namespace OwlStock.Services
             }
 
             return timeOnlies;
-        }
+        }*/
     }
 }

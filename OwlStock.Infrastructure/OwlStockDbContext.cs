@@ -19,6 +19,11 @@ namespace OwlStock.Infrastructure
         public DbSet<Tag>? Tags { get; set; }
         public DbSet<PhotoShoot>? PhotoShoots { get; set; }
         public DbSet<Gear>? Gear { get; set; }
+        public DbSet<PostCode>? PostCodes{ get; set; }
+        public DbSet<Region>? Regions{ get; set; }
+        public DbSet<Municipality>? Municipalities{ get; set; }
+        public DbSet<City>? Cities{ get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

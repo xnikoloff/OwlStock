@@ -49,10 +49,22 @@
             </div>-->
         </div>
         <div class="row">
-            <div class="col-12" id="photo-shoot-type-description">
+            <div class="col-12 col-md-6 col-lg-3 form-group" id="photo-shoot-type-description">
                 <label asp-for="PhotoShootTypeDescription"></label>
                 <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
                 <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 form-group">
+                <label for="Region">Region</label>
+                <input type="hidden" id="RegionId" />
+                <select id="Region" class="form-control" asp-items="@(new SelectList(Model.ServicedRegions, "Id", "Name"))" required>
+                    <option value="0" selected></option>
+                </select>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 form-group settlement" style="display:none">
+                <label for="Settlement">Settlement</label>
+                <input type="hidden" id="SettlementId" />
+                <input id="Settlement" class="form-control" required />
             </div>
         </div>
         <div class="row mt-3">
@@ -62,50 +74,106 @@
         </div>
     </form>
 </div>
-<div class="container">
-    <div class="row mt-3">
-        <div class="col-12 p-2 bg-light text-center">
-            <h2>Pick Date and Time</h2>
-        </div>
+<div class="container dates-container" style="display:none">
+    <div class="row mt-5">
+        @for (int i = 0; i < 3; i++)
+        {
+            <div class="col-12 col-md-6 col-lg-4 mx-auto">
+                <div class="card card-weather text-center mx-auto btn-date btn-date-weather">
+                    <div class="card-header">
+                        <h6>@remainingDates[i].ToString("dd.MM")</h6>
+                    </div>
+                    <div class="card-body card-body-weather text-center">
+                        <h5 class="temperatureCurrent"></h5>
+                        <div class="icon"></div>
+                        <p class="forecastText">Нямаме информация за времето :(</p>
+                        @*<p class="precipitation"></p>*@
+                    </div>
+                    <div class="card-footer  text-center">
+                        Busy
+                    </div>
+                </div>
+            </div>
+        }
     </div>
     <div class="row mt-5">
         <div class="col-12 scrollmenu" id="dates-list">
-            @for (int i = 0; i < remainingDates.Count; i++)
-            {
-                <button type="button" class="btn btn-secondary btn-sm btn-date">@remainingDates[i].ToString("dd.MM")</button>
-            }
+            <div id="date-buttons-slider">
+                @for (int i = 3; i < remainingDates.Count; i++)
+                {
+                    <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
+                        <div class="card-header">
+                            <h6>@remainingDates[i].ToString("dd.MM")</h6>
+                        </div>
+                        <div class="card-body text-center">
+                                Busy
+                            </div>
+                        </div>
+                    
+                    @*<button type="button" class="btn-date">
+                <b>@remainingDates[i].ToString("dd.MM")</b>
+                <hr />
+                <p><span class="temperatureCurrent">0</span>C°</p>
+                <p><span class="forecastText"></span></p>
+                <p>Precipitation:<span class="precipitation"> 0</span>%</p>
+                </button>*@
+                }
+            </div>
+            
+
         </div>
-
-    </div>
-    <div class="row">
-        <div class="col-12 hours-container" id="hours-container">
-            <hr />
-            @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
-            {
-                <button class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
-                    @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30")
-                </button>
-            }
-
+        <div class="row">
+            <div class="col-12 hours-container" id="hours-container" style="display:none">
+                <hr />
+                @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
+                {
+                    <button class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
+                        @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
+                    </button>
+                }
+            </div>
         </div>
     </div>
 </div>
     
 
 <style>
-
-    div.scrollmenu {
-        background-color: #333;
-        overflow: auto;
-        white-space: nowrap;
+    #dates-list {
+        overflow: scroll;
     }
 
-    div.scrollmenu button {
-        display: inline-block;
-        color: white;
-        text-align: center;
-        padding: 14px;
-        text-decoration: none;
+    #date-buttons-slider {
+        position: relative;
+        display: flex;
+        flex-flow: row nowrap;
+        padding: 10px;
+    }
+
+    #date-button-simple, .btn-date-weather {
+        flex: 0 0 auto;
+        background: #f2f2f2;
+        color: #1a1a1a;
+        margin-right: 10px;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px -2px #8cb0db;
+        transform: unset;
+        transition: .4s;
+    }
+
+    #date-button-simple {
+        min-height: 100px;
+    }
+    
+    .btn-date-weather {
+        max-width: 300px;
+        min-height: 300px;
+    }
+
+    #date-button-simple:hover, .btn-date-weather:hover {
+        box-shadow: 0px 0px 10px -2px #394859;
+        transform: scale(1.02);
+        transition: .4s;
     }
 
     .hours-container{
@@ -115,25 +183,77 @@
     .hours-container button {
         margin: 5px;
     }
+
+    .btn-date-weather .card-body .icon {
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 50px;
+        width: 80px;
+        margin: 10px auto;
+    }
+
+    .ui-autocomplete{
+        font-family: "Helvetica";
+        border-radius: 2px;
+        border: none;
+        background: #fff;
+        transition: .2s;
+        box-shadow: 0px 0px 10px -2px #394859;
+        padding: 5px;
+
+    }
+
+    .ui-menu-item-wrapper{
+        color: #1a1a1a;
+        font-weight: normal;
+    }
+
+    .ui-menu-item-wrapper:hover{
+        font-weight: normal;
+        color: #1a1a1a;
+        background: #f7f7f7;
+        border:none;
+    }
+
 </style>
 
 <script>
     $(document).ready(function(){
-        showTimeSlots($("#dates-list button:first-child").html());
-        
-        $(".btn-date").click(function(){
-            showTimeSlots($(this).html());
+        $("#Region").change(function () {
+            getSettlementsByRegion($("#Region option:selected").text());
+            $(".settlement").css("display", "block");
+        })
+
+        $("#Settlement").change(function () {
+            getForecast($(this).val());
+            $(".dates-container").css("transition", ".4s");
+            $(".dates-container").css("display", "block");
+        });
+
+        $(".card-weather").click(function () {
+            $(".card-weather").css("box-shadow", "unset")
+            $(".btn-date-simple").css("background", "unset");
+            $(".btn-date-simple").css("color", "unset");
+            $(this).css("box-shadow", "0px 0px 15px 2px #6cab65")
+        });
+
+        $(".btn-date").click(function () {
+            showTimeSlots($(this).find(".card-header h6").html());
+        });
+
+        $(document).on("click", ".btn-date", function () {
+            $(".reservation-time").css("display", "block");
+            
         });
 
         $(document).on("click", ".btn-time-slot", function () {
-            $("#ReservationTime").val($(this).html());
-
-            let classes = $(this).attr("class");
-            
-            if (classes.includes("btn-success")) {
+            console.log($(this).hasClass("btn-success"));
+            if ($(this).hasClass("btn-success")) {
+                $("#ReservationTime").val($(this).text());
                 $("#btn-book").prop("disabled", false);
             }
-            else{
+
+            else {
                 $("#btn-book").prop("disabled", true);
             }
         });
@@ -147,7 +267,7 @@
         $("#PhotoShootType").change(function () {
             let option = $('#PhotoShootType').find(":selected").val();
 
-            //7 is Other
+            //7 is {Other}
             if (option == 7) {
                 $("#photo-shoot-type-description").css("display", "block");
             }
@@ -165,10 +285,17 @@
     
 
     function setDate(){
-        $(".btn-date").click(function () {
+        $(".btn-date-simple").click(function () {
             let currentDate = new Date();
             let selectedDay = formatSelectedDate($(this).text());
             $('input[name="ReservationDate"]').val(selectedDay);
+            $(".btn-date").each(function () {
+                $(this).css("background", "unset");
+                $(this).css("color", "unset");
+            });
+            $(this).css("background", "#a2cc93");
+            $(this).css("color", "#fff");
+            $(".card-weather").css("box-shadow", "unset");
 
         });
     }
@@ -179,6 +306,7 @@
     }
 
     function showTimeSlots(selectedDate){
+
         let selectedDateFormated = formatSelectedDate(selectedDate);
         let calendar = @Html.Raw(Json.Serialize(calendar));
         let timeSlots = $(".btn-time-slot");
@@ -187,6 +315,7 @@
         let timeSubstring = '';
 
         $('#hours-container').empty();
+        $('#hours-container').css("display", "block");
         for (let i = 0; i < calendar[selectedDateFormated]?.length; i++) {
             isAvailable = calendar[selectedDateFormated][i]?.isAvailable;
             time = calendar[selectedDateFormated][i]?.time;
@@ -213,5 +342,83 @@
         if (selected == 7) {
             $("#PhotoShootTypeDescription").prop("required", true);
         }
+    }
+
+    function getWeather(settlement){
+        var request = $.ajax({
+            url: "@Url.Action("currentWeather", "Weather")",
+            method: "GET",
+            data: { settlement: settlement },
+            success: function (response) {
+                let json = JSON.parse(JSON.stringify(response));
+                console.log(json);
+                $(".forecastText").html(json.current.condition.text);
+                $(".temperatureCurrent").html(Math.round(json.current.temperature));
+                //$(".precipitation").html(' ' + json.current.precipitation);
+            },
+            error:function(response){
+                console.log("error");
+                console.log(response);
+            }
+        });
+    }
+
+    function getForecast(settlement) {
+        var request = $.ajax({
+            url: "@Url.Action("forecast", "Weather")",
+            method: "GET",
+            data: { settlement: settlement },
+            success: function (response) {
+                let json = JSON.parse(JSON.stringify(response));
+                $(".card-weather").each(function (i) {
+                    let cardBody = $(this).find(".card-body-weather");
+                    cardBody.find(".icon").css("background-image", `url(${json.forecast.forecastDays[i].day.condition.icon})`);
+                    cardBody.find("h5").text(json.forecast.forecastDays[i].day.averageTemperature != 0 ? (Math.round(json.forecast.forecastDays[i].day.averageTemperature) + 'C°') : '');
+                    cardBody.find(".forecastText").text(json.forecast.forecastDays[i].day.condition.text);
+                    //cardBody.find(".precipitation").text('Precipitation: ' + json.forecast.forecastDays[i].day.totalPrecipitation + '%');
+                    i++;
+                });
+            },
+            error: function (response) {
+                console.log("error");
+                console.log(response);
+            }
+        });
+    }
+
+    /*function getAutocomplete(query) {
+        var request = $.ajax({
+            url: "@Url.Action("autocomplete", "Weather")",
+            method: "GET",
+            data: { query: query },
+            success: function (response) {
+                $("#Settlement").autocomplete({
+                    source: response.map(r => r.name)
+                });
+                return response;
+            },
+            error: function (response) {
+                console.log("error");
+                console.log(response);
+            }
+        });
+    }*/
+
+    function getSettlementsByRegion(region) {
+        var request = $.ajax({
+            url: "@Url.Action("settlementsByRegion", "Settlement")",
+            method: "GET",
+            data: { region: region },
+            success: function (response) {
+                $("#Settlement").autocomplete({
+                    source: response.map(r => r.nameLatin)
+                });
+                return response;
+            },
+            error: function (response) {
+                console.log("error");
+                console.log(response);
+            }
+        });
     }
 </script>
