@@ -1,5 +1,4 @@
 ﻿using OwlStock.Domain.Enumerations;
-using OwlStock.Services.DTOs.Settlement;
 
 namespace OwlStock.Services.Interfaces
 {

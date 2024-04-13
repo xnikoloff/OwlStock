@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain.Enumerations;
-using OwlStock.Services.DTOs.Settlement;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Web.Controllers.API
