@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace OwlStock.Domain.Enumerations
+﻿namespace OwlStock.Domain.Enumerations
 {
     public enum Category
     {

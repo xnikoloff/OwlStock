@@ -6,6 +6,7 @@
     Dictionary<DateOnly, IEnumerable<TimeSlot>> calendar = Model.Calendar ?? new();
 }
 
+<input type="hidden" id="priceForDistance"/>
 <div class="container">
     <div class="row bg-light mt-3">
         <div class="col-12 p-2 text-center">
@@ -65,6 +66,11 @@
                 <label for="Settlement">Settlement</label>
                 <input type="hidden" id="SettlementId" />
                 <input id="Settlement" class="form-control" required />
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-price" style="display:none">
+                <label>Разход за пътни</label>
+                <br/>
+                <h6 id="priceDesciption">Тъй като се намирате на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв.</h6>
             </div>
         </div>
         <div class="row mt-3">
@@ -225,6 +231,7 @@
         })
 
         $("#Settlement").change(function () {
+            calculatePriceByDistance($(this).val());
             getForecast($(this).val());
             $(".dates-container").css("transition", ".4s");
             $(".dates-container").css("display", "block");
@@ -412,13 +419,39 @@
             success: function (response) {
                 $("#Settlement").autocomplete({
                     source: response.map(r => r.nameLatin)
-                });
-                return response;
+            });
+            //console.log(response.map(r => r.map(r => r.)))
+            //calculateDistance(response.map(r => r.latitude), response.map(r => r.longitude), '42.010493', '24.878557');
+            return response;
             },
             error: function (response) {
                 console.log("error");
                 console.log(response);
             }
         });
+    }
+
+    function calculatePriceByDistance(settlement) {
+        let region = $("#Region").find(":selected").text();
+        let settlementData = [region, settlement];
+
+        var request = $.ajax({
+            contentType: 'application/json',
+            url: "@Url.Action("fuelPrice", "Calculations")",
+            traditional: true,
+            method: "GET",
+            data: { 'settlementData': settlementData },
+            success: function (response) {
+                console.log(response);
+                $("#price").html(response);
+                $(".col-price").css("display", "block");
+            },
+            error: function (response) {
+                console.log("error");
+                console.log(response);
+            }
+        });
+
+
     }
 </script>

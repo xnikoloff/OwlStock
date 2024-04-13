@@ -21,10 +21,10 @@ namespace OwlStock.Domain.Entities
         public string? Slug { get; set; }
 
         [MaxLength(ModelConstraints.LatLongMaxLength)]
-        public string? Latitude { get; set; }
+        public double Latitude { get; set; }
 
         [MaxLength(ModelConstraints.LatLongMaxLength)]
-        public string? Longitude { get; set; }
+        public double Longitude { get; set; }
 
         [MaxLength(ModelConstraints.PostCodeMaxLength)]
         public string? PostCode { get; set; }

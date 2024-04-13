@@ -9,7 +9,7 @@ namespace OwlStock.Web.Controllers.API
     public class SettlementController : ControllerBase
     {
         private readonly ISettlementService _settlementService;
-
+        
         public SettlementController(ISettlementService settlementService)
         {
             _settlementService = settlementService;
