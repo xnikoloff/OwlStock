@@ -4,24 +4,46 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="container-fluid">
+<div class="container-fluid banner-container">
     <div class="row">
         <div class="col-12 wrapper">
             <div class="banner mx-auto text-center">
                 <div class="text-wrapper">
-                    <h1 class="text-white mt-4">OwlStock</h1>
-                    <h4 class="text-white">Stock photos for you or your business.</h4>
-                    <a asp-controller="Photo" asp-action="All" class="btn btn-lg btn-warning font-weight-bold mt-4">Discover</a>
+                    <h1 class="text-white mt-4">FlashPix</h1>
+                    <h4 class="text-white">ФОТОГРАФСКО СТУДИО</h4>
+                    <a asp-controller="Photoshoot" asp-action="Reserve" class="btn btn-lg btn-warning font-weight-bold mt-4">Резервация</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="container-fluid mt-2">
-    <partial name="_Grid" model="Model" />
+<div class="container-fluid icons-container">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-3 icons-column">
+            <span class="icon"><i class="fa-solid fa-camera fa-2xl"></i></span>
+            <h4 class="icon-text">Услуги</h4>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 icons-column">
+            <span class="icon"><i class="fa-solid fa-coins fa-2xl"></i></span>
+            <h4 class="icon-text">Цени</h4>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 icons-column">
+            <span class="icon"><i class="fa-solid fa-images fa-2xl"></i></span>
+            <h4 class="icon-text">Галерия</h4>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 icons-column">
+            <span class="icon"><i class="fa-solid fa-bolt-lightning fa-2xl"></i></span>
+            <h4 class="icon-text">За нас</h4>
+        </div>
+    </div>
 </div>
 
 <style>
+    .banner-container{
+        /*bottom only*/
+        box-shadow: 0 8px 5px -5px #333;
+    }
+
     .banner {
         margin-top: 100px;
     }
@@ -42,11 +64,24 @@
     }
 
     .text-wrapper{
-        width: 40%;
+        width: 60%;
         margin: 0 auto;
-        padding: 20px 20px 40px 20px;
+        padding: 40px 20px;
         background: rgba(0, 0, 0, 0.5);
         border-radius: 10px;
 
+    }
+
+    .icons-container {
+        padding: 150px 0;
+    }
+
+    .icons-container .icons-column {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .icons-container .icons-column .icon-text {
+        margin-top: 20px;
     }
 </style>

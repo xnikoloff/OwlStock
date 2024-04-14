@@ -9,12 +9,12 @@ namespace OwlStock.Services.DTOs.PhotoShoot
     public class CreatePhotoShootDTO
     {
         [Required]
-        [Display(Name = "First Name")]
+        [Display(Name = "Име")]
         [MaxLength(ModelConstraints.PersonNameMaxLength)]
         public string? PersonFirstName { get; set; }
 
         [Required]
-        [Display(Name = "Last Name")]
+        [Display(Name = "Фамилия")]
         [MaxLength(ModelConstraints.PersonNameMaxLength)]
         public string? PersonLastName { get; set; }
 
@@ -22,23 +22,23 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         public string? PersonEmail { get; set; }
 
         [Required]
-        [Display(Name = "Phone")]
+        [Display(Name = "Телефон")]
         [MaxLength(ModelConstraints.PersonPhoneMaxLenth)]
         public string? PersonPhone { get; set; }
 
         [Required]
-        [Display(Name = "Date")]
+        [Display(Name = "Дата")]
         public DateTime ReservationDate { get; set; } = DateTime.Now;
 
         [Required]
-        [Display(Name = "Time")]
+        [Display(Name = "Час")]
         public TimeOnly ReservationTime { get; set; }
 
         [Required]
-        [Display(Name = "Type")]
+        [Display(Name = "Тип на фотосесията")]
         public PhotoShootType PhotoShootType { get; set; }
 
-        [Display(Name = "Photo Shoot Type Description")]
+        [Display(Name = "Описание")]
         [MaxLength(ModelConstraints.PhotoShootTypeDescriptionMaxLength)]
         public string? PhotoShootTypeDescription { get; set; }
 

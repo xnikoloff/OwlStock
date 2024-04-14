@@ -8,18 +8,18 @@
 
 <input type="hidden" id="priceForDistance"/>
 <div class="container">
-    <div class="row bg-light mt-3">
-        <div class="col-12 p-2 text-center">
-            <h1>Your Details</h1>
-        </div>
-    </div>
+    
     <form asp-action="Reserve" method="post">
         <div asp-validation-summary="All" class="text-danger"></div>
 
         <input type="hidden" asp-for="IdentityUserId" />
         <input type="hidden" asp-for="ReservationDate" />
         <input type="hidden" asp-for="ReservationTime" />
-
+        <div class="row bg-light mt-3">
+            <div class="col-12 p-1">
+                <h4>Вашите данни</h4>
+            </div>
+        </div>
         <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-3 form-group">
                 <label asp-for="PersonFirstName"></label>
@@ -49,21 +49,26 @@
                 <span asp-validation-for="ReservationDate" class="text-danger"></span>
             </div>-->
         </div>
-        <div class="row">
+        <div class="row bg-light mt-3">
+            <div class="col-12 p-1">
+                <h4>Място</h4>
+            </div>
+        </div>
+        <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-3 form-group" id="photo-shoot-type-description">
                 <label asp-for="PhotoShootTypeDescription"></label>
                 <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
                 <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label for="Region">Region</label>
+                <label for="Region">Област</label>
                 <input type="hidden" id="RegionId" />
                 <select id="Region" class="form-control" asp-items="@(new SelectList(Model.ServicedRegions, "Id", "Name"))" required>
                     <option value="0" selected></option>
                 </select>
             </div>
             <div class="col-12 col-md-6 col-lg-3 form-group settlement" style="display:none">
-                <label for="Settlement">Settlement</label>
+                <label for="Settlement">Населено място</label>
                 <input type="hidden" id="SettlementId" />
                 <input id="Settlement" class="form-control" required />
             </div>
@@ -73,74 +78,80 @@
                 <p id="priceDesciption">Тъй като се намирате на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв.</p>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary" id="btn-book" disabled>Book</button>
+        <div class="dates-container" style="display:none">
+            <div class="row bg-light mt-3">
+                <div class="col-12 p-1">
+                    <h4>Дата и час</h4>
+                </div>
+            </div>
+            <div class="row mt-5">
+                @for (int i = 0; i < 3; i++)
+                {
+                    <div class="col-12 col-md-6 col-lg-4 mx-auto">
+                        <div class="card card-weather text-center mx-auto btn-date btn-date-weather">
+                            <div class="card-header">
+                                <h6>@remainingDates[i].ToString("dd.MM")</h6>
+                            </div>
+                            <div class="card-body card-body-weather text-center">
+                                <h5 class="temperatureCurrent"></h5>
+                                <div class="icon"></div>
+                                <p class="forecastText">Нямаме информация за времето :(</p>
+                                @*<p class="precipitation"></p>*@
+                            </div>
+                            <div class="card-footer  text-center">
+                                Busy
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 scrollmenu" id="dates-list">
+                    <div id="date-buttons-slider">
+                        @for (int i = 3; i < remainingDates.Count; i++)
+                        {
+                            <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
+                                <div class="card-header">
+                                    <h6>@remainingDates[i].ToString("dd.MM")</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    Busy
+                                </div>
+                            </div>
+
+                            @*<button type="button" class="btn-date">
+                        <b>@remainingDates[i].ToString("dd.MM")</b>
+                        <hr />
+                        <p><span class="temperatureCurrent">0</span>C°</p>
+                        <p><span class="forecastText"></span></p>
+                        <p>Precipitation:<span class="precipitation"> 0</span>%</p>
+                        </button>*@
+                        }
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-12 hours-container" id="hours-container" style="display:none">
+                        <hr />
+                        @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
+                        {
+                            <button class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
+                                @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-outline-secondary btn-lg" id="btn-book" disabled>Резервирай</button>
             </div>
         </div>
     </form>
 </div>
-<div class="container dates-container" style="display:none">
-    <div class="row mt-5">
-        @for (int i = 0; i < 3; i++)
-        {
-            <div class="col-12 col-md-6 col-lg-4 mx-auto">
-                <div class="card card-weather text-center mx-auto btn-date btn-date-weather">
-                    <div class="card-header">
-                        <h6>@remainingDates[i].ToString("dd.MM")</h6>
-                    </div>
-                    <div class="card-body card-body-weather text-center">
-                        <h5 class="temperatureCurrent"></h5>
-                        <div class="icon"></div>
-                        <p class="forecastText">Нямаме информация за времето :(</p>
-                        @*<p class="precipitation"></p>*@
-                    </div>
-                    <div class="card-footer  text-center">
-                        Busy
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-    <div class="row mt-5">
-        <div class="col-12 scrollmenu" id="dates-list">
-            <div id="date-buttons-slider">
-                @for (int i = 3; i < remainingDates.Count; i++)
-                {
-                    <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
-                        <div class="card-header">
-                            <h6>@remainingDates[i].ToString("dd.MM")</h6>
-                        </div>
-                        <div class="card-body text-center">
-                                Busy
-                            </div>
-                        </div>
-                    
-                    @*<button type="button" class="btn-date">
-                <b>@remainingDates[i].ToString("dd.MM")</b>
-                <hr />
-                <p><span class="temperatureCurrent">0</span>C°</p>
-                <p><span class="forecastText"></span></p>
-                <p>Precipitation:<span class="precipitation"> 0</span>%</p>
-                </button>*@
-                }
-            </div>
-            
 
-        </div>
-        <div class="row">
-            <div class="col-12 hours-container" id="hours-container" style="display:none">
-                <hr />
-                @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
-                {
-                    <button class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
-                        @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
-                    </button>
-                }
-            </div>
-        </div>
-    </div>
-</div>
     
 
 <style>
@@ -177,7 +188,7 @@
     }
 
     #date-button-simple:hover, .btn-date-weather:hover {
-        box-shadow: 0px 0px 10px -2px #394859;
+        box-shadow: 0px 0px 10px 2px #394859;
         transform: scale(1.02);
         transition: .4s;
     }
