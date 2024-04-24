@@ -4,38 +4,112 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="container-fluid banner-container">
-    <div class="row">
-        <div class="col-12 wrapper">
-            <div class="banner mx-auto text-center">
-                <div class="text-wrapper">
-                    <h1 class="text-white mt-4">FlashPix</h1>
-                    <h4 class="text-white">ФОТОГРАФСКО СТУДИО</h4>
-                    <a asp-controller="Photoshoot" asp-action="Reserve" class="btn btn-lg btn-warning font-weight-bold mt-4">Резервация</a>
-                </div>
-            </div>
-        </div>
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container wrapper">
+        <div class="masthead-heading text-uppercase">DreamPix</div>
+        <div class="masthead-subheading">Фотографско студио</div>
+        <a class="btn btn-primary btn-xl text-uppercase" href="#services">Резервирай</a>
     </div>
-</div>
-<div class="container-fluid icons-container">
+</header>
+<div class="container icons-container">
     <div class="row">
         <div class="col-12 col-md-6 col-lg-3 icons-column">
             <span class="icon"><i class="fa-solid fa-camera fa-2xl"></i></span>
-            <h4 class="icon-text">Услуги</h4>
+            <h4 class="icon-title">Услуги</h4>
+            <p class="icon-text">Потърсете ни за всеки повод, който искате се превърне в спомен</p>
+            <a asp-controller="StaticContent" asp-action="Services" class="btn btn-outline-primary icon-cta-btn">Повече</a>
         </div>
         <div class="col-12 col-md-6 col-lg-3 icons-column">
             <span class="icon"><i class="fa-solid fa-coins fa-2xl"></i></span>
-            <h4 class="icon-text">Цени</h4>
+            <h4 class="icon-title">Цени</h4>
+            <p class="icon-text">Разгледайте ценовата ни гама, за предлаганите от нас услуги</p>
+            <a asp-controller="StaticContent" asp-action="Prices" class="btn btn-outline-primary icon-cta-btn">Повече</a>
         </div>
         <div class="col-12 col-md-6 col-lg-3 icons-column">
             <span class="icon"><i class="fa-solid fa-images fa-2xl"></i></span>
-            <h4 class="icon-text">Галерия</h4>
+            <h4 class="icon-title">Галерия</h4>
+            <p class="icon-text">Вдъхновете се от вече направените от нас фотографии</p>
+            <a asp-controller="StaticContent" asp-action="Gallery" class="btn btn-outline-primary icon-cta-btn">Повече</a>
         </div>
         <div class="col-12 col-md-6 col-lg-3 icons-column">
             <span class="icon"><i class="fa-solid fa-bolt-lightning fa-2xl"></i></span>
-            <h4 class="icon-text">За нас</h4>
+            <h4 class="icon-title">За нас</h4>
+            <p class="icon-text">Научете повече за нашата дейност и история</p>
+            <a asp-controller="StaticContent" asp-action="AboutUs" class="btn btn-outline-primary icon-cta-btn">Повече</a>
         </div>
     </div>
+    <!-- Portfolio Grid-->
+    <section class="page-section bg-light" id="portfolio">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-heading text-uppercase">Актуално</h2>
+                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 mb-4">
+                    <!-- Portfolio item 1-->
+                    <div class="portfolio-item">
+                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal1">
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                            </div>
+                            <img class="img-fluid" src="~/images/resources/free.jpg" alt="current1" />
+                        </a>
+                        <div class="portfolio-caption">
+                            <div class="portfolio-caption-heading">Спечели фотосесия</div>
+                            <div class="portfolio-caption-subheading text-muted">Участвай в игратани и спечели БЕЗПЛАТНА фотосесия</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-4">
+                    <!-- Portfolio item 2-->
+                    <div class="portfolio-item">
+                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal2">
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                            </div>
+                            <img class="img-fluid" src="~/images/resources/gift.jpg" alt="current2" />
+                        </a>
+                        <div class="portfolio-caption">
+                            <div class="portfolio-caption-heading">Подари ваучер</div>
+                            <div class="portfolio-caption-subheading text-muted">Зарадвай любим човек с уникален подарък</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-4">
+                    <!-- Portfolio item 3-->
+                    <div class="portfolio-item">
+                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal3">
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                            </div>
+                            <img class="img-fluid" src="~/images/resources/kids.jpg" alt="current3" />
+                        </a>
+                        <div class="portfolio-caption">
+                            <div class="portfolio-caption-heading">50% намление на детска фотосесия</div>
+                            <div class="portfolio-caption-subheading text-muted">Създайте безценни спомени за децата ви на половин цена</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-4 mb-lg-0">
+                    <!-- Portfolio item 4-->
+                    <div class="portfolio-item">
+                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal4">
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                            </div>
+                            <img class="img-fluid" src="~/images/resources/easter.jpg" alt="current4" />
+                        </a>
+                        <div class="portfolio-caption">
+                            <div class="portfolio-caption-heading">Великден</div>
+                            <div class="portfolio-caption-subheading text-muted">Възползвайте се от Великденските ни промоции</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <style>
@@ -56,11 +130,9 @@
         cursor: pointer;
     }
 
-    .wrapper {
+    /*Override from styles.css*/
+    header.masthead {
         background-image: url('@(ViewBag.HomePhoto)');
-        background-size: cover;
-        height: 90vh;
-        backdrop-filter: brightness(30%);
     }
 
     .text-wrapper{
@@ -78,10 +150,26 @@
 
     .icons-container .icons-column {
         margin: 0 auto;
+        padding-bottom: 80px;
         text-align: center;
+        border-right: 1px solid #dbdbdb;
+        transition: .4s;
     }
 
-    .icons-container .icons-column .icon-text {
+    .icons-container .icons-column:last-child {
+        border-right: unset;
+    }
+
+    .icons-container .icons-column .icon-title {
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    .icons-container .icons-column .icon-cta-btn {
         margin-top: 20px;
+    }
+
+    .icons-container .icons-column .icon-text{
+        min-height: 150px;
     }
 </style>

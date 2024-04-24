@@ -4,46 +4,48 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OwlStock.Web</title>
-    
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <script src="https://kit.fontawesome.com/28246c67aa.js" crossorigin="anonymous"></script>
-    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
-          rel="stylesheet">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+    <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Agency - Start Bootstrap Theme</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />   
+        <!--Bootsrtap and JQuery-->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
             integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="~/OwlStock.Web.styles.css" asp-append-version="true" />
+
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="~/css/site.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header class="bg-light">
+<body class="page-top">
+<!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/site/logo.png" alt="site-logo" class="logo">&nbsp;<b>OwlStock</b>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Photo" asp-action="All">Discover</a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="PhotoShoot" asp-action="Index">Photo Shoots</a>
-                        </li>
-                    </ul>
+            <a class="navbar-brand"><img src="DreamPix.png" alt="DreamPix" class="logo"/></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars ms-1"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a asp-controller="PhotoShoot" asp-action="Index" class="nav-link">Резервирай фотосесия</a></li>
+                    <li class="nav-item"><a asp-controller="Photo" asp-action="All" class="nav-link">Галерия</a></li>
+                </ul>
                     <partial name="_LoginPartial" />
-                    <form asp-controller="Photo" asp-action="AllByTag" method="GET" class="form-inline mx-4">
-                      <input name="tag" class="form-control" type="search" placeholder="Search" aria-label="Search">
-                    </form>
-                </div>
-            </nav>
-            <partial name="_CategoriesMenu"></partial>
+                <form asp-controller="Photo" asp-action="AllByTag" method="GET" class="form-inline mx-4">
+                    <input name="tag" class="form-control" type="search" placeholder="Search" aria-label="Search">
+                </form>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <main role="main" class="mt-3">
             @RenderBody()
@@ -51,46 +53,23 @@
 
     <div class="container-fluid bg-light py-5 footer-container">
       <!-- Footer -->
-      <footer class="text-center">
-        <!-- Grid container -->
-        <div class="container">
-          <!-- Section: Text -->
-          <section class="mb-5">
-            <div class="row d-flex justify-content-center">
-              <div class="col-lg-8">
-                <h1><b>FlashPix</b></h1>
-              </div>
+        <!-- Footer-->
+        <footer class="footer py-4">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-4 text-lg-start">Copyright &copy; DREAMPIX 2023</div>
+                    <div class="col-lg-4 my-3 my-lg-0">
+                        <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a class="link-dark text-decoration-none me-3" href="#!">Privacy Policy</a>
+                        <a class="link-dark text-decoration-none" href="#!">Terms of Use</a>
+                    </div>
+                </div>
             </div>
-          </section>
-          <!-- Section: Text -->
-
-          <!-- Section: Social -->
-          <section class="text-center mb-5">
-            <a href="" class="me-4">
-              <i class="fa-brands fa-square-facebook fa-xl text-primary"></i>
-            </a>
-            <a href="" class="me-4">
-              <i class="fa-brands fa-square-instagram fa-xl text-danger"></i>
-            </a>
-            <a href="" class="me-4">
-                <i class="fa-solid fa-envelope fa-xl text-warning"></i>
-            </a>
-            <a href="" class="me-4">
-              <i class="fa-solid fa-square-phone fa-xl text-info"></i>
-            </a>
-        
-          </section>
-          <!-- Section: Social -->
-        </div>
-        <!-- Grid container -->
-
-        <!-- Copyright -->
-        <div class="text-center p-3 bg-dark">
-      
-          <span class="text-white">@DateTime.Now.Year &copy;</span>
-        </div>
-        <!-- Copyright -->
-      </footer>
+        </footer>
       <!-- Footer -->
     </div>
 
@@ -103,8 +82,7 @@
 </html>
 
 <style>
-    /*top only*/
     .footer-container{
-         box-shadow: 0 -5px 5px -5px #333;
-     }
+        margin-top: 50px;
+    }
 </style>

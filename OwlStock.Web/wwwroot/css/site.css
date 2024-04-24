@@ -18,7 +18,7 @@ label{
 }
 
 .logo {
-    width: 50px;
+    width: 150px;
 }
 
 body {
@@ -39,4 +39,8 @@ form .form-group{
 
 .photo-container img{
     width: 750px;
+}
+
+.logo-letters-pix {
+    font-size: 0.7em;
 }
