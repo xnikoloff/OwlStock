@@ -75,7 +75,7 @@
             <div class="col-12 col-md-6 col-lg-6 col-price" style="display:none">
                 <label>Разход за пътни</label>
                 <br/>
-                <p id="priceDesciption">Тъй като се намирате на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв.</p>
+                <p id="priceDesciption">Тъй като се намирате на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв (<i>изчислява се на км</i>).</p>
             </div>
         </div>
         <div class="dates-container" style="display:none">
@@ -136,7 +136,7 @@
                         <hr />
                         @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
                         {
-                            <button class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
+                            <button type="button" class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
                                 @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
                             </button>
                         }
@@ -264,8 +264,10 @@
             
         });
 
-        $(document).on("click", ".btn-time-slot", function () {
-            console.log($(this).hasClass("btn-success"));
+        $(".btn-time-slot")
+
+        $(document).on("click", ".btn-time-slot", function (event) {
+            event.preventDefault();
             if ($(this).hasClass("btn-success")) {
                 $("#ReservationTime").val($(this).text());
                 $("#btn-book").prop("disabled", false);

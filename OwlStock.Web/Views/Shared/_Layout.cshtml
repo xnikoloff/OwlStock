@@ -29,14 +29,14 @@
 <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
         <div class="container">
-            <a class="navbar-brand"><img src="DreamPix.png" alt="DreamPix" class="logo"/></a>
+            <a asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/DreamPix.png" alt="DreamPix" class="logo"/></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 Menu
                 <i class="fas fa-bars ms-1"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                    <li class="nav-item"><a asp-controller="PhotoShoot" asp-action="Index" class="nav-link">Резервирай фотосесия</a></li>
+                    <li class="nav-item"><a asp-controller="PhotoShoot" asp-action="Reserve" class="nav-link">Резервирай фотосесия</a></li>
                     <li class="nav-item"><a asp-controller="Photo" asp-action="All" class="nav-link">Галерия</a></li>
                 </ul>
                     <partial name="_LoginPartial" />
@@ -57,15 +57,11 @@
         <footer class="footer py-4">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-lg-4 text-lg-start">Copyright &copy; DREAMPIX 2023</div>
+                    <div class="col-lg-4 text-lg-start">&copy; DREAMPIX @DateTime.Now.Year</div>
                     <div class="col-lg-4 my-3 my-lg-0">
-                        <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                         <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Twitter"><i class="fab fa-instagram"></i></a>
                         <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                    <div class="col-lg-4 text-lg-end">
-                        <a class="link-dark text-decoration-none me-3" href="#!">Privacy Policy</a>
-                        <a class="link-dark text-decoration-none" href="#!">Terms of Use</a>
                     </div>
                 </div>
             </div>

@@ -1,14 +1,18 @@
 ﻿@model PhotoByIdDTO
 
-<div class="container">
-    <div class="row">
+@{
+    ViewData["Title"] = Model?.Photo?.Name;
+}
+
+<div class="container-fluid">
+    <div class="row py-4">
         @if (User.IsInRole("Administrator"))
         {
             <div class="col-12 col-md-6 col-lg-2">
                 <form asp-controller="Photo" asp-action="ChangeDownloadPermissions" method="POST">
                     <input type="hidden" asp-for="Photo.Id" />
                     <button type="submit" class="btn btn-warning text-white">@(Model.Photo.IsDownloadable ? "Non-downloadble" : "Downloadable")</button>
-               </form>
+                </form>
             </div>
             <div class="col-12 col-md-6 col-lg-2">
                 <form asp-controller="Photo" asp-action="Delete" method="POST">
@@ -19,113 +23,122 @@
             </div>
         }
     </div>
-    <form asp-controller="Order" asp-action="OrderInfo" method="GET" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Photo.Id" />
-        <input type="hidden" asp-for="Photo.FileData" />
-        <input type="hidden" asp-for="Photo.FileName" />
-        <input type="hidden" asp-for="Photo.FileType" />
-        <input type="hidden" asp-for="Photo.Name" />
-        <input type="hidden" asp-for="Photo.IsFree" />
-
-        <div class="row mt-2">
-            <div class="col-12 col-md-6">
-                <h4>@Model?.Photo?.Name</h4>
-            </div>
-            <div class="col-12 col-md-6 text-end">
-
-                @if(Model.Photo.IsDownloadable)
-                {
-                    <label asp-for="PhotoSize"></label>
-                    <select asp-for="PhotoSize" asp-items="Html.GetEnumSelectList<PhotoSize>()"></select>
-                        
-                    @if (Model.Photo.IsFree)
-                    {
-                        <button class="download-btn" type="submit"><i class="fa-solid fa-download"></i></button>
-                    }
-
-                    else
-                    {
-                        <input type="hidden" asp-for="Photo.Price" />
-                        <h2><span id="price-text"></span> BGN</h2>
-
-                        <button class="download-btn" type="submit"><b><i class="fa-solid fa-download"></i></b></button>
-                        
-                    }
-                }
-            </div>
-        </div>
-        <hr />
+    
+    <div class="row">
         
-        <div class="row">
-            <div class="col-12">
-                <div class="photo">
-                    <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
-                </div>
-            </div>
-            
-        </div>
-    </form>
-    <div class="row mt-4">
-        <hr />
-        <div class="col-12 col-md-6 mt-3">
-            <h6>Description</h6>
-            <p>@Model?.Photo?.Description</p>
-        </div>
-        <div class="col-12 col-md-6 mt-3">
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <h6>Featured In</h6>
-            
-                    @foreach (PhotoCategory photoCategory in Model.Photo.PhotoCategories)
-                    {
-                        <a asp-controller="Photo" asp-action="AllByCategory" asp-route-category="@photoCategory.Category">@photoCategory.Category</a>
-                    }
-                </div>
-                <div class="col-12 col-md-6">
-                    <h6>Tags</h6>
 
-                    @foreach (Tag tag in Model.Photo.Tags)
+            <div class="col-12 col-md-6 col-lg-8 col-image">
+                <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-details">
+                <form asp-controller="Order" asp-action="OrderInfo" method="GET" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Photo.Id" />
+                    <input type="hidden" asp-for="Photo.FileData" />
+                    <input type="hidden" asp-for="Photo.FileName" />
+                    <input type="hidden" asp-for="Photo.FileType" />
+                    <input type="hidden" asp-for="Photo.Name" />
+                    <input type="hidden" asp-for="Photo.IsFree" />
+                    <h1>@Model?.Photo?.Name</h1>
+                    <p class="photo-description">@Model?.Photo?.Description</p>
+                    @if (Model.Photo.IsDownloadable && !Model.Photo.IsFree)
                     {
-                        <a asp-controller="Photo" asp-action="AllByTag" asp-route-tag="@tag.Text">#@tag.Text</a>
+                        <h3 id="price-text-wrapper"></h3>
                     }
-                </div>
+                    <div class="row">
+                        <div class="col-6">
+                        <select asp-for="PhotoSize" asp-items="Html.GetEnumSelectList<PhotoSize>()" class="form-control"></select>
+                        </div>
+                    
+                        <div class="col-6">
+                        @if (Model.Photo.IsFree)
+                        {
+                            <button class="btn btn-primary btn-lg btn-download" type="submit"><i class="fa-solid fa-download"></i></button>
+                        }
+
+                        else
+                        {
+                            <input type="hidden" asp-for="Photo.Price" />
+                            <button class="btn btn-primary btn-lg btn-download" type="submit"><i class="fa-solid fa-download"></i></button>
+                        }
+                        </div>
+                    </div>
+                    <div class="photo-details-container">
+                        <div class="photo-details-item">
+                            <span><i class="fa-solid fa-location-dot fa-lg"></i></span><span class="details-text" id="location">@Model.Photo.GeoLocation</span>
+                        </div>
+                        <div class="photo-details-item">
+                        <span><i class="fa-solid fa-camera-retro fa-lg"></i></span><span class="details-text" id="gear">@Model?.Photo?.Gear?.CameraBrand @Model?.Photo?.Gear?.CameraModel, @Model?.Photo?.Gear?.CameraLens, @Model?.Photo?.Gear?.AdditionalInformation</span>
+                        </div>
+                        <div class="photo-details-item">
+                            <span><i class="fa-solid fa-hashtag fa-lg"></i></span>
+                            @foreach (Tag tag in Model.Photo.Tags)
+                            {
+                                <span class="details-text" id="tags"><a asp-controller="Photo" asp-action="AllByTag" asp-route-tag="@tag.Text">#@tag.Text</a></span>
+                            }
+                        </div>
+                        <div class="photo-details-item">
+                            <span><i class="fa-solid fa-layer-group fa-lg"></i></span>
+                            @foreach (PhotoCategory photoCategory in Model.Photo.PhotoCategories)
+                            {
+                                <span class="details-text" id="featured-in">
+                                    <a asp-controller="Photo" asp-action="AllByCategory" asp-route-category="@photoCategory.Category">@photoCategory.Category</a>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="row mt-4">
-                <div class="col-12 col-md-6">
-                    <h6>Location</h6>
-                    <p><i class="fa-solid fa-location-dot"></i> @Model.Photo.GeoLocation</p>
-                </div>
-                <div class="col-12 col-md-6">
-                    <h6>Gear</h6>
-                    <p>@Model?.Photo?.Gear?.CameraBrand @Model?.Photo?.Gear?.CameraModel, @Model?.Photo?.Gear?.CameraLens, @Model?.Photo?.Gear?.AdditionalInformation</p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
 <style>
-    .download-btn{
-        padding: 5px 10px;
-        border: none;
-        border-radius: 10px;
-        background: #123456;
+    .container-fluid{
+        margin: 0 !important;
+        padding: 0 !important;
+        margin-top: 40px;
+    }
+
+    .container-fluid .row .col-image img{
+        width: 100%;
+    }
+
+    .container-fluid .row .col-details{
+        padding-top: 30px;
+    }
+
+    .container-fluid .row .col-details h1{
+        text-align: center;
+    }
+
+    .container-fluid .row .col-details .photo-description{
+        margin-top: 40px;
+    }
+
+    .container-fluid .row .col-details #price{
+      margin-top: 20px;
+    }
+
+    .container-fluid .row .col-details select{
+      margin-top: 20px;
+      height: 50px;
+    }
+
+    .container-fluid .row .col-details .btn-download{
+        width: 100%;
+        margin-top: 20px;
         color: #fff;
     }
-    select{
-        padding: 5px;
-        border-radius: 10px;
+
+    .container-fluid .row .col-details .photo-details-container{
+      margin-top: 10px;
     }
 
-    .photo img{
-        max-height: 100%;
-        max-width: 100%;
+    .container-fluid .row .col-details .photo-details-container .photo-details-item{
+      margin-top: 30px;
     }
 
-    .info-container{
-        background: #fafafa;
-        padding: 10px 20px;
-        border-radius: 10px;
+    .container-fluid .row .col-details .photo-details-container .photo-details-item .details-text{
+      margin-left: 20px;
     }
 </style>
 
@@ -145,29 +158,29 @@
     function calculatePrice(){
         let priceInt = @(Model?.Photo?.Price?.ToString().Split(',')[0]);
         let priceDecimal = @(Model?.Photo?.Price?.ToString().Split(',')[1]);
-        let priceCalculated = $("#price-text");
+        let priceCalculated = $("#price-text-wrapper");
         let price = $("#Photo_Price");
         let priceValue = priceInt + ',' + priceDecimal;
         let size = $("#PhotoSize").find(":selected");
         switch (size.val()) {
             case "@((int)PhotoSize.Small)": {
                 price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.8)).toFixed(2));
-                priceCalculated.html(price.val());
+                priceCalculated.html(price.val() + "лв");
                 break;
             }
             case "@((int)PhotoSize.Medium)": {
                 price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.5)).toFixed(2));
-                priceCalculated.html(price.val());
+                priceCalculated.html(price.val() + "лв");
                 break;
             }
             case "@((int)PhotoSize.Large)": {
                 price.val((parseInt(priceValue) - (parseInt(priceValue) * 0.2)).toFixed(2));
-                priceCalculated.html(price.val());
+                priceCalculated.html(price.val() + "лв");
                 break;
             }
             default: {
                 price.val(priceValue);
-                priceCalculated.html(price.val());
+                priceCalculated.html(price.val() + "лв");
                 break;
             }
         }
