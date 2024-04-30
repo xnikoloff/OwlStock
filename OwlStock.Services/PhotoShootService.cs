@@ -95,6 +95,10 @@ namespace OwlStock.Services
                 PhotoShootType = dto.PhotoShootType,
                 PhotoShootTypeDescription = dto.PhotoShootTypeDescription,
                 CreatedOn = DateTime.Now,
+                UserPlace = dto.UserPlace,
+                GoogleMapsLink = dto.GoogleMapsLink,
+                IsDecidedByUs = dto.IsDecidedByUs,
+                Price = dto.Price,
                 IdentityUserId = dto.IdentityUserId
             };
 

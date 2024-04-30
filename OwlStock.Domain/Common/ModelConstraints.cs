@@ -14,6 +14,7 @@
         public const int PersonEmailMaxLength = 200;
         public const int PersonPhoneMaxLenth = 30;
         public const int PhotoShootTypeDescriptionMaxLength = 500;
+        public const int UserPlace = 50;
 
 
         //Common

@@ -42,6 +42,19 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         [MaxLength(ModelConstraints.PhotoShootTypeDescriptionMaxLength)]
         public string? PhotoShootTypeDescription { get; set; }
 
+        [Display(Name = "Място на фотосесията")]
+        [MaxLength(ModelConstraints.UserPlace)]
+        public string? UserPlace { get; set; }
+
+        [Display(Name = "Нека ние изберем място за Вас")]
+        public bool IsDecidedByUs { get; set; }
+
+        [Display(Name = "Линк към Google Maps")]
+        public string? GoogleMapsLink { get; set; }
+
+        [Required]
+        public decimal Price { get; set; }
+
         public Dictionary<DateOnly, IEnumerable<TimeSlot>>? Calendar { get; set; }
         public List<DateTime>? RemainingDates { get; set; }
 

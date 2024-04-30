@@ -16,12 +16,17 @@ namespace OwlStock.Services
             _context = context;
         }
 
-        public decimal CalculatePhotoshootPrice(PhotoShootType type, decimal fuelPrice)
+        public decimal CalculatePhotoshootPrice(PhotoShootType type, decimal fuelPrice = 0)
         {
             switch (type)
             {
                 case PhotoShootType.Personal:
                 {
+                    if (fuelPrice == 0)
+                    {
+                        return DefaultValue.PortrairPhotoShoot;
+                    }
+
                     return DefaultValue.PortrairPhotoShoot + fuelPrice;
                 }
 

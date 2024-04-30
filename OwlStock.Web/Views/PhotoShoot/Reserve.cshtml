@@ -48,6 +48,11 @@
                 <input asp-for="ReservationDate" class="form-control" />
                 <span asp-validation-for="ReservationDate" class="text-danger"></span>
             </div>-->
+            <div class="col-12 col-md-6 col-lg-3 form-group" id="photo-shoot-type-description">
+                <label asp-for="PhotoShootTypeDescription"></label>
+                <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
+                <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
+            </div>
         </div>
         <div class="row bg-light mt-3">
             <div class="col-12 p-1">
@@ -55,27 +60,55 @@
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-12 col-md-6 col-lg-3 form-group" id="photo-shoot-type-description">
-                <label asp-for="PhotoShootTypeDescription"></label>
-                <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
-                <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
+            <div class="col-12 col-md-6 col-lg-4 form-group is-decided-by-us">
+                <input asp-for="IsDecidedByUs" />
+                <label asp-for="IsDecidedByUs"></label>
             </div>
-            <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label for="Region">Област</label>
-                <input type="hidden" id="RegionId" />
-                <select id="Region" class="form-control" asp-items="@(new SelectList(Model.ServicedRegions, "Id", "Name"))" required>
-                    <option value="0" selected></option>
-                </select>
+        </div>
+        <div class="row mt-3 row-decided-by-us-info" style="display:none">
+            <div class="col-12">
+                <h6>Ще изберем подходящо място в областта, която сте избрали, и ще се свържем допълнително с вас за повече информация.</h6>
             </div>
-            <div class="col-12 col-md-6 col-lg-3 form-group settlement" style="display:none">
-                <label for="Settlement">Населено място</label>
-                <input type="hidden" id="SettlementId" />
-                <input id="Settlement" class="form-control" required />
+        </div>
+        <div class="place-container">
+            <div class="row mt-3">
+                <div class="col-12 col-md-6 col-lg-6 form-group">
+                    <label for="Region">Област</label>
+                    <input type="hidden" id="RegionId" />
+                    <select id="Region" class="form-control" asp-items="@(new SelectList(Model.ServicedRegions, "Id", "Name"))" required>
+                        <option value="0" selected></option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 form-group settlement" style="display:none">
+                    <label for="Settlement">Населено място</label>
+                    <input type="hidden" id="SettlementId" />
+                    <input id="Settlement" class="form-control" required />
+                </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-6 col-price" style="display:none">
-                <label>Разход за пътни</label>
-                <br/>
-                <p id="priceDesciption">Тъй като се намирате на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв (<i>изчислява се на км</i>).</p>
+            <div class="place-addition-info">
+                <div class="row">
+                    <div class="col-12 form-group user-place" style="display:none">
+                        <label asp-for="UserPlace"></label>
+                        <input asp-for="UserPlace" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-12 form-group google-maps-link" style="display:none">
+                        <label asp-for="GoogleMapsLink"></label>
+                        <input asp-for="GoogleMapsLink" class="form-control" />
+                        <br />
+                        <span><i>По избор, но силно препоръчително :)</i></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-price" style="display:none">
+                    <label><b>Разход за пътни</b></label>
+                    <br />
+                    <p id="priceDesciption">Тъй като избраното населено масто се намира на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв (<i>изчислява се на км</i>).</p>
+                </div>
             </div>
         </div>
         <div class="dates-container" style="display:none">
@@ -142,6 +175,13 @@
                         }
                     </div>
                 </div>
+                <div class="row row-total-price mt-5">
+                    <div class="col-12 text-center">
+                        <input type="hidden" asp-for="Price"/>
+                        <h3>Цена</h3>
+                        <h1 class="mt-2"><span id="total-price"></span> лв</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row mt-5">
@@ -155,6 +195,10 @@
     
 
 <style>
+    .is-decided-by-us{
+        margin-left: 40px;
+        transform: scale(1.2);
+    }
     #dates-list {
         overflow: scroll;
     }
@@ -236,6 +280,17 @@
 
 <script>
     $(document).ready(function(){
+        $("#IsDecidedByUs").change(function () {
+            if (this.checked) {
+                $(".row-decided-by-us-info").css("display", "block");
+                $(".dates-container").css("display", "block");
+            }
+            else {
+                $(".row-decided-by-us-info").css("display", "none");
+                $(".dates-container").css("display", "unset");
+            }
+        });
+
         $("#Region").change(function () {
             getSettlementsByRegion($("#Region option:selected").text());
             $(".settlement").css("display", "block");
@@ -246,6 +301,10 @@
             getForecast($(this).val());
             $(".dates-container").css("transition", ".4s");
             $(".dates-container").css("display", "block");
+            if ($("#IsDecidedByUs").checked == false){
+                $(".user-place").css("display", "block");
+                $(".google-maps-link").css("display", "block");
+            }
         });
 
         $(".card-weather").click(function () {
@@ -433,8 +492,7 @@
                 $("#Settlement").autocomplete({
                     source: response.map(r => r.nameLatin)
             });
-            //console.log(response.map(r => r.map(r => r.)))
-            //calculateDistance(response.map(r => r.latitude), response.map(r => r.longitude), '42.010493', '24.878557');
+            
             return response;
             },
             error: function (response) {
@@ -445,9 +503,9 @@
     }
 
     function calculatePriceByDistance(settlement) {
+        let price = 0;
         let region = $("#Region").find(":selected").text();
         let settlementData = [region, settlement];
-
         var request = $.ajax({
             contentType: 'application/json',
             url: "@Url.Action("fuelPrice", "Calculations")",
@@ -455,7 +513,7 @@
             method: "GET",
             data: { 'settlementData': settlementData },
             success: function (response) {
-                console.log(response);
+                calculateTotalPrice($("#PhotoShootType").find(":selected").val(), response)
                 $("#price").html(response);
                 $(".col-price").css("display", "block");
             },
@@ -464,7 +522,25 @@
                 console.log(response);
             }
         });
+    }
 
-
+    function calculateTotalPrice(photoshootType, fuelPrice){
+        var request = $.ajax({
+            contentType: 'application/json',
+            url: "@Url.Action("photoshootPrice", "Calculations")",
+            traditional: true,
+            method: "GET",
+            data: { 'photoshootType': photoshootType, 'fuelPrice': fuelPrice },
+            success: function (response) {
+                price = response;
+                $("#Price").val(response);
+                $("#total-price").html(response);
+                $(".row-total-price").css("display", "block");
+            },
+            error: function (response) {
+                console.log("error");
+                console.log(response);
+            }
+        });
     }
 </script>
