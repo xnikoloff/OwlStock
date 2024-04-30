@@ -48,9 +48,9 @@
                 <input asp-for="ReservationDate" class="form-control" />
                 <span asp-validation-for="ReservationDate" class="text-danger"></span>
             </div>-->
-            <div class="col-12 col-md-6 col-lg-3 form-group" id="photo-shoot-type-description">
+            <div class="col-12 form-group" id="photo-shoot-type-description">
                 <label asp-for="PhotoShootTypeDescription"></label>
-                <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="10" class="form-control"></textarea>
+                <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="6" class="form-control"></textarea>
                 <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
             </div>
         </div>
@@ -345,9 +345,10 @@
 
         $("#PhotoShootType").change(function () {
             let option = $('#PhotoShootType').find(":selected").val();
+            console.log(option);
 
-            //7 is {Other}
-            if (option == 7) {
+            //8 is {Other}
+            if (option == 8) {
                 $("#photo-shoot-type-description").css("display", "block");
             }
 
