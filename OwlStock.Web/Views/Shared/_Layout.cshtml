@@ -37,11 +37,17 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                     <li class="nav-item"><a asp-controller="PhotoShoot" asp-action="Reserve" class="nav-link">Резервирай фотосесия</a></li>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item"><a asp-controller="PhotoShoot" asp-action="MyPhotoShoots" class="nav-link">Моите фотосесии</a></li>
+                    }
+
                     <li class="nav-item"><a asp-controller="Photo" asp-action="All" class="nav-link">Галерия</a></li>
                 </ul>
                     <partial name="_LoginPartial" />
                 <form asp-controller="Photo" asp-action="AllByTag" method="GET" class="form-inline mx-4">
-                    <input name="tag" class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <input name="tag" class="form-control" type="search" placeholder="Търсене" aria-label="Search">
                 </form>
             </div>
         </div>

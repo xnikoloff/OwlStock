@@ -2,26 +2,24 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-12 col-md-6 col-lg-4">
-            <a asp-action="UpdateFiles">Update Files</a>
-        </div>
     </div>
     <div class="row">
         <div class="col-12 col-md-6 col-lg-4 mx-auto text-center">
-            <h1>Photo Shoot #@Model.Id</h1>
+            <h1>Фотосесия #@Model.Id</h1>
         </div>
     </div>
     <hr />
     <div class="row">
-        <div class="col-12 col-md-6 col-lg-6 mx-auto mt-5">
-            <h4 class="mx-auto text-center">Details</h4>
+        <div class="col-12 mx-auto mt-5">
+            <h4 class="mx-auto text-center">Детайли</h4>
             <table class="table mt-4">
                 <thead>
                     <tr>
-                        <th>Model</th>
-                        <th>PhotoShoot Date</th>
-                        <th>PhotoShoot Type</th>
-                        <th>Created On</th>
+                        <th>Модел</th>
+                        <th>Дата</th>
+                        <th>Тип</th>
+                        <th>Създаден на</th>
+                        <th>Цена</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +28,7 @@
                         <td>@Model.ReservationDate</td>
                         <td>@Model.PhotoShootType</td>
                         <td>@Model.CreatedOn</td>
+                        <td>@Model.Price лв</td>
                     </tr>
                 </tbody>
             </table>
@@ -40,7 +39,7 @@
     <div class="row">
         @if (Model.PhotoShootPhotos.Count == 0)
         {
-            <p class="text-center"><i>Your photos will appear here soon :)</i></p>
+            <p class="text-center"><i>Снимките Ви ще се покажат скоро тук :)</i></p>
         }
 
 

@@ -14,11 +14,14 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Created On</th>
-                            <th>Reservation For</th>
-                            <th>Actions</th>
+                            <th>Дата</th>
+                            <th>Тип</th>
+                            <th>Създаден на</th>
+                            <th>Резервиран за</th>
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <th>Действия</th>
+                            }
                         </tr>
                     </thead>
 
@@ -29,7 +32,10 @@
                             <td>@dto.PhotoShootType</td>
                             <td>@dto.CreatedOn</td>
                             <td>@dto.ReservationFor</td>
-                            <td><a asp-action="UpdateFiles" asp-route-id="@dto.Id" class="btn btn-secondary">Update</a></td>
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <td><a asp-action="UpdateFiles" asp-route-id="@dto.Id" class="btn btn-secondary">Update</a></td>
+                            }
                         </tr>
                     }
 
