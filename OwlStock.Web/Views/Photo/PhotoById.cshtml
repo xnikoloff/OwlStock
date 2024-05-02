@@ -160,7 +160,7 @@
         let priceDecimal = @(Model?.Photo?.Price?.ToString().Split(',')[1]);
         let priceCalculated = $("#price-text-wrapper");
         let price = $("#Photo_Price");
-        let priceValue = priceInt + '.' + priceDecimal;
+        let priceValue = priceInt + ',' + priceDecimal;
         let size = $("#PhotoSize").find(":selected");
         switch (size.val()) {
             case "@((int)PhotoSize.Small)": {
