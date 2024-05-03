@@ -7,7 +7,7 @@
     @foreach(GalleryPhoto photo in Model)
     {
         <div class="col-4 mt-5">
-            <img src="~/images/@(PhotoSize.Small.ToString() + "_" + photo?.FileName)" />
+            <img src="~/resources/gallery-photos/@(PhotoSize.Small.ToString() + "_" + photo?.FileName)" />
         </div>
     }
     
