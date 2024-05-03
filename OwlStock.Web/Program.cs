@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.ObjectPool;
 using OwlStock.Infrastructure;
@@ -43,12 +42,6 @@ builder.Services.AddRazorPages();
 
 
 var app = builder.Build();
-
-app.UseRequestLocalization(new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture("bg-BG"),
-    FallBackToParentCultures = false
-});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

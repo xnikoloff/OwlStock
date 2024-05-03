@@ -156,11 +156,9 @@
     });
 
     function calculatePrice(){
-        let priceInt = @(Model?.Photo?.Price?.ToString().Split(',')[0]);
-        let priceDecimal = @(Model?.Photo?.Price?.ToString().Split(',')[1]);
+        let priceValue = @(Model?.Photo?.Price?.ToString(CultureInfo.InvariantCulture));
         let priceCalculated = $("#price-text-wrapper");
         let price = $("#Photo_Price");
-        let priceValue = priceInt + ',' + priceDecimal;
         let size = $("#PhotoSize").find(":selected");
         switch (size.val()) {
             case "@((int)PhotoSize.Small)": {
@@ -179,7 +177,7 @@
                 break;
             }
             default: {
-                price.val(priceValue);
+                price.val(parseInt(priceValue).toFixed(2));
                 priceCalculated.html(price.val() + "лв");
                 break;
             }
