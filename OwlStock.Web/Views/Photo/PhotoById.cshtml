@@ -28,7 +28,7 @@
         
 
             <div class="col-12 col-md-6 col-lg-8 col-image">
-                <img src="~/images/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)"/>
+            <img src="~/resources/gallery-photos/@(PhotoSize.Small.ToString() + "_" + Model?.Photo?.FileName)" />
             </div>
             <div class="col-12 col-md-6 col-lg-4 col-details">
                 <form asp-controller="Order" asp-action="OrderInfo" method="GET" enctype="multipart/form-data">

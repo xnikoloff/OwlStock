@@ -8,10 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\images\**" />
-    <Content Remove="wwwroot\images\**" />
-    <EmbeddedResource Remove="wwwroot\images\**" />
-    <None Remove="wwwroot\images\**" />
+    <None Include="wwwroot\images\OriginalSize_IMG_8223.CR2" />
+    <None Include="wwwroot\images\Small_IMG_8223.CR2" />
   </ItemGroup>
 
   <ItemGroup>

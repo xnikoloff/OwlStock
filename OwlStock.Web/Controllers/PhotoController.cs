@@ -95,7 +95,7 @@ namespace OwlStock.Web.Controllers
 
                 dto.GalleryPhoto.FileName = dto.FormFile.FileName;
                 dto.GalleryPhoto.FileType = dto.FormFile.ContentType;
-                dto.GalleryPhoto.FilePath = Path.Combine(webRootPath, "images").Replace('\\', '/');
+                dto.GalleryPhoto.FilePath = Path.Combine(webRootPath, "resources/gallery-photos").Replace('\\', '/');
 
                 using MemoryStream stream = new();
                 dto.FormFile.CopyTo(stream);

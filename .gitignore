@@ -452,3 +452,6 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+OwlStock.Web/wwwroot/resources/gallery-photos
+OwlStock.Web/wwwroot/resources/photoshoots
