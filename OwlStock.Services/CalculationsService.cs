@@ -30,7 +30,47 @@ namespace OwlStock.Services
                     return DefaultValue.PortrairPhotoShoot + fuelPrice;
                 }
 
-                default: throw new ArgumentException($"Invalid ${nameof(PhotoShootType)}");
+                case PhotoShootType.Wedding:
+                {
+                    if (fuelPrice == 0)
+                    {
+                        return DefaultValue.WeddingPhotoshoot;
+                    }
+
+                    return DefaultValue.WeddingPhotoshoot + fuelPrice;
+                }
+
+                case PhotoShootType.Prom:
+                {
+                    if (fuelPrice == 0)
+                    {
+                        return DefaultValue.PromPhotoshoot;
+                    }
+
+                    return DefaultValue.PromPhotoshoot + fuelPrice;
+                }
+
+                case PhotoShootType.Kids:
+                {
+                    if (fuelPrice == 0)
+                    {
+                        return DefaultValue.KidsPhotoshoot;
+                    }
+
+                    return DefaultValue.KidsPhotoshoot + fuelPrice;
+                }
+
+                case PhotoShootType.Automotive:
+                {
+                    if (fuelPrice == 0)
+                    {
+                        return DefaultValue.Automotive;
+                    }
+
+                    return DefaultValue.Automotive + fuelPrice;
+                }
+
+                default: return fuelPrice;
             }
         }
 
