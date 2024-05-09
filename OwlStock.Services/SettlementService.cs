@@ -62,6 +62,32 @@ namespace OwlStock.Services
             return result;
         }
 
+        //not used for now
+        /*public async Task<double[]> GetLatitudeAndLongitude(string settlement)
+        {
+            if (_context.Cities is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
+            }
+
+            if (settlement.IsNullOrEmpty())
+            {
+                throw new NullReferenceException($"{nameof(settlement)} is null or empty");
+            }
+
+            double[]? data = await _context.Cities
+                .Where(c => c.NameLatin!.Equals(settlement))
+                .Select(c => new double[] { c.Latitude, c.Longitude })
+                .FirstOrDefaultAsync();
+
+            if (data?.Length == 0 || data == null)
+            {
+                throw new NullReferenceException($"{nameof(City)} with name {settlement} cannot be found");
+            }
+
+            return data;
+        }*/
+
         public async Task<IEnumerable<SettlementInfo>> GetSettlementInfo(string settlement)
         {
             string? host = _configuration.GetSection("WeatherStack").GetSection("Host").Value ?? throw new NullReferenceException("Cannot get section 'Host'");

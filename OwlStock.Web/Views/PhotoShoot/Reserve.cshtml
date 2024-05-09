@@ -15,6 +15,8 @@
         <input type="hidden" asp-for="IdentityUserId" />
         <input type="hidden" asp-for="ReservationDate" />
         <input type="hidden" asp-for="ReservationTime" />
+        @*not used for now*@
+        @*<input type="hidden" asp-for="SettlementName" />*@
         <div class="row bg-light mt-3">
             <div class="col-12 p-1">
                 <h4>Вашите данни</h4>
@@ -122,8 +124,8 @@
                 {
                     <div class="col-12 col-md-6 col-lg-4 mx-auto">
                         <div class="card card-weather text-center mx-auto btn-date btn-date-weather">
-                            <div class="card-header">
-                                <h6>@remainingDates[i].ToString("dd.MM")</h6>
+                            <div class="card-header card-header-date">
+                                <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
                             </div>
                             <div class="card-body card-body-weather text-center">
                                 <h5 class="temperatureCurrent"></h5>
@@ -144,8 +146,8 @@
                         @for (int i = 3; i < remainingDates.Count; i++)
                         {
                             <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
-                                <div class="card-header">
-                                    <h6>@remainingDates[i].ToString("dd.MM")</h6>
+                                <div class="card-header card-header-date">
+                                    <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
                                 </div>
                                 <div class="card-body text-center">
                                     Busy
@@ -165,11 +167,11 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-12 hours-container" id="hours-container" style="display:none">
+                    <div class="col-12 hours-container mx-auto text-center" id="hours-container" style="display:none">
                         <hr />
                         @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
                         {
-                            <button type="button" class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-sm btn-time-slot" id="time-slot">
+                            <button type="button" class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-lg btn-time-slot" id="time-slot">
                                 @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
                             </button>
                         }
@@ -238,7 +240,7 @@
     }
 
     .hours-container{
-        padding: 20px;
+        margin: 80px 0;
     }
 
     .hours-container button {
@@ -299,6 +301,8 @@
         $("#Settlement").change(function () {
             calculatePriceByDistance($(this).val());
             getForecast($(this).val());
+            //not used for now
+            //$("#SettlementName").val($(this).val());
             $(".dates-container").css("transition", ".4s");
             $(".dates-container").css("display", "block");
             if ($("#IsDecidedByUs").checked == false){
@@ -314,6 +318,16 @@
             $(this).css("box-shadow", "0px 0px 15px 2px #6cab65")
         });
 
+        $(".btn-date-simple").click(function () {
+            $(".btn-date").each(function () {
+                $(this).css("background", "unset");
+                $(this).css("color", "unset");
+            });
+            $(this).css("background", "#a2cc93");
+            $(this).css("color", "#fff");
+            $(".card-weather").css("box-shadow", "unset");
+        });
+
         $(".btn-date").click(function () {
             showTimeSlots($(this).find(".card-header h6").html());
         });
@@ -327,7 +341,7 @@
 
         $(document).on("click", ".btn-time-slot", function (event) {
             event.preventDefault();
-            if ($(this).hasClass("btn-success")) {
+            if ($(this).hasClass("btn-outline-success")) {
                 $("#ReservationTime").val($(this).text());
                 $("#btn-book").prop("disabled", false);
             }
@@ -345,8 +359,7 @@
 
         $("#PhotoShootType").change(function () {
             let option = $('#PhotoShootType').find(":selected").val();
-            console.log(option);
-
+            
             //9 is {Other}
             if (option == 9) {
                 $("#photo-shoot-type-description").css("display", "block");
@@ -365,18 +378,10 @@
     
 
     function setDate(){
-        $(".btn-date-simple").click(function () {
+        $(".btn-date").click(function () {
             let currentDate = new Date();
-            let selectedDay = formatSelectedDate($(this).text());
+            let selectedDay = formatSelectedDate($(this).find(".date-text").text());
             $('input[name="ReservationDate"]').val(selectedDay);
-            $(".btn-date").each(function () {
-                $(this).css("background", "unset");
-                $(this).css("color", "unset");
-            });
-            $(this).css("background", "#a2cc93");
-            $(this).css("color", "#fff");
-            $(".card-weather").css("box-shadow", "unset");
-
         });
     }
 
@@ -401,7 +406,7 @@
             time = calendar[selectedDateFormated][i]?.time;
             timeSubstring = time.substring(0, time.length - 3);
             
-            $('#hours-container').append(`<button class='btn btn-${isAvailable ? 'success' : 'danger'} btn-sm btn-time-slot'>${timeSubstring}</button>`);
+            $('#hours-container').append(`<button class='btn btn-${isAvailable ? 'outline-success' : 'outline-danger'} btn-lg btn-time-slot'>${timeSubstring}</button>`);
         }
     }
 
@@ -431,7 +436,6 @@
             data: { settlement: settlement },
             success: function (response) {
                 let json = JSON.parse(JSON.stringify(response));
-                console.log(json);
                 $(".forecastText").html(json.current.condition.text);
                 $(".temperatureCurrent").html(Math.round(json.current.temperature));
                 //$(".precipitation").html(' ' + json.current.precipitation);

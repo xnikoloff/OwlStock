@@ -87,23 +87,23 @@ namespace OwlStock.Services
             }
 
             int regionId = await _context.Regions
-                .Where(r => r.Name.Equals(data[0]))
+                .Where(r => r.Name!.Equals(data[0]))
             .Select(r => r.Id)
             .FirstOrDefaultAsync();
 
-            City? city = await _context.Cities.Where(c => c.RegionId == regionId && c.NameLatin.Equals(data[1])).FirstOrDefaultAsync() ??
+            City? city = await _context.Cities.Where(c => c.RegionId == regionId && c.NameLatin!.Equals(data[1])).FirstOrDefaultAsync() ??
                 throw new NullReferenceException($"{nameof(city)} with RegionId {regionId} and name ${data[1]} cannot be found");
 
             double distance = CalculateDistance(city.Latitude, city.Longitude, DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude);
             return CalculatePriceByDistance(Math.Ceiling(distance));
         }
 
-        public double CalculateDistance(double latitudeA, double longitudeA, double latitudeB, double longitudeAB)
+        public double CalculateDistance(double latitudeA, double longitudeA, double latitudeB, double longitudeB)
         {
             var d1 = latitudeA * (Math.PI / 180.0);
             var num1 = longitudeA * (Math.PI / 180.0);
             var d2 = latitudeB * (Math.PI / 180.0);
-            var num2 = longitudeAB * (Math.PI / 180.0) - num1;
+            var num2 = longitudeB * (Math.PI / 180.0) - num1;
             var d3 = Math.Pow(Math.Sin((d2 - d1) / 2.0), 2.0) +
                         Math.Cos(d1) * Math.Cos(d2) * Math.Pow(Math.Sin(num2 / 2.0), 2.0);
             return Math.Ceiling(6376500.0 * (2.0 * Math.Atan2(Math.Sqrt(d3), Math.Sqrt(1.0 - d3))) / 1000);
@@ -119,5 +119,16 @@ namespace OwlStock.Services
 
             return Math.Ceiling(DefaultValue.TripTax + (DefaultValue.FuelPriceByKilometer * Convert.ToDecimal(distance)));
         }
+
+        //not used for now
+        /*public double CalculateTimeForTravel(double latitudeA, double longitudeA, double latitudeB, double longitudeB)
+        {
+            double distance = CalculateDistance(latitudeA, longitudeA, latitudeB, longitudeB);
+
+            //divide distance by speed to calculate the time needed
+            //to travel that distance
+            //double the distance to include the time needed to go back to point A
+            return Math.Round(distance / DefaultValue.Speed) * 2;
+        }*/
     }
 }

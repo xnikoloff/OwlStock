@@ -15,6 +15,8 @@ namespace OwlStock.Tests.PhotoshootTests
             //Arange
             DataSeeder seeder = new();
             Mock<IEmailService> emailServiceMock = new();
+            Mock<ICalculationsService> calculationServiceMock = new();
+            Mock<ISettlementService> settlementServiceMock = new();
             CalendarService calendarService = new();
             PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService);
 
@@ -33,6 +35,8 @@ namespace OwlStock.Tests.PhotoshootTests
             //Arange
             DataSeeder seeder = new();
             Mock<IEmailService> emailServiceMock = new();
+            Mock<ICalculationsService> calculationServiceMock = new();
+            Mock<ISettlementService> settlementServiceMock = new();
             CalendarService calendarService = new();
             PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService);
 
@@ -51,6 +55,8 @@ namespace OwlStock.Tests.PhotoshootTests
             DataSeeder seeder = new();
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalendarService> calendarServiceMock = new();
+            Mock<ISettlementService> settlementServiceMock = new();
+            Mock<ICalculationsService> calculationServiceMock = new();
             PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarServiceMock.Object);
             
             //Act

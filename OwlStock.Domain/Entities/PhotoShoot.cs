@@ -27,7 +27,7 @@ namespace OwlStock.Domain.Entities
         public string? GoogleMapsLink { get; set; }
         public bool IsDecidedByUs { get; set; }
         public decimal Price { get; set; }
-
+        
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }
         public IdentityUser? IdentityUser { get; set; }

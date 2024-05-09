@@ -14,29 +14,11 @@ namespace OwlStock.Services
         private readonly TimeSlot[] _timeSlots =
         {
             new(new(8, 0), true),
-            new(new(8, 30), true),
-            new(new(9, 0), true),
-            new(new(9, 30), true),
             new(new(10, 0), true),
-            new(new(10, 30), true),
-            new(new(11, 0), true),
-            new(new(11, 30), true),
             new(new(12, 00), true),
-            new(new(12, 30), true),
-            new(new(13, 0), true),
-            new(new(13, 30), true),
             new(new (14, 0), true),
-            new(new(14, 30), true),
-            new(new(15, 0), true),
-            new(new(15, 30), true),
             new(new (16, 0), true),
-            new(new (16, 30), true),
-            new(new(17, 0), true),
-            new(new(17, 30), true),
             new(new(18, 0), true),
-            new(new(18, 30), true),
-            new(new(19, 0), true),
-            new(new(19, 30), true),
             new(new(20, 0), true)
         };
 
@@ -51,45 +33,21 @@ namespace OwlStock.Services
             Dictionary<DateOnly, IEnumerable<TimeSlot>> calendar = GetDefaultCalendar();
             List<DateTime> modifiedDates = new();
             TimeSlot[] timeSlots = GetTimeSlots().ToArray();
-            List<TimeSlot> timeSlot = new();
-
+            
             for (int i = 0; i < reservationDates.Count; i++)
             {
                 List<TimeSlot> modifiedTimeSlots = new();
 
-                //check if the current reservation date has already been modified
-                //if true, get all timeslots for that day from the calendar
-
-                //Since there can be more than one booked hour for a given date,
-                //dates in the {bookedDates} list can be repeated but with different hours
-                //To prevent overwriting timeslots for same dates,
-                //{modifiedTimeSlots} is assigned with the timeslots for the current date from the calendar
-                //so that the booked hour can be added to the already modified day
-                if (modifiedDates.Any(md => md.Date == reservationDates[i].Date))
-                {
-                    modifiedTimeSlots = calendar[DateOnly.FromDateTime(reservationDates[i].Date)].ToList();
-
-                }
-
                 //assign new objects for the booked hours for differented dates
-                else
+                for (int j = 0; j < timeSlots.Length; j++)
                 {
-                    for (int j = 0; j < timeSlots.Length; j++)
-                    {
-                        modifiedTimeSlots.Add(new(timeSlots[j].Time, timeSlots[j].IsAvailable));
-                    }
+                    modifiedTimeSlots.Add(new(timeSlots[j].Time, timeSlots[j].IsAvailable));
                 }
-
-                //find the timeslot that has to be modified
-                timeSlot = modifiedTimeSlots
-                    .Where(t => t.Time > new TimeOnly(reservationDates[i].Hour - 1, reservationDates[i].Minute + 30) && t.Time < new TimeOnly(reservationDates[i].Hour + 2, reservationDates[i].Minute + 30))
-                    .ToList() ?? throw new NullReferenceException($"{nameof(TimeSlot)} with time {reservationDates[i].Hour}:{reservationDates[i].Minute} cannot be found");
-
+                
                 //make it not available
-                for (int j = 0; j < timeSlot.Count; j++)
+                for (int j = 0; j < modifiedTimeSlots.Count; j++)
                 {
-
-                    timeSlot[j].IsAvailable = false;
+                    modifiedTimeSlots[j].IsAvailable = false;
                 }
 
                 //assign the modified timeslots to the key for the current reservation

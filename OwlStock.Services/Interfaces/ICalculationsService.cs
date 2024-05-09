@@ -27,7 +27,7 @@ namespace OwlStock.Services.Interfaces
         /// <param name="latitudeB"></param>
         /// <param name="longitudeAB"></param>
         /// <returns></returns>
-        double CalculateDistance(double latitudeA, double longitudeA, double latitudeB, double longitudeAB);
+        double CalculateDistance(double latitudeA, double longitudeA, double latitudeB, double longitudeB);
 
         /// <summary>
         /// Calculates fuel price by provided distance
@@ -35,5 +35,16 @@ namespace OwlStock.Services.Interfaces
         /// <param name="distance">Distance in KM</param>
         /// <returns></returns>
         decimal CalculatePriceByDistance(double distance);
+
+        //not used for now
+        /// <summary>
+        /// Calculates the time needed to travel a distance between two points back and forth
+        /// </summary>
+        /// <param name="latitudeA">Latitude for point A</param>
+        /// <param name="longitudeA">Longitude for point A</param>
+        /// <param name="latitudeB">Latitude for point B</param>
+        /// <param name="longitudeB">Longitude for point B</param>
+        /// <returns></returns>
+        //double CalculateTimeForTravel(double latitudeA, double longitudeA, double latitudeB, double longitudeB);
     }
 }

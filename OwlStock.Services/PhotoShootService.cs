@@ -14,12 +14,17 @@ namespace OwlStock.Services
         private readonly OwlStockDbContext _context;
         private readonly IEmailService _emailService;
         private readonly ICalendarService _calendarService;
+        //private readonly ICalculationsService _calculationsService;
+        //private readonly ISettlementService _settlementService;
 
-        public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService)
+        public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService
+            /*ICalculationsService calculationsService, ISettlementService settlementService*/)
         {
             _context = context;
             _emailService = emailService;
             _calendarService = calendarService;
+            //_calculationsService = calculationsService;
+            //_settlementService = settlementService;
         }
 
         public async Task<PhotoShoot> PhotoShootById(Guid id)
@@ -84,6 +89,10 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
+            //not used for now
+            //double[] settlementLatAndLon = await _settlementService.GetLatitudeAndLongitude(dto.SettlementName ?? 
+            //    throw new NullReferenceException($"{nameof(dto.SettlementName)} is null or empty"));
+
             PhotoShoot photoShoot = new()
             {
                 PersonFirstName = dto.PersonFirstName,
@@ -101,6 +110,10 @@ namespace OwlStock.Services
                 Price = dto.Price,
                 IdentityUserId = dto.IdentityUserId
             };
+
+            //not used for now
+            //double timeForTravel = _calculationsService.CalculateTimeForTravel(DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude,
+            //    settlementLatAndLon[0], settlementLatAndLon[1]);
 
             await _context.AddAsync(photoShoot);
             await _context.SaveChangesAsync();

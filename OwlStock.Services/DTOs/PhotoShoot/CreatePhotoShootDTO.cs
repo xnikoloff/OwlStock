@@ -42,6 +42,10 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         [MaxLength(ModelConstraints.PhotoShootTypeDescriptionMaxLength)]
         public string? PhotoShootTypeDescription { get; set; }
 
+        //not used for now
+        //[Required]
+        //public string? SettlementName { get; set; }
+
         [Display(Name = "Място на фотосесията")]
         [MaxLength(ModelConstraints.UserPlace)]
         public string? UserPlace { get; set; }
