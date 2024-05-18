@@ -14,6 +14,7 @@
         <input type="hidden" asp-for="IdentityUserId" />
         <input type="hidden" asp-for="ReservationDate" />
         <input type="hidden" asp-for="ReservationTime" />
+        <input type="hidden" asp-for="SelectedSettlementId" />
         @*not used for now*@
         @*<input type="hidden" asp-for="SettlementName" />*@
         <div class="row bg-light mt-3">
@@ -325,7 +326,6 @@
             updatePrice();
             $(".settlement").css("display", "block");
             getSettlementsByRegion($("#Region option:selected").text());
-            console.log($("#RegionId").val())
             $("#RegionId").val($(this).val());
         })
 
@@ -518,12 +518,13 @@
     }*/
 
     function getSettlementsByRegion(region) {
+        //destroy Selectize before repopulating the select list with new data
+        $('#Settlement').selectize()[0].selectize.destroy();
         $.ajax({
             url: "@Url.Action("settlementsByRegion", "Settlement")",
             method: "GET",
             data: { region: region },
             success: function (response) {
-                console.log(response);
                 $("#Settlement").selectize({
                     respect_word_boundaries: false,
                     plugins: ["restore_on_backspace", "clear_button"],
@@ -537,6 +538,7 @@
                     onChange: function (value) {
                         updatePrice();
                         getForecast(value);
+                        $("#SelectedSettlementId").val(value);
                         //not used for now
                         //$("#SettlementName").val($(this).val());
 
@@ -567,6 +569,7 @@
             method: "GET",
             data: { 'regionId': regionId },
             success: function (response) {
+                console.log(response);
                 calculateTotalPrice($("#PhotoShootType").find(":selected").val(), response)
                 $(".col-price").css("display", "block");
             },
@@ -601,8 +604,8 @@
 
         let photoshootType = $("#PhotoShootType").find(":selected").val();
 
-        if ($("#IsDecidedByUs").is(":checked")) {
-            if($("#Settlement").val() == ''){
+        /*if ($("#IsDecidedByUs").is(":checked")) {
+            if ($("#Settlement").val() == null || $("#Settlement").val() == '') {
                 let fuelPriceWhenDecidedByUs = calculatePriceByDistance($("#Region option:selected").text(), true);
                 calculateTotalPrice(photoshootType, fuelPriceWhenDecidedByUs);
             }
@@ -610,14 +613,13 @@
                 let fuelPriceWhenDecidedByUser = calculatePriceByDistance($("#Settlement").val(), false);
                 calculateTotalPrice(photoshootType, fuelPriceWhenDecidedByUser);
             }
-        }
+        }*/
 
-        else{
-            if ($("#Settlement").val() != '') {
-                let fuelPriceWhenDecidedByUser = calculatePriceByDistance($("#Region option:selected").text(), false);
-                calculateTotalPrice(photoshootType, fuelPriceWhenDecidedByUser);
-            }
+        if ($("#Settlement").val() != null || $("#Settlement").val() != '') {
+            let fuelPrice = calculatePriceByDistance($("#Region option:selected").text(), false);
+            calculateTotalPrice(photoshootType, fuelPrice);
         }
+        
     }
 
 </script>

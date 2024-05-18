@@ -89,7 +89,7 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
-            City city = await _settlementService.GetCityById(dto.SelectedSettlementId);
+            City city = await _settlementService.GetCityById(int.Parse(dto.SelectedSettlementId ?? "0"));
             string[] coordinates = new string[] { city.Latitude.ToString(), city.Longitude.ToString() };
             decimal fuelPrice = _calculationsService.CalculateFuelPrice(city.RegionId);
             decimal totalPrice = _calculationsService.CalculatePhotoshootPrice(dto.PhotoShootType, fuelPrice);
@@ -113,7 +113,7 @@ namespace OwlStock.Services
                 IsDecidedByUs = dto.IsDecidedByUs,
                 Price = totalPrice,
                 IdentityUserId = dto.IdentityUserId,
-                CityId = dto.SelectedSettlementId
+                CityId = int.Parse(dto.SelectedSettlementId ?? throw new ArgumentNullException(dto.SelectedSettlementId))
             };
 
             //not used for now

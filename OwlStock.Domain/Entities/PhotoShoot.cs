@@ -31,7 +31,7 @@ namespace OwlStock.Domain.Entities
         public City? City { get; set; }
 
         [ForeignKey(nameof(City))]
-        public int CityId { get; set; }
+        public int? CityId { get; set; }
         
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }

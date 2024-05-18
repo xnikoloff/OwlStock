@@ -66,6 +66,6 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         public TimeSlot[]? AllTimeSlots { get; set; }
 
         public string? IdentityUserId { get; set; }
-        public int SelectedSettlementId { get; set; }
+        public string? SelectedSettlementId { get; set; }
     }
 }

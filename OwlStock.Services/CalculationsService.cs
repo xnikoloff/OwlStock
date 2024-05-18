@@ -1,5 +1,4 @@
 ﻿using OwlStock.Domain.Enumerations;
-using OwlStock.Infrastructure;
 using OwlStock.Services.Common;
 using OwlStock.Services.Common.Enumerations;
 using OwlStock.Services.Interfaces;
@@ -8,13 +7,6 @@ namespace OwlStock.Services
 {
     public class CalculationsService : ICalculationsService
     {
-        private readonly OwlStockDbContext _context;
-        
-        public CalculationsService(OwlStockDbContext context)
-        {
-            _context = context;
-        }
-
         public decimal CalculatePhotoshootPrice(PhotoShootType type, decimal fuelPrice = 0)
         {
             switch (type)
@@ -75,16 +67,6 @@ namespace OwlStock.Services
 
         public decimal CalculateFuelPrice(int regionId)
         {
-            if (_context.Regions is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Regions)} is null");
-            }
-
-            if (_context.Cities is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
-            }
-
             double latitude = 0;
             double longitude = 0;
 

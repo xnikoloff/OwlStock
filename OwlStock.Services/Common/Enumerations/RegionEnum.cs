@@ -2,9 +2,9 @@
 {
     internal enum RegionEnum
     {
-        Plovdiv = 1,
-        Pazardzhik = 2,
-        StaraZagora = 3,
-        Haskovo = 4,
+        Plovdiv = 21,
+        Pazardzhik = 3,
+        StaraZagora = 16,
+        Haskovo = 17,
     }
 }
