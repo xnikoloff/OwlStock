@@ -1,7 +1,6 @@
 ﻿@model CreatePhotoShootDTO
 
 @{
-
     List<DateTime> remainingDates = Model.RemainingDates ?? new();
     Dictionary<DateOnly, IEnumerable<TimeSlot>> calendar = Model.Calendar ?? new();
 }
@@ -84,23 +83,24 @@
                 <div class="col-12 col-md-6 col-lg-6 form-group settlement" style="display:none">
                     <label for="Settlement">Населено място</label>
                     <input type="hidden" id="SettlementId" />
-                    <input id="Settlement" class="form-control" required />
+                    <select id="Settlement" class="form-control" required></select>
+                    <span class="decided-by-us-settlement-info text-info" style="display:none">Това не е задължително</span>
                 </div>
             </div>
-            <div class="place-addition-info">
+            <div class="place-addition-info" style="display:none">
                 <div class="row">
-                    <div class="col-12 form-group user-place" style="display:none">
+                    <div class="col-12 form-group user-place">
                         <label asp-for="UserPlace"></label>
                         <input asp-for="UserPlace" class="form-control" />
                     </div>
                 </div>
                 <div class="row">
 
-                    <div class="col-12 form-group google-maps-link" style="display:none">
+                    <div class="col-12 form-group google-maps-link">
                         <label asp-for="GoogleMapsLink"></label>
                         <input asp-for="GoogleMapsLink" class="form-control" />
                         <br />
-                        <span><i>По избор, но силно препоръчително :)</i></span>
+                        <span class="text-info"><i>Това не е задължително, но е силно препоръчително :)</i></span>
                     </div>
                 </div>
             </div>
@@ -113,13 +113,30 @@
                 </div>
             </div>
         </div>
-        <div class="dates-container" style="display:none">
+        <div class="dates-container">
             <div class="row bg-light mt-3">
                 <div class="col-12 p-1">
                     <h4>Дата и час</h4>
                 </div>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-5 row-dates-all" style="display:none;">
+                <div class="col-12 scrollmenu" id="dates-list">
+                    <div id="date-buttons-slider">
+                        @for (int i = 0; i < remainingDates.Count; i++)
+                        {
+                            <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
+                                <div class="card-header card-header-date">
+                                    <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    Busy
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5 row-dates-weather-first-three" style="display:none;">
                 @for (int i = 0; i < 3; i++)
                 {
                     <div class="col-12 col-md-6 col-lg-4 mx-auto">
@@ -140,7 +157,7 @@
                     </div>
                 }
             </div>
-            <div class="row mt-5">
+            <div class="row mt-5 row-dates-weather-remaining" style="display:none;">
                 <div class="col-12 scrollmenu" id="dates-list">
                     <div id="date-buttons-slider">
                         @for (int i = 3; i < remainingDates.Count; i++)
@@ -153,36 +170,34 @@
                                     Busy
                                 </div>
                             </div>
-
+                            @*This will be used when more expensive Weather APIsubscription is bought*@
+                            @*The current is for 3 days only*@
                             @*<button type="button" class="btn-date">
-                        <b>@remainingDates[i].ToString("dd.MM")</b>
-                        <hr />
-                        <p><span class="temperatureCurrent">0</span>C°</p>
-                        <p><span class="forecastText"></span></p>
-                        <p>Precipitation:<span class="precipitation"> 0</span>%</p>
-                        </button>*@
-                        }
-                    </div>
-
-
-                </div>
-                <div class="row">
-                    <div class="col-12 hours-container mx-auto text-center" id="hours-container" style="display:none">
-                        <hr />
-                        @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
-                        {
-                            <button type="button" class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-lg btn-time-slot" id="time-slot">
-                                @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
-                            </button>
+                            <b>@remainingDates[i].ToString("dd.MM")</b>
+                            <hr />
+                            <p><span class="temperatureCurrent">0</span>C°</p>
+                            <p><span class="forecastText"></span></p>
+                            <p>Precipitation:<span class="precipitation"> 0</span>%</p>
+                            </button>*@
                         }
                     </div>
                 </div>
-                <div class="row row-total-price mt-5">
-                    <div class="col-12 text-center">
-                        <input type="hidden" asp-for="Price"/>
-                        <h3>Цена</h3>
-                        <h1 class="mt-2"><span id="total-price"></span> лв</h1>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-12 hours-container mx-auto text-center" id="hours-container" style="display:none">
+                    <hr />
+                    @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
+                    {
+                        <button type="button" class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-lg btn-time-slot" id="time-slot">
+                            @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="row row-total-price mt-5" style="display:none">
+                <div class="col-12 text-center">
+                    <h3>Цена</h3>
+                    <h1 class="mt-2"><span id="total-price"></span> лв</h1>
                 </div>
             </div>
         </div>
@@ -278,36 +293,54 @@
         border:none;
     }
 
+
+
 </style>
 
 <script>
     $(document).ready(function(){
         $("#IsDecidedByUs").change(function () {
             if (this.checked) {
+                $("#Settlement").val('');
                 $(".row-decided-by-us-info").css("display", "block");
-                $(".dates-container").css("display", "block");
+                $(".decided-by-us-settlement-info").css("display", "unset");
+                $(".row-dates-all").css("display", "flex");
+                $(".row-dates-weather-first-three").css("display", "none");
+                $(".row-dates-weather-remaining").css("display", "none");
+                $(".place-addition-info").css("display", "none");
             }
             else {
                 $(".row-decided-by-us-info").css("display", "none");
-                $(".dates-container").css("display", "unset");
+                $(".decided-by-us-settlement-info").css("display", "none");
+                $(".row-dates-all").css("display", "none");
+                $(".row-dates-weather-first-three").css("display", "flex");
+                $(".row-dates-weather-remaining").css("display", "flex");
+                $(".place-addition-info").css("display", "block");
             }
+            updatePrice();
         });
 
         $("#Region").change(function () {
-            getSettlementsByRegion($("#Region option:selected").text());
+            $("#Settlement").val('');
+            updatePrice();
             $(".settlement").css("display", "block");
+            getSettlementsByRegion($("#Region option:selected").text());
+            console.log($("#RegionId").val())
+            $("#RegionId").val($(this).val());
         })
 
         $("#Settlement").change(function () {
-            calculatePriceByDistance($(this).val());
+            updatePrice();
             getForecast($(this).val());
             //not used for now
             //$("#SettlementName").val($(this).val());
-            $(".dates-container").css("transition", ".4s");
-            $(".dates-container").css("display", "block");
-            if ($("#IsDecidedByUs").checked == false){
-                $(".user-place").css("display", "block");
-                $(".google-maps-link").css("display", "block");
+            
+            if ($("#IsDecidedByUs").prop('checked') == false) {
+                $(".place-addition-info").css("display", "block");
+                $(".row-dates-weather-first-three").css("transition", ".4s");
+                $(".row-dates-weather-remaining").css("transition", ".4s");
+                $(".row-dates-weather-first-three").css("display", "flex");
+                $(".row-dates-weather-remaining").css("display", "flex");
             }
         });
 
@@ -337,8 +370,6 @@
             
         });
 
-        $(".btn-time-slot")
-
         $(document).on("click", ".btn-time-slot", function (event) {
             event.preventDefault();
             if ($(this).hasClass("btn-outline-success")) {
@@ -351,10 +382,9 @@
             }
         });
 
-        
         setDate();
         
-        //hide description
+        //hide description on page load
         $("#photo-shoot-type-description").css("display", "none");
 
         $("#PhotoShootType").change(function () {
@@ -368,10 +398,9 @@
             else{
                 $("#photo-shoot-type-description").css("display", "none");
             }
-        });
 
-        $("#PhotoShootType").change(function () {
             checkPhotoShootTypeDescriptionEmpty();
+            updatePrice();
         });
     });;
 
@@ -447,11 +476,11 @@
         });
     }
 
-    function getForecast(settlement) {
+    function getForecast(settlementId) {
         var request = $.ajax({
             url: "@Url.Action("forecast", "Weather")",
             method: "GET",
-            data: { settlement: settlement },
+            data: { settlementId: settlementId },
             success: function (response) {
                 let json = JSON.parse(JSON.stringify(response));
                 $(".card-weather").each(function (i) {
@@ -489,37 +518,56 @@
     }*/
 
     function getSettlementsByRegion(region) {
-        var request = $.ajax({
+        $.ajax({
             url: "@Url.Action("settlementsByRegion", "Settlement")",
             method: "GET",
             data: { region: region },
             success: function (response) {
-                $("#Settlement").autocomplete({
-                    source: response.map(r => r.nameLatin)
-            });
-            
-            return response;
+                console.log(response);
+                $("#Settlement").selectize({
+                    respect_word_boundaries: false,
+                    plugins: ["restore_on_backspace", "clear_button"],
+                    delimiter: " - ",
+                    persist: false,
+                    maxItems: 1,
+                    valueField: "id",
+                    labelField: "name",
+                    searchField: ["name"],
+                    options: response,
+                    onChange: function (value) {
+                        updatePrice();
+                        getForecast(value);
+                        //not used for now
+                        //$("#SettlementName").val($(this).val());
+
+                        if ($("#IsDecidedByUs").prop('checked') == false) {
+                            $(".place-addition-info").css("display", "block");
+                            $(".row-dates-weather-first-three").css("transition", ".4s");
+                            $(".row-dates-weather-remaining").css("transition", ".4s");
+                            $(".row-dates-weather-first-three").css("display", "flex");
+                            $(".row-dates-weather-remaining").css("display", "flex");
+                        }
+                    }
+                });
             },
             error: function (response) {
                 console.log("error");
                 console.log(response);
-            }
+            },
         });
     }
-
-    function calculatePriceByDistance(settlement) {
+    
+    function calculatePriceByDistance(settlement, isRegion = false) {
         let price = 0;
-        let region = $("#Region").find(":selected").text();
-        let settlementData = [region, settlement];
+        let regionId = $("#Region").find(":selected").val();
         var request = $.ajax({
             contentType: 'application/json',
             url: "@Url.Action("fuelPrice", "Calculations")",
             traditional: true,
             method: "GET",
-            data: { 'settlementData': settlementData },
+            data: { 'regionId': regionId },
             success: function (response) {
                 calculateTotalPrice($("#PhotoShootType").find(":selected").val(), response)
-                $("#price").html(response);
                 $(".col-price").css("display", "block");
             },
             error: function (response) {
@@ -538,7 +586,6 @@
             data: { 'photoshootType': photoshootType, 'fuelPrice': fuelPrice },
             success: function (response) {
                 price = response;
-                $("#Price").val(response);
                 $("#total-price").html(response);
                 $(".row-total-price").css("display", "block");
             },
@@ -548,4 +595,29 @@
             }
         });
     }
+
+    function updatePrice(){
+        $("#total-price").html('');
+
+        let photoshootType = $("#PhotoShootType").find(":selected").val();
+
+        if ($("#IsDecidedByUs").is(":checked")) {
+            if($("#Settlement").val() == ''){
+                let fuelPriceWhenDecidedByUs = calculatePriceByDistance($("#Region option:selected").text(), true);
+                calculateTotalPrice(photoshootType, fuelPriceWhenDecidedByUs);
+            }
+            else{
+                let fuelPriceWhenDecidedByUser = calculatePriceByDistance($("#Settlement").val(), false);
+                calculateTotalPrice(photoshootType, fuelPriceWhenDecidedByUser);
+            }
+        }
+
+        else{
+            if ($("#Settlement").val() != '') {
+                let fuelPriceWhenDecidedByUser = calculatePriceByDistance($("#Region option:selected").text(), false);
+                calculateTotalPrice(photoshootType, fuelPriceWhenDecidedByUser);
+            }
+        }
+    }
+
 </script>

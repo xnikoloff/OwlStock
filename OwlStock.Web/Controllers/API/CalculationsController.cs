@@ -24,9 +24,9 @@ namespace OwlStock.Web.Controllers.API
 
         [HttpGet]
         [Route("fuelPrice")]
-        public async Task<decimal> CalculateFuelPrice([FromQuery]string[] settlementData)
+        public decimal CalculateFuelPrice([FromQuery]int regionId)
         {
-            return await _calculationsService.CalculateFuelPrice(settlementData);
+            return _calculationsService.CalculateFuelPrice(regionId);   
         }
     }
 }

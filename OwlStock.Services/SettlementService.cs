@@ -32,6 +32,25 @@ namespace OwlStock.Services
             return await _context.Cities.Where(c => c.Name.Contains(query)).ToListAsync();
         }
 
+        public async Task<City> GetCityById(int id)
+        {
+            if(_context.Cities is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
+            }
+
+            if(id == 0)
+            {
+                throw new NullReferenceException($"{nameof(id)} is 0");
+            }
+
+            return await _context.Cities
+                .Include(c => c.Region)
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync() ?? 
+                throw new NullReferenceException($"City with {nameof(id)} {id} cannot be found");
+        }
+
         public async Task<IEnumerable<Region>> GetServicedRegion()
         {
             if (_context.Regions is null)
@@ -62,31 +81,25 @@ namespace OwlStock.Services
             return result;
         }
 
-        //not used for now
-        /*public async Task<double[]> GetLatitudeAndLongitude(string settlement)
+        public async Task<double[]> GetLatitudeAndLongitude(int settlementId)
         {
             if (_context.Cities is null)
             {
                 throw new NullReferenceException($"{nameof(_context.Cities)} is null");
             }
 
-            if (settlement.IsNullOrEmpty())
-            {
-                throw new NullReferenceException($"{nameof(settlement)} is null or empty");
-            }
-
             double[]? data = await _context.Cities
-                .Where(c => c.NameLatin!.Equals(settlement))
+                .Where(c => c.Id == settlementId)
                 .Select(c => new double[] { c.Latitude, c.Longitude })
                 .FirstOrDefaultAsync();
 
             if (data?.Length == 0 || data == null)
             {
-                throw new NullReferenceException($"{nameof(City)} with name {settlement} cannot be found");
+                throw new NullReferenceException($"{nameof(City)} with Id {settlementId} cannot be found");
             }
 
             return data;
-        }*/
+        }
 
         public async Task<IEnumerable<SettlementInfo>> GetSettlementInfo(string settlement)
         {

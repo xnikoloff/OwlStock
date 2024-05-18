@@ -14,17 +14,17 @@ namespace OwlStock.Services
         private readonly OwlStockDbContext _context;
         private readonly IEmailService _emailService;
         private readonly ICalendarService _calendarService;
-        //private readonly ICalculationsService _calculationsService;
-        //private readonly ISettlementService _settlementService;
+        private readonly ICalculationsService _calculationsService;
+        private readonly ISettlementService _settlementService;
 
-        public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService
-            /*ICalculationsService calculationsService, ISettlementService settlementService*/)
+        public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService,
+            ICalculationsService calculationsService, ISettlementService settlementService)
         {
             _context = context;
             _emailService = emailService;
             _calendarService = calendarService;
-            //_calculationsService = calculationsService;
-            //_settlementService = settlementService;
+            _calculationsService = calculationsService;
+            _settlementService = settlementService;
         }
 
         public async Task<PhotoShoot> PhotoShootById(Guid id)
@@ -89,6 +89,10 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
+            City city = await _settlementService.GetCityById(dto.SelectedSettlementId);
+            string[] coordinates = new string[] { city.Latitude.ToString(), city.Longitude.ToString() };
+            decimal fuelPrice = _calculationsService.CalculateFuelPrice(city.RegionId);
+            decimal totalPrice = _calculationsService.CalculatePhotoshootPrice(dto.PhotoShootType, fuelPrice);
             //not used for now
             //double[] settlementLatAndLon = await _settlementService.GetLatitudeAndLongitude(dto.SettlementName ?? 
             //    throw new NullReferenceException($"{nameof(dto.SettlementName)} is null or empty"));
@@ -107,8 +111,9 @@ namespace OwlStock.Services
                 UserPlace = dto.UserPlace,
                 GoogleMapsLink = dto.GoogleMapsLink,
                 IsDecidedByUs = dto.IsDecidedByUs,
-                Price = dto.Price,
-                IdentityUserId = dto.IdentityUserId
+                Price = totalPrice,
+                IdentityUserId = dto.IdentityUserId,
+                CityId = dto.SelectedSettlementId
             };
 
             //not used for now

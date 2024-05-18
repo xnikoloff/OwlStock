@@ -2,6 +2,9 @@
 using OwlStock.Services.Common.HelperClasses.Weather;
 using OwlStock.Services.Interfaces;
 using Newtonsoft.Json;
+using OwlStock.Infrastructure;
+using OwlStock.Domain.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OwlStock.Services
 {
@@ -13,12 +16,14 @@ namespace OwlStock.Services
 
         private readonly string _host;
         private readonly IConfiguration _configuration;
+        private readonly ISettlementService _settlementService;
 
-        public WeatherService(IConfiguration configuration)
+        public WeatherService(IConfiguration configuration, ISettlementService settlementService)
         {
             _configuration = configuration;
             _host = _configuration.GetSection("Weather").GetSection("Host").Value!;
             _apiKey = configuration.GetSection("Weather").GetSection("Key").Value!;
+            _settlementService = settlementService;
         }
         
         public async Task<WeatherCurrent> GetCurrentWeather(string settlement)
@@ -35,12 +40,19 @@ namespace OwlStock.Services
             return forecast ?? throw new NullReferenceException($"{nameof(forecast)} is null");
         }
 
-        public async Task<WeatherForecast> GetForecast(string settlement)
+        public async Task<WeatherForecast> GetForecast(string settlementId)
         {
+            if (settlementId.IsNullOrEmpty())
+            {
+                throw new NullReferenceException($"{nameof(settlementId)} is null or empty");
+            }
+
             using HttpClient client = new();
             client.BaseAddress = new Uri(_host);
 
-            string url = Path.Combine(_host, _configuration.GetSection("Weather").GetSection("Forecast").Value! + $"?q={settlement}&days={_days}&lang={_language}&key={_apiKey}");
+            City city = await _settlementService.GetCityById(int.Parse(settlementId));
+
+            string url = Path.Combine(_host, _configuration.GetSection("Weather").GetSection("Forecast").Value! + $"?q={city.NameLatin}&days={_days}&lang={_language}&key={_apiKey}");
             HttpResponseMessage response = await client.GetAsync(url);
 
             string json = await response.Content.ReadAsStringAsync();

@@ -56,7 +56,6 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         [Display(Name = "Линк към Google Maps")]
         public string? GoogleMapsLink { get; set; }
 
-        [Required]
         public decimal Price { get; set; }
 
         public Dictionary<DateOnly, IEnumerable<TimeSlot>>? Calendar { get; set; }
@@ -67,5 +66,6 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         public TimeSlot[]? AllTimeSlots { get; set; }
 
         public string? IdentityUserId { get; set; }
+        public int SelectedSettlementId { get; set; }
     }
 }

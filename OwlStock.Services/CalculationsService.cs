@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OwlStock.Domain.Entities;
-using OwlStock.Domain.Enumerations;
+﻿using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Services.Common;
+using OwlStock.Services.Common.Enumerations;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services
@@ -74,7 +73,7 @@ namespace OwlStock.Services
             }
         }
 
-        public async Task<decimal> CalculateFuelPrice(string[] data)
+        public decimal CalculateFuelPrice(int regionId)
         {
             if (_context.Regions is null)
             {
@@ -86,16 +85,43 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.Cities)} is null");
             }
 
-            int regionId = await _context.Regions
-                .Where(r => r.Name!.Equals(data[0]))
-            .Select(r => r.Id)
-            .FirstOrDefaultAsync();
+            double latitude = 0;
+            double longitude = 0;
 
-            City? city = await _context.Cities.Where(c => c.RegionId == regionId && c.NameLatin!.Equals(data[1])).FirstOrDefaultAsync() ??
-                throw new NullReferenceException($"{nameof(city)} with RegionId {regionId} and name ${data[1]} cannot be found");
+            switch (regionId)
+            {
+                case (int)RegionEnum.Plovdiv:
+                {
+                    latitude = DefaultValue.LatitudePlovdiv;
+                    longitude = DefaultValue.LongitudePlovdiv;
+                    break;
+                }
 
-            double distance = CalculateDistance(city.Latitude, city.Longitude, DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude);
+                case (int)RegionEnum.Pazardzhik:
+                {
+                    latitude = DefaultValue.LatitudeHaskovo;
+                    longitude = DefaultValue.LongitudeHaskovo;
+                    break;
+                }
+
+                case (int)RegionEnum.StaraZagora:
+                {
+                    latitude = DefaultValue.LatitudeStaraZagora;
+                    longitude = DefaultValue.LongitudeStaraZagora;
+                    break;
+                }
+
+                case (int)RegionEnum.Haskovo:
+                {
+                    latitude = DefaultValue.LatitudePazarzhik;
+                    longitude = DefaultValue.LongitudePazarzhik;
+                    break;
+                }
+            }
+
+            double distance = CalculateDistance(latitude, longitude, DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude);
             return CalculatePriceByDistance(Math.Ceiling(distance));
+
         }
 
         public double CalculateDistance(double latitudeA, double longitudeA, double latitudeB, double longitudeB)
@@ -130,5 +156,6 @@ namespace OwlStock.Services
             //double the distance to include the time needed to go back to point A
             return Math.Round(distance / DefaultValue.Speed) * 2;
         }*/
+
     }
 }

@@ -17,8 +17,9 @@ namespace OwlStock.Tests.PhotoshootTests
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
             Mock<ISettlementService> settlementServiceMock = new();
+            Mock<CalculationsService> calculationsServiceMock = new();
             CalendarService calendarService = new();
-            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService);
+            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationsServiceMock.Object, settlementServiceMock.Object);
 
             //Act
             //existing guid in database
@@ -37,8 +38,9 @@ namespace OwlStock.Tests.PhotoshootTests
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
             Mock<ISettlementService> settlementServiceMock = new();
+            Mock<CalculationsService> calculationsServiceMock = new();
             CalendarService calendarService = new();
-            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService);
+            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationsServiceMock.Object, settlementServiceMock.Object);
 
             //Act
             //not existing guid
@@ -57,7 +59,7 @@ namespace OwlStock.Tests.PhotoshootTests
             Mock<ICalendarService> calendarServiceMock = new();
             Mock<ISettlementService> settlementServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
-            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarServiceMock.Object);
+            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarServiceMock.Object, calculationServiceMock.Object, settlementServiceMock.Object);
             
             //Act
             //existing Id

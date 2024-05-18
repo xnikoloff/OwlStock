@@ -20,9 +20,9 @@ namespace OwlStock.Web.Controllers.API
 
         [HttpGet]
         [Route("forecast")]
-        public async Task<WeatherForecast> GetForecast(string settlement)
+        public async Task<WeatherForecast> GetForecast(string settlementId)
         {
-            WeatherForecast foreacast = await _weatherService.GetForecast(settlement);
+            WeatherForecast foreacast = await _weatherService.GetForecast(settlementId);
             return foreacast;
         }
 

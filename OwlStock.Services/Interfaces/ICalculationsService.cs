@@ -17,7 +17,7 @@ namespace OwlStock.Services.Interfaces
         /// </summary>
         /// <param name="settlementData">0th element is the region, 1st element is the settlement</param>
         /// <returns></returns>
-        Task<decimal> CalculateFuelPrice(string[] settlementData);
+        decimal CalculateFuelPrice(int regionId);
 
         /// <summary>
         /// Calculates price by provided latitude and longitude for two settlements

@@ -6,11 +6,10 @@ namespace OwlStock.Services.Interfaces
     public interface ISettlementService
     {
         Task<IEnumerable<City>> Autocomplete(string query);
+        Task<City> GetCityById(int id);
         Task<IEnumerable<Region>> GetServicedRegion();
         Task<IEnumerable<City>> GetCitiesByRegion(string region);
         Task<IEnumerable<SettlementInfo>> GetSettlementInfo(string settlement);
-        
-        //not used for now
-        //Task<double[]> GetLatitudeAndLongitude(string settlement);
+        Task<double[]> GetLatitudeAndLongitude(int settlementId);
     }
 }
