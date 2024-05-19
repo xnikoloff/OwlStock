@@ -24,22 +24,22 @@
         </div>
         <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PersonFirstName"></label>
+                <label asp-for="PersonFirstName" class="required"></label>
                 <input asp-for="PersonFirstName" class="form-control" required />
                 <span asp-validation-for="PersonFirstName" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PersonLastName"></label>
+                <label asp-for="PersonLastName" class="required"></label>
                 <input asp-for="PersonLastName" class="form-control" required />
                 <span asp-validation-for="PersonLastName" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PersonPhone"></label>
+                <label asp-for="PersonPhone" class="required"></label>
                 <input asp-for="PersonPhone" class="form-control" required />
                 <span asp-validation-for="PersonPhone" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PhotoShootType"></label>
+                <label asp-for="PhotoShootType" class="required"></label>
                 <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control" required></select>
                 <span asp-validation-for="PhotoShootType" class="text-danger"></span>
             </div>
@@ -51,7 +51,7 @@
                 <span asp-validation-for="ReservationDate" class="text-danger"></span>
             </div>-->
             <div class="col-12 form-group" id="photo-shoot-type-description">
-                <label asp-for="PhotoShootTypeDescription"></label>
+                <label asp-for="PhotoShootTypeDescription" class="required"></label>
                 <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="6" class="form-control"></textarea>
                 <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
             </div>
@@ -75,14 +75,14 @@
         <div class="place-container">
             <div class="row mt-3">
                 <div class="col-12 col-md-6 col-lg-6 form-group">
-                    <label for="Region">Област</label>
+                    <label for="Region" class="required">Област</label>
                     <input type="hidden" id="RegionId" />
                     <select id="Region" class="form-control" asp-items="@(new SelectList(Model.ServicedRegions, "Id", "Name"))" required>
                         <option value="0" selected></option>
                     </select>
                 </div>
                 <div class="col-12 col-md-6 col-lg-6 form-group settlement" style="display:none">
-                    <label for="Settlement">Населено място</label>
+                    <label for="Settlement" class="required">Населено място</label>
                     <input type="hidden" id="SettlementId" />
                     <select id="Settlement" class="form-control" required></select>
                     <span class="decided-by-us-settlement-info text-info" style="display:none">Това не е задължително</span>
@@ -91,8 +91,8 @@
             <div class="place-addition-info" style="display:none">
                 <div class="row">
                     <div class="col-12 form-group user-place">
-                        <label asp-for="UserPlace"></label>
-                        <input asp-for="UserPlace" class="form-control" />
+                        <label asp-for="UserPlace" class="required"></label>
+                        <input asp-for="UserPlace" class="form-control" required />
                     </div>
                 </div>
                 <div class="row">
@@ -213,6 +213,11 @@
     
 
 <style>
+    .required:after {
+        content: " *";
+        color: red;
+    }
+
     .is-decided-by-us{
         margin-left: 40px;
         transform: scale(1.2);

@@ -48,6 +48,7 @@ namespace OwlStock.Services.DTOs.PhotoShoot
 
         [Display(Name = "Място на фотосесията")]
         [MaxLength(ModelConstraints.UserPlace)]
+        [Required(ErrorMessage = "Място на фотосесията е задължително")]
         public string? UserPlace { get; set; }
 
         [Display(Name = "Нека ние изберем място за Вас")]

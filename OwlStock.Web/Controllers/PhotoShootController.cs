@@ -72,6 +72,10 @@ namespace OwlStock.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                dto.Calendar = await _photoShootService.GetPhotoShootsCalendar();
+                dto.AllTimeSlots = _calendarService.GetTimeSlots();
+                dto.RemainingDates = _calendarService.GetRemainingDates().ToList();
+                dto.ServicedRegions = (await _settlementService.GetServicedRegion()).ToList();
                 return View(dto);
             }
 
