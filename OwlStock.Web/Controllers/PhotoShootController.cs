@@ -70,6 +70,11 @@ namespace OwlStock.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Reserve(CreatePhotoShootDTO dto)
         {
+            if (dto.IsDecidedByUs)
+            {
+                ModelState.Remove("UserPlace");
+            }
+
             if (!ModelState.IsValid)
             {
                 dto.Calendar = await _photoShootService.GetPhotoShootsCalendar();

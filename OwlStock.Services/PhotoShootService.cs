@@ -88,11 +88,8 @@ namespace OwlStock.Services
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
-
-            City city = await _settlementService.GetCityById(int.Parse(dto.SelectedSettlementId ?? "0"));
-            string[] coordinates = new string[] { city.Latitude.ToString(), city.Longitude.ToString() };
-            decimal fuelPrice = _calculationsService.CalculateFuelPrice(city.RegionId);
-            decimal totalPrice = _calculationsService.CalculatePhotoshootPrice(dto.PhotoShootType, fuelPrice);
+            
+            decimal totalPrice = _calculationsService.CalculatePhotoshootPrice(dto.PhotoShootType, dto.FuelPrice);
             //not used for now
             //double[] settlementLatAndLon = await _settlementService.GetLatitudeAndLongitude(dto.SettlementName ?? 
             //    throw new NullReferenceException($"{nameof(dto.SettlementName)} is null or empty"));
@@ -113,8 +110,12 @@ namespace OwlStock.Services
                 IsDecidedByUs = dto.IsDecidedByUs,
                 Price = totalPrice,
                 IdentityUserId = dto.IdentityUserId,
-                CityId = int.Parse(dto.SelectedSettlementId ?? throw new ArgumentNullException(dto.SelectedSettlementId))
             };
+
+            if (!dto.IsDecidedByUs)
+            {
+                photoShoot.CityId = int.Parse(dto.SelectedSettlementId ?? throw new ArgumentNullException(dto.SelectedSettlementId));
+            }
 
             //not used for now
             //double timeForTravel = _calculationsService.CalculateTimeForTravel(DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude,

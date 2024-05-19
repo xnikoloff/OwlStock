@@ -15,6 +15,7 @@
         <input type="hidden" asp-for="ReservationDate" />
         <input type="hidden" asp-for="ReservationTime" />
         <input type="hidden" asp-for="SelectedSettlementId" />
+        <input type="hidden" asp-for="FuelPrice" />
         @*not used for now*@
         @*<input type="hidden" asp-for="SettlementName" />*@
         <div class="row bg-light mt-3">
@@ -82,9 +83,9 @@
                     </select>
                 </div>
                 <div class="col-12 col-md-6 col-lg-6 form-group settlement" style="display:none">
-                    <label for="Settlement" class="required">Населено място</label>
+                    <label for="Settlement">Населено място</label>
                     <input type="hidden" id="SettlementId" />
-                    <select id="Settlement" class="form-control" required></select>
+                    <select id="Settlement" class="form-control"></select>
                     <span class="decided-by-us-settlement-info text-info" style="display:none">Това не е задължително</span>
                 </div>
             </div>
@@ -92,7 +93,7 @@
                 <div class="row">
                     <div class="col-12 form-group user-place">
                         <label asp-for="UserPlace" class="required"></label>
-                        <input asp-for="UserPlace" class="form-control" required />
+                        <input asp-for="UserPlace" class="form-control" />
                     </div>
                 </div>
                 <div class="row">
@@ -575,7 +576,8 @@
             data: { 'regionId': regionId },
             success: function (response) {
                 console.log(response);
-                calculateTotalPrice($("#PhotoShootType").find(":selected").val(), response)
+                calculateTotalPrice($("#PhotoShootType").find(":selected").val(), response);
+                $("#FuelPrice").val(response);
                 $(".col-price").css("display", "block");
             },
             error: function (response) {
