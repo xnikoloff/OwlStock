@@ -130,9 +130,9 @@
                                 <div class="card-header card-header-date">
                                     <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
                                 </div>
-                                <div class="card-body text-center">
+                                <!--<div class="card-body text-center">
                                     Busy
-                                </div>
+                                </div>-->
                             </div>
                         }
                     </div>
@@ -152,9 +152,9 @@
                                 <p class="forecastText">Нямаме информация за времето :(</p>
                                 @*<p class="precipitation"></p>*@
                             </div>
-                            <div class="card-footer  text-center">
+                           <!-- <div class="card-footer  text-center">
                                 Busy
-                            </div>
+                             </div>-->
                         </div>
                     </div>
                 }
@@ -168,9 +168,9 @@
                                 <div class="card-header card-header-date">
                                     <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
                                 </div>
-                                <div class="card-body text-center">
+                                <!--<div class="card-body text-center">
                                     Busy
-                                </div>
+                                </div>-->
                             </div>
                             @*This will be used when more expensive Weather APIsubscription is bought*@
                             @*The current is for 3 days only*@
@@ -382,8 +382,9 @@
                 $("#ReservationTime").val($(this).text());
                 $("#btn-book").prop("disabled", false);
             }
-
+            
             else {
+                alert("Избраният час е зает");
                 $("#btn-book").prop("disabled", true);
             }
         });
