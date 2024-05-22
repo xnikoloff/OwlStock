@@ -24,19 +24,19 @@
             <span class="icon"><i class="fa-solid fa-coins fa-2xl"></i></span>
             <h4 class="icon-title">Цени</h4>
             <p class="icon-text">Разгледайте ценовата ни гама, за предлаганите от нас услуги</p>
-            <a asp-controller="StaticContent" asp-action="Prices" class="btn btn-outline-primary icon-cta-btn">Повече</a>
+            <a asp-controller="StaticContent" asp-action="Pricing" class="btn btn-outline-primary icon-cta-btn">Повече</a>
         </div>
         <div class="col-12 col-md-6 col-lg-3 icons-column">
             <span class="icon"><i class="fa-solid fa-images fa-2xl"></i></span>
             <h4 class="icon-title">Галерия</h4>
             <p class="icon-text">Вдъхновете се от вече направените от нас фотографии</p>
-            <a asp-controller="StaticContent" asp-action="Gallery" class="btn btn-outline-primary icon-cta-btn">Повече</a>
+            <a asp-controller="Photo" asp-action="All" class="btn btn-outline-primary icon-cta-btn">Повече</a>
         </div>
         <div class="col-12 col-md-6 col-lg-3 icons-column">
             <span class="icon"><i class="fa-solid fa-bolt-lightning fa-2xl"></i></span>
             <h4 class="icon-title">За нас</h4>
             <p class="icon-text">Научете повече за нашата дейност и история</p>
-            <a asp-controller="StaticContent" asp-action="AboutUs" class="btn btn-outline-primary icon-cta-btn">Повече</a>
+            <a asp-controller="StaticContent" asp-action="About" class="btn btn-outline-primary icon-cta-btn">Повече</a>
         </div>
     </div>
     <!-- Portfolio Grid-->
@@ -44,7 +44,7 @@
         <div class="container">
             <div class="text-center">
                 <h2 class="section-heading text-uppercase">Актуално</h2>
-                <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                <h3 class="section-subheading text-muted">Разгледайте активните и предложения и промоции</h3>
             </div>
             <div class="row">
                 <div class="col-sm-6 mb-4">
@@ -113,11 +113,11 @@
 </div>
 
 <style>
-    .banner-container{
-        /*bottom only*/
+    /*.banner-container{
+        bottom only
         
         dow: 0 8px 5px -5px #333;
-    }
+    }*/
 
     .banner {
         margin-top: 100px;

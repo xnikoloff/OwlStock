@@ -9,6 +9,7 @@
         internal const decimal PromPhotoshoot = 400m;
         internal const decimal KidsPhotoshoot = 200m;
         internal const decimal Automotive = 100m;
+        internal const decimal Baptism = 300m;
 
         //Fuel
         internal const decimal FuelPriceByKilometer = 0.18m;
