@@ -2,6 +2,9 @@
   "version": "1.0",
   "defaultProvider": "cdnjs",
   "libraries": [
-    
+    {
+      "library": "wysihtml@0.5.5",
+      "destination": "wwwroot/wysihtml/"
+    }
   ]
 }

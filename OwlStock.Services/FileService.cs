@@ -1,4 +1,5 @@
-﻿using OwlStock.Domain.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using OwlStock.Domain.Entities;
 
 namespace OwlStock.Services
 {
@@ -49,6 +50,22 @@ namespace OwlStock.Services
             }
             
             return false;
+        }
+
+        public async Task CreateIFormFile(IFormFile file, string webRootPath)
+        {
+            if(file == null) 
+            { 
+                throw new NullReferenceException($"{nameof(file)} is null");
+            }
+
+            string filePath = Path.Combine(webRootPath, "resources", "images", file.FileName);
+            if (file.Length > 0)
+            {
+                using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+            }
+            
         }
     }
 }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlStock.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlStock.Services", "OwlStock.Services\OwlStock.Services.csproj", "{C0F7B389-1354-4A87-9764-5F0DAABA8E17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OwlStock.Tests", "OwlStock.Tests\OwlStock.Tests.csproj", "{243BE15F-9BBC-4097-9512-ED30E658C2E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlStock.Tests", "OwlStock.Tests\OwlStock.Tests.csproj", "{243BE15F-9BBC-4097-9512-ED30E658C2E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

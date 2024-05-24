@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.ObjectPool;
 using OwlStock.Infrastructure;
 using OwlStock.Services;
 using System.Text.Json.Serialization;
@@ -65,6 +64,8 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapDefaultControllerRoute();
+
+//app.MapControllerRoute("dreampixRoute", "{action}/{id?}");
 
 using (var scope = app.Services.CreateScope())
 {

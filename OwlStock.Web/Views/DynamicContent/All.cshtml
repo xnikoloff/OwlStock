@@ -1,0 +1,39 @@
+﻿@model IEnumerable<DynamicContent>
+
+@{
+    ViewData["Title"] = "Актуално";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach(DynamicContent dynamicContent in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <a asp-action="Content" asp-controller="DynamicContent" asp-route-id="@dynamicContent.Id"><img src="~/resources/images/@(dynamicContent.ImageName)" /></a>
+                    </div>
+                    <div class="card-footer">
+                        <h6>@dynamicContent.Title</h6>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card{
+        max-width: 250px;
+        min-height: 200px;
+    }
+
+    .card .card-body{
+        width: 100%;
+    }
+    .card .card-body img{
+        width: 200px;
+        text-align: center;
+        margin: 0 auto;
+    }
+</style>

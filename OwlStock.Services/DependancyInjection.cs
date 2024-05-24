@@ -22,6 +22,7 @@ namespace OwlStock.Services
             services.AddTransient<ISettlementService, SettlementService>();
             services.AddTransient<IWeatherService, WeatherService>();
             services.AddTransient<ICalculationsService, CalculationsService>();
+            services.AddTransient<IDynamicContentService, DynamicContentService>();
 
             return services;
         }
