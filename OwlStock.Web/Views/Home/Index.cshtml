@@ -1,4 +1,4 @@
-﻿@model List<GalleryPhoto>
+﻿@model IEnumerable<DynamicContent>
 
 @{
     ViewData["Title"] = "Home page";
@@ -47,66 +47,23 @@
                 <h3 class="section-subheading text-muted">Разгледайте активните и предложения и промоции</h3>
             </div>
             <div class="row">
-                <div class="col-sm-6 mb-4">
-                    <!-- Portfolio item 1-->
-                    <div class="portfolio-item">
-                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal1">
-                            <div class="portfolio-hover">
-                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                @foreach(DynamicContent dynamicContent in Model)
+                {
+                    <div class="col-sm-6 mb-4">
+                        <div class="portfolio-item">
+                            <a asp-action="Content" asp-controller="DynamicContent" asp-route-id="@dynamicContent.Id" class="portfolio-link">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="~/resources/images/@(dynamicContent.ImageName)" alt="current1" />
+                            </a>
+                            <div class="portfolio-caption">
+                                <div class="portfolio-caption-heading">@dynamicContent.Title</div>
+                                <div class="portfolio-caption-subheading text-muted">@dynamicContent.Description</div>
                             </div>
-                            <img class="img-fluid" src="~/resources/images/free.jpg" alt="current1" />
-                        </a>
-                        <div class="portfolio-caption">
-                            <div class="portfolio-caption-heading">Спечели фотосесия</div>
-                            <div class="portfolio-caption-subheading text-muted">Участвай в игратани и спечели БЕЗПЛАТНА фотосесия</div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-6 mb-4">
-                    <!-- Portfolio item 2-->
-                    <div class="portfolio-item">
-                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal2">
-                            <div class="portfolio-hover">
-                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                            </div>
-                            <img class="img-fluid" src="~/resources/images/gift.jpg" alt="current2" />
-                        </a>
-                        <div class="portfolio-caption">
-                            <div class="portfolio-caption-heading">Подари ваучер</div>
-                            <div class="portfolio-caption-subheading text-muted">Зарадвай любим човек с уникален подарък</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 mb-4">
-                    <!-- Portfolio item 3-->
-                    <div class="portfolio-item">
-                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal3">
-                            <div class="portfolio-hover">
-                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                            </div>
-                            <img class="img-fluid" src="~/resources/images/kids.jpg" alt="current3" />
-                        </a>
-                        <div class="portfolio-caption">
-                            <div class="portfolio-caption-heading">50% намление на детска фотосесия</div>
-                            <div class="portfolio-caption-subheading text-muted">Създайте безценни спомени за децата ви на половин цена</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 mb-4 mb-lg-0">
-                    <!-- Portfolio item 4-->
-                    <div class="portfolio-item">
-                        <a class="portfolio-link" data-bs-toggle="modal" href="#portfolioModal4">
-                            <div class="portfolio-hover">
-                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                            </div>
-                            <img class="img-fluid" src="~/resources/images/easter.jpg" alt="current4" />
-                        </a>
-                        <div class="portfolio-caption">
-                            <div class="portfolio-caption-heading">Великден</div>
-                            <div class="portfolio-caption-subheading text-muted">Възползвайте се от Великденските ни промоции</div>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
             <div class="row">
                 <div class="col-12 text-center mt-3">

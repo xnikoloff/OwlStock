@@ -6,21 +6,21 @@ namespace OwlStock.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IGalleryService _galleryService;
+        private readonly IDynamicContentService _dynamicContentService;
         private readonly IHomeService _homeService;
         
-        public HomeController(IGalleryService galleryService, IHomeService homeService)
+        public HomeController(IDynamicContentService dynamicContentServic, IHomeService homeService)
         {
-            _galleryService = galleryService;
+            _dynamicContentService = dynamicContentServic;
             _homeService = homeService;
         }
 
         public async Task<IActionResult> Index()
         {
             ViewBag.HomePhoto = await _homeService.ChooseHomePagePhoto();
-            List<GalleryPhoto> galleryPhotos = await _galleryService.All();
+            IEnumerable<DynamicContent> dynamicContents = await _dynamicContentService.GetAll();
             
-            return View(galleryPhotos);
+            return View(dynamicContents);
         }
     }
 }

@@ -53,8 +53,10 @@ namespace OwlStock.Services
             await _context.SaveChangesAsync();
             await _fileService.CreateIFormFile(dto!.Image, dto!.WebRootPath);
 
-            return await _context.DynamicContents.OrderBy(dc => dc.Id).FirstOrDefaultAsync() ?? 
-                throw new NullReferenceException($"Cannot find DynamicContent");
+            return await _context.DynamicContents
+                .OrderByDescending(dc => dc.Id)
+                .FirstOrDefaultAsync() ?? 
+                    throw new NullReferenceException($"Cannot find DynamicContent");
         }
 
         public async Task Delete(Guid id)
@@ -90,6 +92,20 @@ namespace OwlStock.Services
             }
 
             return await _context.DynamicContents.ToListAsync();
+        }
+
+        public async Task<IEnumerable<DynamicContent>> GetLastFour()
+        {
+            if (_context.DynamicContents is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.DynamicContents)} is null");
+            }
+
+            return await _context.DynamicContents
+                .Where(dc => dc.ShowInTopPosition && dc.IsVisible)
+                .OrderBy(dc => dc.Id)
+                .Take(4)
+                .ToListAsync();
         }
     }
 }
