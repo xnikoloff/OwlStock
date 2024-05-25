@@ -1,0 +1,15 @@
+﻿@model string
+
+<div class="container-header">
+    <div class="row">
+        <div class="col-12 text-center col-title">
+            <h1 id="title">@Model</h1>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <a asp-action="Index" asp-controller="Home">Начало</a> - <a asp-action="All" asp-controller="DynamicContent">Актуално</a>
+        </div>
+    </div>
+</div>
+<hr />

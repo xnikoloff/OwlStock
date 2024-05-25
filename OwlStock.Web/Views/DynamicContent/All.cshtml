@@ -5,21 +5,20 @@
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-12 text-center">
-            <h1>Актуално</h1>
-        </div>
-    </div>
+    <partial name="_DynamicContentHeader.cshtml" model="@("Актуално")"/>
     <div class="row mt-5">
         @foreach(DynamicContent dynamicContent in Model)
         {
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-6 col-lg-3 text-center mx-auto">
                 <div class="card">
+                    <div class="card-header">
+                        <h6>@dynamicContent?.Title</h6>
+                    </div>
                     <div class="card-body">
-                        <a asp-action="Content" asp-controller="DynamicContent" asp-route-id="@dynamicContent.Id"><img src="~/resources/images/@(dynamicContent.ImageName)" /></a>
+                        <a asp-action="Content" asp-controller="DynamicContent" asp-route-id="@dynamicContent?.Id"><img src="~/resources/images/@(dynamicContent?.ImageName)" /></a>
                     </div>
                     <div class="card-footer">
-                        <h6>@dynamicContent.Title</h6>
+                        <p>@dynamicContent?.Description</p>
                     </div>
                 </div>
             </div>
@@ -30,15 +29,38 @@
 <style>
     .card{
         max-width: 250px;
-        min-height: 200px;
+        /*min-height: 380px;*/
+    }
+
+    .card .card-header{
+        min-height: 80px;
     }
 
     .card .card-body{
         width: 100%;
     }
+
     .card .card-body img{
         width: 200px;
         text-align: center;
         margin: 0 auto;
+        border-radius: 8px;
+    }
+
+    .card .card-footer{
+        min-height: 100px;
+    }
+
+    @@media only screen and (max-width: 900px) {
+        .card .card-body img {
+            width: 320px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .card {
+            max-width: unset;
+            min-height: 300px;
+        }
     }
 </style>

@@ -5,23 +5,13 @@
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-12 text-center col-title">
-            <h1 id="title">@Model.Title</h1>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-12 text-center">
-            <a asp-action="Index" asp-controller="Home">Начало</a> - <a asp-action="All" asp-controller="DynamicContent">Актуално</a>
-        </div>
-    </div>
-    <hr />
+    <partial name="_DynamicContentHeader" model="Model.Title"/>
     <div class="row row-content mt-5">
+        <div class="col-12 col-md-6 col-lg-4 col-banner">
+            <img style="width:350px" id="image" src="~/resources/images/@(Model.ImageName)"/>
+        </div>
         <div class="col-12 col-md-6 col-lg-8 col-content">
             <p id="content"></p>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4 col-banner">
-            <img style="width:400px" id="image" src="~/resources/images/@(Model.ImageName)"/>
         </div>
     </div>
 </div>

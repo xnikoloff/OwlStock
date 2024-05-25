@@ -89,7 +89,8 @@
 
     /*Override from styles.css*/
     header.masthead {
-        background-image: url('@(ViewBag.HomePhoto)');
+        background-image: url(@ViewBag.HomePhoto);
+        background-size: cover;
     }
 
     .icons-container {

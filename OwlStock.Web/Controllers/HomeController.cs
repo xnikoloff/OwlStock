@@ -17,7 +17,13 @@ namespace OwlStock.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.HomePhoto = await _homeService.ChooseHomePagePhoto();
+            string photo = await _homeService.ChooseHomePagePhoto();
+            if(System.IO.File.Exists(photo))
+            {
+                ViewBag.HomePhoto = photo;
+            }
+            
+            ViewBag.HomePhoto = @Url.Content("~/resources/images/background.jpg");
             IEnumerable<DynamicContent> dynamicContents = await _dynamicContentService.GetAll();
             
             return View(dynamicContents);
