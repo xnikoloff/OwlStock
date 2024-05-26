@@ -10,13 +10,13 @@ namespace OwlStock.Services
     {
         private readonly OwlStockDbContext _context;
         private readonly IFileService _fileService;
-        private readonly IPhotoResizer _photoResizer;
+        private readonly ICalculationsService _calculationsService;
 
-        public DynamicContentService(OwlStockDbContext context, IFileService fileService, IPhotoResizer photoResizer)
+        public DynamicContentService(OwlStockDbContext context, IFileService fileService, ICalculationsService calculationsService)
         {
             _context = context;
             _fileService = fileService;
-            _photoResizer = photoResizer;
+            _calculationsService = calculationsService;
 
         }
 
@@ -37,6 +37,11 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(dto.DynamicContent)} is null");
             }
 
+            if (dto.DynamicContent.Content == null)
+            {
+                throw new NullReferenceException($"{nameof(dto.DynamicContent)} is null");
+            }
+
             if (dto.Image == null)
             {
                 throw new NullReferenceException($"{nameof(dto.Image)} is null");
@@ -48,6 +53,8 @@ namespace OwlStock.Services
             }
 
             dto.DynamicContent.ImageName = dto?.Image?.FileName;
+            dto!.DynamicContent.ReadingTime = _calculationsService.CalculateReadingTime(dto.DynamicContent.Content);
+            dto.DynamicContent.CreatedOn = DateTime.Now;
 
             await _context.AddAsync(dto!.DynamicContent);
             await _context.SaveChangesAsync();

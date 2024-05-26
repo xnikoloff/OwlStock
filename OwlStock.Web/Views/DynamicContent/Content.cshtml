@@ -6,6 +6,11 @@
 
 <div class="container">
     <partial name="_DynamicContentHeader" model="Model.Title"/>
+    <div class="row mt-2">
+        <div class="col-12 col-data">
+            <span>Създадена на: <span class="data"><b>@(Model.CreatedOn.ToString("dd.MM.yyyy") + " г.")</b></span></span> <b>-</b> <span>Време за четене: <span class="data"><b>@(Model.ReadingTime == 0 ? "< 1 мин" : Model.ReadingTime + "мин")</b></span</span>
+        </div>
+    </div>
     <div class="row row-content mt-5">
         <div class="col-12 col-md-6 col-lg-4 col-banner">
             <img style="width:350px" id="image" src="~/resources/images/@(Model.ImageName)"/>
@@ -24,6 +29,10 @@
     #image{
         border-radius: 8px;
         box-shadow: 0px 0px 10px -2px #8cb0db;
+    }
+
+    .data{
+        color: #ffc800;
     }
 
     .row-content{

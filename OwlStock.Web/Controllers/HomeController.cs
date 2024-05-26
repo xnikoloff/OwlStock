@@ -24,7 +24,7 @@ namespace OwlStock.Web.Controllers
             }
             
             ViewBag.HomePhoto = @Url.Content("~/resources/images/background.jpg");
-            IEnumerable<DynamicContent> dynamicContents = await _dynamicContentService.GetAll();
+            IEnumerable<DynamicContent> dynamicContents = await _dynamicContentService.GetLastFour();
             
             return View(dynamicContents);
         }

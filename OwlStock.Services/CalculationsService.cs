@@ -1,4 +1,5 @@
-﻿using OwlStock.Domain.Enumerations;
+﻿using Microsoft.IdentityModel.Tokens;
+using OwlStock.Domain.Enumerations;
 using OwlStock.Services.Common;
 using OwlStock.Services.Common.Enumerations;
 using OwlStock.Services.Interfaces;
@@ -139,5 +140,18 @@ namespace OwlStock.Services
             return Math.Round(distance / DefaultValue.Speed) * 2;
         }*/
 
+        public int CalculateReadingTime(string text)
+        {
+            if (text.IsNullOrEmpty())
+            {
+                return 0;
+            }
+
+            //200 is the number of words an average person reads per minute
+            //dividing the words count per 200 gives the minutes 
+            //it will take to read the text
+            return (text.Split(' ').Length) / 200;
+        }
     }
+
 }

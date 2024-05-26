@@ -46,5 +46,12 @@ namespace OwlStock.Services.Interfaces
         /// <param name="longitudeB">Longitude for point B</param>
         /// <returns></returns>
         //double CalculateTimeForTravel(double latitudeA, double longitudeA, double latitudeB, double longitudeB);
+
+        /// <summary>
+        /// Calculates reading time by counting words >= 2 characters
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        int CalculateReadingTime(string text);
     }
 }

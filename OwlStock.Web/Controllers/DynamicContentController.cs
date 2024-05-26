@@ -2,6 +2,7 @@
 using OwlStock.Domain.Entities;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
+using System.Security.Claims;
 
 namespace OwlStock.Web.Controllers
 {
@@ -38,6 +39,9 @@ namespace OwlStock.Web.Controllers
         public async Task<IActionResult> Create(CreateDynamicContentDTO dto)
         {
             dto.WebRootPath = _webHostEnvironment.WebRootPath;
+            dto.DynamicContent.CreatedById = User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                throw new NullReferenceException("User not logged in");
+
             DynamicContent dynamicContent = await _dynamicContentService.Create(dto);
             return RedirectToAction(nameof(Content), new { id = dynamicContent?.Id });
         }
