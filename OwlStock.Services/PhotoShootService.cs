@@ -27,6 +27,19 @@ namespace OwlStock.Services
             _settlementService = settlementService;
         }
 
+        public async Task<IEnumerable<PhotoShoot>> GetAll()
+        {
+            if(_context.PhotoShoots is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
+            }
+
+            return await _context.PhotoShoots
+                .Include(ph => ph.IdentityUser)
+                .OrderBy(ph => ph.Id)
+                .ToListAsync();
+        }
+
         public async Task<PhotoShoot> PhotoShootById(Guid id)
         {
             if (_context.PhotoShoots is null)
