@@ -61,6 +61,15 @@ namespace OwlStock.Services.DTOs.PhotoShoot
 
         public decimal Price { get; set; }
 
+        [Display(Name = "Не желая снимките ми да бъдат запазени в профила ми")]
+        public bool DoNotUploadPhotos { get; set; }
+
+        [Display(Name = "Начин на получаване на снимки")]
+        public PhotoDeliveryMethod? PhotoDeliveryMethod { get; set; }
+
+        [Display(Name = "Адрес или офис на Econt")]
+        public string? PhotoDeliveryAddress { get; set; }
+
         public Dictionary<DateOnly, IEnumerable<TimeSlot>>? Calendar { get; set; }
         public List<DateTime>? RemainingDates { get; set; }
 

@@ -69,8 +69,8 @@ namespace OwlStock.Services
                     CreatedOn = phs.CreatedOn,
                     PhotoShootType = phs.PhotoShootType,
                     ReservationDate = phs.ReservationDate,
-                    ReservationFor = phs.PersonFullName
-
+                    ReservationFor = phs.PersonFullName,
+                    PhotoDeliveryMethod = phs.PhotoDeliveryMethod
                 })
                 .ToListAsync();
 
@@ -108,6 +108,9 @@ namespace OwlStock.Services
                 UserPlace = dto.UserPlace,
                 GoogleMapsLink = dto.GoogleMapsLink,
                 IsDecidedByUs = dto.IsDecidedByUs,
+                DoNotUploadPhotos = dto.DoNotUploadPhotos,
+                PhotoDeliveryMethod = dto.PhotoDeliveryMethod,
+                PhotoDeliveryAddress = dto.PhotoDeliveryAddress,
                 Price = totalPrice,
                 IdentityUserId = dto.IdentityUserId,
             };

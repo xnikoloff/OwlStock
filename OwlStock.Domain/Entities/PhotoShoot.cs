@@ -9,7 +9,7 @@ namespace OwlStock.Domain.Entities
     {
         public PhotoShoot()
         {
-            this.PhotoShootPhotos = new HashSet<PhotoShootPhoto>();
+            PhotoShootPhotos = new HashSet<PhotoShootPhoto>();
         }
 
         [Key]
@@ -27,7 +27,9 @@ namespace OwlStock.Domain.Entities
         public string? GoogleMapsLink { get; set; }
         public bool IsDecidedByUs { get; set; }
         public decimal Price { get; set; }
-
+        public bool DoNotUploadPhotos { get; set; }
+        public PhotoDeliveryMethod? PhotoDeliveryMethod { get; set; }
+        public string? PhotoDeliveryAddress { get; set; }
         public City? City { get; set; }
 
         [ForeignKey(nameof(City))]

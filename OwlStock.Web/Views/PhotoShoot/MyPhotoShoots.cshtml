@@ -18,6 +18,7 @@
                             <th>Тип</th>
                             <th>Създаден на</th>
                             <th>Резервиран за</th>
+                            <th>Получаване на снимки</th>
                             @if (User.IsInRole("Administrator"))
                             {
                                 <th>Действия</th>
@@ -32,6 +33,7 @@
                             <td>@dto.PhotoShootType</td>
                             <td>@dto.CreatedOn</td>
                             <td>@dto.ReservationFor</td>
+                            <td>@(dto.PhotoDeliveryMethod == null ? "На профила Ви" : dto.PhotoDeliveryMethod)</td>
                             @if (User.IsInRole("Administrator"))
                             {
                                 <td><a asp-action="UpdateFiles" asp-route-id="@dto.Id" class="btn btn-secondary">Update</a></td>
