@@ -7,7 +7,7 @@ namespace OwlStock.Services
 {
     public class BraintreeService : IBraintreeService
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public BraintreeService(IConfiguration configuration)
         {
