@@ -34,10 +34,6 @@
                             <td>@dto.CreatedOn</td>
                             <td>@dto.ReservationFor</td>
                             <td>@(dto.PhotoDeliveryMethod == null ? "На профила Ви" : dto.PhotoDeliveryMethod)</td>
-                            @if (User.IsInRole("Administrator"))
-                            {
-                                <td><a asp-action="UpdateFiles" asp-route-id="@dto.Id" class="btn btn-secondary">Update</a></td>
-                            }
                         </tr>
                     }
 

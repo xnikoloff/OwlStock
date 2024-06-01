@@ -51,6 +51,7 @@ namespace OwlStock.Services
 
             PhotoShoot? dto = await _context.PhotoShoots
                 .Include(phs => phs.PhotoShootPhotos)
+                .Include(phs => phs.City)
                 .Where(phs => phs.Id == id)
                 .FirstOrDefaultAsync();
 
