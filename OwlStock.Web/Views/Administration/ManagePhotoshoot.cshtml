@@ -10,4 +10,53 @@
             <h1>@ViewData["Title"]</h1>
         </div>
     </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mx-auto">
+                <form asp-action="ManagePhotoshoot" method="POST">
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-4 form-group">
+                            <label asp-for="CreatedOn"></label>
+                            <input asp-for="CreatedOn" class="form-control" readonly />
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4 form-group">
+                            <label asp-for="PersonEmail"></label>
+                            <input asp-for="PersonEmail" class="form-control" readonly />
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4 form-group">
+                            <label asp-for="PersonPhone"></label>
+                            <input asp-for="PersonPhone" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 form-group">
+                            <label asp-for="PhotoShootTypeDescription"></label>
+                            <textarea asp-for="PhotoShootTypeDescription" class="form-control" readonly></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-6 form-group">
+                            <label asp-for="PersonFullName"></label>
+                            <input asp-for="PersonFullName" class="form-control" readonly />
+                        </div>
+                        <div class="col-12 col-md-6 form-group">
+                            <label asp-for="City.Name"></label>
+                            <input asp-for="City.Name" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-12 col-md-6 form-group">
+                            <label asp-for="Price"></label>
+                            <input asp-for="Price" class="form-control" />
+                        </div>
+                        <div class="col-12 col-md-6 form-group">
+                            <label asp-for="ReservationDate"></label>
+                            <input asp-for="ReservationDate" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
