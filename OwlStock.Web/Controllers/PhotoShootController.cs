@@ -15,10 +15,7 @@ namespace OwlStock.Web.Controllers
         private readonly ICalendarService _calendarService;
         private readonly ISettlementService _settlementService;
         
-        public PhotoShootController
-        (
-            IPhotoShootService photoShootService, ICalendarService calendarService, ISettlementService settlementService
-        )
+        public PhotoShootController(IPhotoShootService photoShootService, ICalendarService calendarService, ISettlementService settlementService)
         {
             _photoShootService = photoShootService;
             _calendarService = calendarService;

@@ -15,7 +15,7 @@ namespace OwlStock.Services
         private readonly IEmailService _emailService;
         private readonly ICalendarService _calendarService;
         private readonly ICalculationsService _calculationsService;
-        
+
         public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService, ICalculationsService calculationsService)
         {
             _context = context;
@@ -26,7 +26,7 @@ namespace OwlStock.Services
 
         public async Task<IEnumerable<PhotoShoot>> GetAll()
         {
-            if(_context.PhotoShoots is null)
+            if (_context.PhotoShoots is null)
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
@@ -95,11 +95,11 @@ namespace OwlStock.Services
                 throw new ArgumentNullException(nameof(dto));
             }
 
-            if(_context.PhotoShoots is null)
+            if (_context.PhotoShoots is null)
             {
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
-            
+
             decimal totalPrice = _calculationsService.CalculatePhotoshootPrice(dto.PhotoShootType, dto.FuelPrice);
             //not used for now
             //double[] settlementLatAndLon = await _settlementService.GetLatitudeAndLongitude(dto.SettlementName ?? 
@@ -140,7 +140,7 @@ namespace OwlStock.Services
 
             PhotoShoot? photoShootResult = await _context.PhotoShoots
                 .OrderByDescending(ph => ph.Id)
-                .LastOrDefaultAsync() ?? 
+                .LastOrDefaultAsync() ??
                     throw new NullReferenceException($"No records found");
 
             PhotoShootEmailTemplateDTO emailDto = new()
@@ -164,14 +164,14 @@ namespace OwlStock.Services
                 throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
             }
 
-            if(dto.Id == Guid.Empty)
+            if (dto.Id == Guid.Empty)
             {
                 throw new ArgumentException($"{nameof(dto.Id)}");
             }
 
             PhotoShoot? existingPhotoShoot = await _context.PhotoShoots.FindAsync(dto.Id) ??
                 throw new NullReferenceException($"{nameof(existingPhotoShoot)} with id ${dto?.Id} does not exists");
-            
+
             existingPhotoShoot.PersonFullName = dto.PersonFullName;
             existingPhotoShoot.ReservationDate = dto.ReservationDate;
             existingPhotoShoot.PersonPhone = dto.PersonPhone;
@@ -202,6 +202,28 @@ namespace OwlStock.Services
                 .ToListAsync();
 
             return _calendarService.GetPhotoShootsCalendar(reservationDates);
+        }
+
+        public async Task<PhotoShoot> ChangeStatus(Guid id, PhotoshootStatus status)
+        {
+            if (_context.PhotoShoots is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
+            }
+
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Guid is empty", $"{nameof(id)}");
+            }
+
+            PhotoShoot? photoShoot = await _context.PhotoShoots.FindAsync(id) ??
+                throw new NullReferenceException($"{nameof(photoShoot)} with id ${id} does not exists");
+
+            photoShoot.Status = status;
+
+            await _context.SaveChangesAsync();
+
+            return photoShoot;
         }
     }
 }

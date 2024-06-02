@@ -1,4 +1,5 @@
 ﻿using OwlStock.Domain.Entities;
+using OwlStock.Domain.Enumerations;
 using OwlStock.Services.Common.HelperClasses;
 using OwlStock.Services.DTOs.PhotoShoot;
 
@@ -12,5 +13,6 @@ namespace OwlStock.Services.Interfaces
         Task<PhotoShoot> PhotoShootById(Guid id);
         Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId);
         Task<Dictionary<DateOnly, IEnumerable<TimeSlot>>> GetPhotoShootsCalendar();
+        Task<PhotoShoot> ChangeStatus(Guid id, PhotoshootStatus status);
     }
 }

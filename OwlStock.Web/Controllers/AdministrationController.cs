@@ -130,6 +130,34 @@ namespace OwlStock.Web.Controllers
             return RedirectToAction(nameof(Photoshoots));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AcceptPhotoshoot(Guid id)
+        {
+            await _photoShootService.ChangeStatus(id, PhotoshootStatus.Accepted);
+            return RedirectToAction(nameof(Photoshoots));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeclinePhotoshoot(Guid id)
+        {
+            await _photoShootService.ChangeStatus(id, PhotoshootStatus.Declined);
+            return RedirectToAction(nameof(Photoshoots));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CancelPhotoshoot(Guid id)
+        {
+            await _photoShootService.ChangeStatus(id, PhotoshootStatus.Cancelled);
+            return RedirectToAction(nameof(Photoshoots));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApprovePhotoshoot(Guid id, PhotoshootStatus status)
+        {
+            await _photoShootService.ChangeStatus(id, status);
+            return RedirectToAction(nameof(Photoshoots));
+        }
+
         private static IEnumerable<PhotoShootPhoto> BuildPhotoShootPhotoList(IEnumerable<IFormFile> files, PhotoShoot photoShoot, string webRootPath)
         {
             List<PhotoShootPhoto> photoShootPhotos = new();

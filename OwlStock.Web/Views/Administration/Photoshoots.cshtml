@@ -27,7 +27,7 @@
                             <tr>
                                 <td><a asp-controller="Administration" asp-action="ManagePhotoshoot" asp-route-id="@photoShoot.Id" class="btn btn-primary btn-sm">Управление</a></td>
                                 <td>@photoShoot.Id</td>
-                                <td>N/A</td>
+                                <td>@photoShoot.Status</td>
                                 <td>@photoShoot.PersonFullName</td>
                                 <td>@photoShoot.UserPlace</td>
                                 <td>@photoShoot.ReservationDate.ToString("dd.MM.yyyy")</td>
