@@ -5,6 +5,7 @@ using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure.Common.EmailTemplates.PhotoShoot;
 using OwlStock.Services;
+using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
 using OwlStock.Web.DTOs.PhotoShootDTOs;
 using System.Security.Claims;
@@ -47,7 +48,36 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ManagePhotoshoot(Guid id)
         {
-            return View(await _photoShootService.PhotoShootById(id));
+            PhotoShoot photoshoot = await _photoShootService.PhotoShootById(id);
+            ManagePhotoshootDTO dto = new()
+            {
+                Id = photoshoot.Id,
+                CreatedOn = photoshoot.CreatedOn,
+                ReservationDate = photoshoot.ReservationDate,
+                PersonFullName = photoshoot.PersonFullName,
+                PersonEmail = photoshoot.PersonEmail,
+                PersonPhone = photoshoot.PersonPhone,
+                Price = photoshoot.Price,
+                PhotoShootType = photoshoot.PhotoShootType,
+                PhotoShootTypeDescription = photoshoot.PhotoShootTypeDescription,
+                PhotoDeliveryAddress = photoshoot.PhotoDeliveryAddress,
+                GoogleMapsLink = photoshoot.GoogleMapsLink,
+                PhotoDeliveryMethod = photoshoot.PhotoDeliveryMethod,
+                UserPlace = photoshoot.UserPlace
+            };
+            return View(dto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManagePhotoshoot(ManagePhotoshootDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            await _photoShootService.Update(dto);
+            return RedirectToAction(nameof(Photoshoots));
         }
 
         [HttpGet]

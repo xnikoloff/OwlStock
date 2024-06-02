@@ -16,10 +16,9 @@ namespace OwlStock.Tests.PhotoshootTests
             DataSeeder seeder = new();
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
-            Mock<ISettlementService> settlementServiceMock = new();
             Mock<CalculationsService> calculationsServiceMock = new();
             CalendarService calendarService = new();
-            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationsServiceMock.Object, settlementServiceMock.Object);
+            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationsServiceMock.Object);
 
             //Act
             //existing guid in database
@@ -37,10 +36,9 @@ namespace OwlStock.Tests.PhotoshootTests
             DataSeeder seeder = new();
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
-            Mock<ISettlementService> settlementServiceMock = new();
             Mock<CalculationsService> calculationsServiceMock = new();
             CalendarService calendarService = new();
-            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationsServiceMock.Object, settlementServiceMock.Object);
+            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationsServiceMock.Object);
 
             //Act
             //not existing guid
@@ -57,9 +55,8 @@ namespace OwlStock.Tests.PhotoshootTests
             DataSeeder seeder = new();
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalendarService> calendarServiceMock = new();
-            Mock<ISettlementService> settlementServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
-            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarServiceMock.Object, calculationServiceMock.Object, settlementServiceMock.Object);
+            PhotoShootService service = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarServiceMock.Object, calculationServiceMock.Object);
             
             //Act
             //existing Id

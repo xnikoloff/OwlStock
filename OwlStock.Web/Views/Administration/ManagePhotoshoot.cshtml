@@ -1,4 +1,4 @@
-﻿@model PhotoShoot
+﻿@model ManagePhotoshootDTO
 
 @{
     ViewData["Title"] = "Управление на фотосесия";
@@ -20,10 +20,11 @@
     <div class="row mt-3">
         <div class="col-12 mx-auto">
             <form asp-action="ManagePhotoshoot" method="POST">
+                <input type="hidden" asp-for="Id"/>
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4 form-group">
                         <label asp-for="CreatedOn"></label>
-                        <input asp-for="CreatedOn" class="form-control" />
+                        <input asp-for="CreatedOn" class="form-control" readonly/>
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 form-group">
                         <label asp-for="ReservationDate"></label>
@@ -36,16 +37,16 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4 form-group">
+                        <label asp-for="PersonEmail"></label>
+                        <input asp-for="PersonEmail" class="form-control" readonly/>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 form-group">
                         <label asp-for="PersonFullName"></label>
                         <input asp-for="PersonFullName" class="form-control" />
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 form-group">
-                        <label asp-for="PersonEmail"></label>
-                        <input asp-for="PersonEmail" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 form-group">
                         <label asp-for="PhotoShootType"></label>
-                        <input asp-for="PhotoShootType" class="form-control" />
+                        <select asp-for="PhotoShootType" asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control"></select>
                     </div>
                 </div>
 
@@ -61,30 +62,26 @@
                 
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4 form-group">
-                        <label asp-for="City.Name"></label>
-                        <input asp-for="City.Name" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 form-group">
-                        <label asp-for="UserPlace"></label>
-                        <input asp-for="UserPlace" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 form-group">
-                        <label asp-for="GoogleMapsLink"></label>
-                        <input asp-for="GoogleMapsLink" class="form-control" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-6 col-lg-4 form-group">
                         <label asp-for="Price"></label>
                         <input asp-for="Price" class="form-control" />
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 form-group">
                         <label asp-for="PhotoDeliveryMethod"></label>
-                        <input asp-for="PhotoDeliveryMethod" class="form-control" />
+                        <select asp-for="PhotoDeliveryMethod" asp-items="@Html.GetEnumSelectList<PhotoDeliveryMethod>()" class="form-control"></select>
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 form-group">
                         <label asp-for="PhotoDeliveryAddress"></label>
                         <input asp-for="PhotoDeliveryAddress" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6 form-group">
+                        <label asp-for="UserPlace"></label>
+                        <input asp-for="UserPlace" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-6 form-group">
+                        <label asp-for="GoogleMapsLink"></label>
+                        <input asp-for="GoogleMapsLink" class="form-control" />
                     </div>
                 </div>
                 <div class="row">

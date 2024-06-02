@@ -15,16 +15,13 @@ namespace OwlStock.Services
         private readonly IEmailService _emailService;
         private readonly ICalendarService _calendarService;
         private readonly ICalculationsService _calculationsService;
-        private readonly ISettlementService _settlementService;
-
-        public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService,
-            ICalculationsService calculationsService, ISettlementService settlementService)
+        
+        public PhotoShootService(OwlStockDbContext context, IEmailService emailService, ICalendarService calendarService, ICalculationsService calculationsService)
         {
             _context = context;
             _emailService = emailService;
             _calendarService = calendarService;
             _calculationsService = calculationsService;
-            _settlementService = settlementService;
         }
 
         public async Task<IEnumerable<PhotoShoot>> GetAll()
@@ -158,6 +155,36 @@ namespace OwlStock.Services
             await _emailService.Send(emailDto);
 
             return photoShootResult;
+        }
+
+        public async Task<PhotoShoot> Update(ManagePhotoshootDTO dto)
+        {
+            if (_context.PhotoShoots is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
+            }
+
+            if(dto.Id == Guid.Empty)
+            {
+                throw new ArgumentException($"{nameof(dto.Id)}");
+            }
+
+            PhotoShoot? existingPhotoShoot = await _context.PhotoShoots.FindAsync(dto.Id) ??
+                throw new NullReferenceException($"{nameof(existingPhotoShoot)} with id ${dto?.Id} does not exists");
+            
+            existingPhotoShoot.PersonFullName = dto.PersonFullName;
+            existingPhotoShoot.ReservationDate = dto.ReservationDate;
+            existingPhotoShoot.PersonPhone = dto.PersonPhone;
+            existingPhotoShoot.PhotoShootType = dto.PhotoShootType;
+            existingPhotoShoot.UserPlace = dto.UserPlace;
+            existingPhotoShoot.GoogleMapsLink = dto.GoogleMapsLink;
+            existingPhotoShoot.Price = dto.Price;
+            existingPhotoShoot.PhotoDeliveryMethod = dto.PhotoDeliveryMethod;
+            existingPhotoShoot.PhotoDeliveryAddress = dto.PhotoDeliveryAddress;
+
+            await _context.SaveChangesAsync();
+
+            return existingPhotoShoot;
         }
 
         public async Task<Dictionary<DateOnly, IEnumerable<TimeSlot>>> GetPhotoShootsCalendar()
