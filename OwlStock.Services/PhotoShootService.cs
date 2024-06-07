@@ -124,6 +124,7 @@ namespace OwlStock.Services
                 PhotoDeliveryAddress = dto.PhotoDeliveryAddress,
                 Price = totalPrice,
                 IdentityUserId = dto.IdentityUserId,
+                Status = PhotoshootStatus.New
             };
 
             if (!dto.IsDecidedByUs)
