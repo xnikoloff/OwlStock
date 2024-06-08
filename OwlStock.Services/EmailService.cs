@@ -39,15 +39,31 @@ namespace OwlStock.Services
                 EnableSsl = true,
             };
 
-            MailMessage message =  new
-            (
-                "hristiyan.at.nikoloff@gmail.com",
-                dto.Recipient ?? throw new NullReferenceException($"{nameof(dto.Recipient)} is null"), 
-                "This is a test", 
-                GetTemplate(dto)
-            );
+            MailMessage[] messages = new MailMessage[] 
+            {
+                new
+                (
+                    "hristiyan.at.nikoloff@gmail.com",
+                    dto.Recipient ?? throw new NullReferenceException($"{nameof(dto.Recipient)} is null"),
+                    "This is a test",
+                    GetTemplate(dto)
+                ),
+
+                //second email is always sent to DreamPix
+                new
+                (
+                    "hristiyan.at.nikoloff@gmail.com",
+                    "hristiyan.at.nikoloff@gmail.com",
+                    "This is a test",
+                    GetTemplateDreampix(dto)
+                ),
+
+            };
             
-            await client.SendMailAsync(message);
+            for(int i = 0; i < messages.Length; i++) 
+            {
+                await client.SendMailAsync(messages[i]);
+            }
 
         }
 
@@ -80,8 +96,27 @@ namespace OwlStock.Services
                     throw new ArgumentException($"{dto.EmailTemplate} is invalid {nameof(EmailTemplate)}");
                 }
             }
+        }
 
-            
+        public string GetTemplateDreampix(EmailTemplateBaseDTO dto)
+        {
+            switch (dto.EmailTemplate)
+            {
+                case EmailTemplate.CreatePhotoShoot:
+                {
+                        return PhotoShootEmailTemplates.CreatePhotoShootTemplateDreampix
+                    (
+                         ((PhotoShootEmailTemplateDTO)dto).PersonFullName ?? "",
+                         ((PhotoShootEmailTemplateDTO)dto).Date,
+                         ((PhotoShootEmailTemplateDTO)dto).Type
+                    );
+                }
+
+                default:
+                {
+                    throw new ArgumentException($"{dto.EmailTemplate} is invalid {nameof(EmailTemplate)}");
+                }
+            }
         }
     }
 }
