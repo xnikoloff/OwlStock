@@ -76,7 +76,7 @@ namespace OwlStock.Services
 
                      return PhotoShootEmailTemplates.CreatePhotoShootTemplate
                     (
-                         ((PhotoShootEmailTemplateDTO)dto).PersonFullName ?? "",
+                         ((PhotoShootEmailTemplateDTO)dto).Price,
                          ((PhotoShootEmailTemplateDTO)dto).Date,
                          ((PhotoShootEmailTemplateDTO)dto).Type
                     );
