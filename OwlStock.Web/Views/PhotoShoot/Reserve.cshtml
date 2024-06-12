@@ -654,6 +654,7 @@
             data: { 'regionId': regionId },
             success: function (response) {
                 calculateTotalPrice($("#PhotoShootType").find(":selected").val(), response);
+                $("#price").text(response);
                 $("#FuelPrice").val(response);
                 $(".col-price").css("display", "block");
             },
