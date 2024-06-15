@@ -130,9 +130,6 @@
                                 <div class="card-header card-header-date">
                                     <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
                                 </div>
-                                <!--<div class="card-body text-center">
-                                    Busy
-                                </div>-->
                             </div>
                         }
                     </div>
@@ -152,9 +149,6 @@
                                 <p class="forecastText">Нямаме информация за времето :(</p>
                                 @*<p class="precipitation"></p>*@
                             </div>
-                           <!-- <div class="card-footer  text-center">
-                                Busy
-                             </div>-->
                         </div>
                     </div>
                 }
@@ -168,9 +162,6 @@
                                 <div class="card-header card-header-date">
                                     <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
                                 </div>
-                                <!--<div class="card-body text-center">
-                                    Busy
-                                </div>-->
                             </div>
                             @*This will be used when more expensive Weather APIsubscription is bought*@
                             @*The current is for 3 days only*@
@@ -540,24 +531,6 @@
         if (selected == 7) {
             $("#PhotoShootTypeDescription").prop("required", true);
         }
-    }
-
-    function getWeather(settlement){
-        var request = $.ajax({
-            url: "@Url.Action("currentWeather", "Weather")",
-            method: "GET",
-            data: { settlement: settlement },
-            success: function (response) {
-                let json = JSON.parse(JSON.stringify(response));
-                $(".forecastText").html(json.current.condition.text);
-                $(".temperatureCurrent").html(Math.round(json.current.temperature));
-                //$(".precipitation").html(' ' + json.current.precipitation);
-            },
-            error:function(response){
-                console.log("error");
-                console.log(response);
-            }
-        });
     }
 
     function getForecast(settlementId) {

@@ -121,10 +121,10 @@ namespace OwlStock.Web.Controllers
 
             await _emailService.Send(new UpdatePhotoShootEmailTemplateDTO()
             {
-                PersonFullName = dto.PersonFullName,
                 EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
+                Topic = "Страхотни новини",
                 Recipient = await GetUserEmail(),
-                Url = $"http:///flash-studio.co/photoshoot/{dto.PhotoShootId}/"
+                PhotoShootId = dto.PhotoShootId
             });
 
             return RedirectToAction(nameof(Photoshoots));

@@ -147,12 +147,12 @@ namespace OwlStock.Services
             {
                 string word = "";
 
-                for (int j = i; j < i + 6; j++)
+                for (int j = i; j < i + 11; j++)
                 {
                     word += filePath[j];
                 }
 
-                if (word.Equals("images"))
+                if (word.Equals("photoshoots"))
                 {
                     position = i;
                     break;

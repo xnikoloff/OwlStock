@@ -141,16 +141,18 @@ namespace OwlStock.Services
 
             PhotoShoot? photoShootResult = await _context.PhotoShoots
                 .OrderByDescending(ph => ph.Id)
-                .LastOrDefaultAsync() ??
+                .FirstOrDefaultAsync() ??
                     throw new NullReferenceException($"No records found");
 
             PhotoShootEmailTemplateDTO emailDto = new()
             {
                 Date = new DateTime(dto.ReservationDate.Year, dto.ReservationDate.Month, dto.ReservationDate.Day, dto.ReservationTime.Hour, dto.ReservationTime.Minute, 0),
+                Topic = "Успешна резервация",
                 Recipient = dto.PersonEmail,
                 Type = dto.PhotoShootType,
                 PersonFullName = dto.PersonFirstName + " " + dto.PersonLastName,
-                EmailTemplate = EmailTemplate.CreatePhotoShoot
+                EmailTemplate = EmailTemplate.CreatePhotoShoot,
+                PhotoShootId = photoShootResult.Id
             };
 
             await _emailService.Send(emailDto);

@@ -39,26 +39,50 @@ namespace OwlStock.Services
                 EnableSsl = true,
             };
 
-            MailMessage[] messages = new MailMessage[] 
+            MailMessage[] messages;
+
+            if (dto.EmailTemplate is EmailTemplate.CreatePhotoShoot)
             {
-                new
-                (
-                    "hristiyan.at.nikoloff@gmail.com",
-                    dto.Recipient ?? throw new NullReferenceException($"{nameof(dto.Recipient)} is null"),
-                    "This is a test",
-                    GetTemplate(dto)
-                ),
+                //if email template is for created photoshoot
+                //send template to user and dreampix
+                messages = new MailMessage[]
+                {
+                    new
+                    (
+                        "hristiyan.at.nikoloff@gmail.com",
+                        dto.Recipient ?? throw new NullReferenceException($"{nameof(dto.Recipient)} is null"),
+                        dto.Topic,
+                        GetTemplate(dto)
+                    ),
 
-                //second email is always sent to DreamPix
-                new
-                (
-                    "hristiyan.at.nikoloff@gmail.com",
-                    "hristiyan.at.nikoloff@gmail.com",
-                    "This is a test",
-                    GetTemplateDreampix(dto)
-                ),
+                    //second email is always sent to DreamPix
+                    new
+                    (
+                        "hristiyan.at.nikoloff@gmail.com",
+                        "hristiyan.at.nikoloff@gmail.com",
+                        dto.Topic,
+                        GetTemplateDreampix(dto)
+                    ),
 
-            };
+                };
+            }
+
+            else
+            {
+                //if email template is not for created photoshoot
+                //send template to user only
+                messages = new MailMessage[]
+                {
+                    new
+                    (
+                        "hristiyan.at.nikoloff@gmail.com",
+                        dto.Recipient ?? throw new NullReferenceException($"{nameof(dto.Recipient)} is null"),
+                        dto.Topic,
+                        GetTemplate(dto)
+                    )
+
+                };
+            }
             
             for(int i = 0; i < messages.Length; i++) 
             {
@@ -73,15 +97,14 @@ namespace OwlStock.Services
             {
                 case EmailTemplate.CreatePhotoShoot:
                 {
-                        return PhotoShootEmailTemplates.CreatePhotoShootTemplate();
+                        return PhotoShootEmailTemplates.CreatePhotoShootTemplate(dto.PhotoShootId);
                 }
 
                 case EmailTemplate.UpdatePhotosForPhotoShoot:
                     {
                         return PhotoShootEmailTemplates.UpdatePhotoShootTemplate
                             (
-                                ((UpdatePhotoShootEmailTemplateDTO)dto).PersonFullName ?? "",
-                                ((UpdatePhotoShootEmailTemplateDTO)dto).Url ?? ""
+                                ((UpdatePhotoShootEmailTemplateDTO)dto).PhotoShootId
                             );
                     }
 
