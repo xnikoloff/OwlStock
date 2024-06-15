@@ -184,6 +184,11 @@ namespace OwlStock.Web.Controllers
             return photoShootPhotos;
         }
 
+        public IActionResult AllUsers()
+        {
+            return View(_userManager.Users.ToList());
+        }
+
         private async Task<string> GetUserEmail()
         {
             var user = await _userManager.FindByIdAsync(GetUserId()) ?? throw new NullReferenceException($"User not logged in");

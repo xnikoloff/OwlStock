@@ -33,7 +33,7 @@ namespace OwlStock.Services
 
             return await _context.PhotoShoots
                 .Include(ph => ph.IdentityUser)
-                .OrderBy(ph => ph.Id)
+                .OrderByDescending(ph => ph.Id)
                 .ToListAsync();
         }
 
