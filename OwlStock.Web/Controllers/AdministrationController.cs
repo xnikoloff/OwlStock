@@ -118,15 +118,7 @@ namespace OwlStock.Web.Controllers
 
                 await _photoService.Create(photo);
             }
-
-            await _emailService.Send(new UpdatePhotoShootEmailTemplateDTO()
-            {
-                EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
-                Topic = "Страхотни новини",
-                Recipient = await GetUserEmail(),
-                PhotoShootId = dto.PhotoShootId
-            });
-
+            
             return RedirectToAction(nameof(Photoshoots));
         }
 
@@ -151,10 +143,19 @@ namespace OwlStock.Web.Controllers
             return RedirectToAction(nameof(Photoshoots));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ApprovePhotoshoot(Guid id, PhotoshootStatus status)
+        [HttpGet]
+        public async Task<IActionResult> CompletePhotoshoot(Guid id)
         {
-            await _photoShootService.ChangeStatus(id, status);
+            await _photoShootService.ChangeStatus(id, PhotoshootStatus.Completed);
+            
+            await _emailService.Send(new UpdatePhotoShootEmailTemplateDTO()
+            {
+                EmailTemplate = EmailTemplate.UpdatePhotosForPhotoShoot,
+                Topic = "Страхотни новини",
+                Recipient = await GetUserEmail(),
+                PhotoShootId = id
+            });
+            
             return RedirectToAction(nameof(Photoshoots));
         }
 
