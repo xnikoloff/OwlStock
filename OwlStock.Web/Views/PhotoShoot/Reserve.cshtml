@@ -583,6 +583,7 @@
         });
     }
 
+    //commented because autocomolete data comes from the database now
     /*function getAutocomplete(query) {
         var request = $.ajax({
             url: "@Url.Action("autocomplete", "Weather")",
@@ -656,7 +657,14 @@
                 calculateTotalPrice($("#PhotoShootType").find(":selected").val(), response);
                 $("#price").text(response);
                 $("#FuelPrice").val(response);
-                $(".col-price").css("display", "block");
+                
+                if (response > 0) {
+                    $(".col-price").css("display", "block");
+                }
+                else{
+                    console.log(response);
+                    $(".col-price").css("display", "none");
+                }
             },
             error: function (response) {
                 console.log("error");

@@ -73,13 +73,7 @@ namespace OwlStock.Services
             {
                 case EmailTemplate.CreatePhotoShoot:
                 {
-
-                     return PhotoShootEmailTemplates.CreatePhotoShootTemplate
-                    (
-                         ((PhotoShootEmailTemplateDTO)dto).Price,
-                         ((PhotoShootEmailTemplateDTO)dto).Date,
-                         ((PhotoShootEmailTemplateDTO)dto).Type
-                    );
+                        return PhotoShootEmailTemplates.CreatePhotoShootTemplate();
                 }
 
                 case EmailTemplate.UpdatePhotosForPhotoShoot:
