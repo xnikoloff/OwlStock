@@ -8,7 +8,7 @@
         {
             <div class="col-12 col-md-6 col-lg-3 column">
                 <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[i].Id)">
-                    <img src="~/@Model[i].FilePathSmall">
+                    <img src="~/resources/@Model[i].FilePathSmall">
                 </a>
             </div>
         }

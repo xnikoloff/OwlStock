@@ -36,7 +36,7 @@ namespace OwlStock.Web.Controllers
         {
             Order order = await _orderService.GetById(id);
 
-            byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\images\\{PhotoSize.OriginalSize.ToString() + "_" + order.Photo?.FileName}");
+            byte[] fileData = System.IO.File.ReadAllBytes(_webHostEnvironment.WebRootPath + $"\\resources\\gallery-photos\\{PhotoSize.OriginalSize.ToString() + "_" + order.Photo?.FileName}");
             byte[] resized = _photoResizer.Resize(fileData, order.PhotoSize);
             
             if (!string.IsNullOrEmpty(order.Photo?.FileType))
@@ -54,7 +54,7 @@ namespace OwlStock.Web.Controllers
             {
                 throw new NullReferenceException($"{nameof(photo.FilePath)} is null");
             }
-            byte[] fileData = System.IO.File.ReadAllBytes(Path.Combine(_webHostEnvironment.WebRootPath, photo.FilePath).Replace('\\', '/'));
+            byte[] fileData = System.IO.File.ReadAllBytes(Path.Combine(_webHostEnvironment.WebRootPath, "resources/" + photo.FilePath + $"/{photo.FileName}").Replace('\\', '/'));
 
             if (!string.IsNullOrEmpty(photo?.FileType))
             {
