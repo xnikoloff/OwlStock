@@ -68,6 +68,34 @@
             </div>
             <a asp-controller="StaticContent" asp-action="Wedding" class="btn btn-light">Разгледайте</a>
         </div>
+        <div class="col-12 col-md-6 border border-white border-5 text-center col-portfolio col-automobile">
+            <div class="portfolio-content-wrap">
+                <h1>Автомобил</h1>
+                <p>Нека автомобилът Ви бъде звездата!</p>
+            </div>
+            <a asp-controller="StaticContent" asp-action="Wedding" class="btn btn-light">Разгледайте</a>
+        </div>
+        <div class="col-12 col-md-6 border border-white border-5 text-center col-portfolio col-product">
+            <div class="portfolio-content-wrap">
+                <h1>Продукт</h1>
+                <p>Ще представим продуктовия Ви каталог в най-добра светлина.</p>
+            </div>
+            <a asp-controller="StaticContent" asp-action="Wedding" class="btn btn-light">Разгледайте</a>
+        </div>
+        <div class="col-12 col-md-6 border border-white border-5 text-center col-portfolio col-pregnancy">
+            <div class="portfolio-content-wrap">
+                <h1>Бременност</h1>
+                <p>Красотата на бремеността Ви завинаги с Вас</p>
+            </div>
+            <a asp-controller="StaticContent" asp-action="Wedding" class="btn btn-light">Разгледайте</a>
+        </div>
+        <div class="col-12 col-md-6 border border-white border-5 text-center col-portfolio col-kids">
+            <div class="portfolio-content-wrap">
+                <h1>Детска фотосесия</h1>
+                <p>Нека заснемем усмивките на децата Ви!</p>
+            </div>
+            <a asp-controller="StaticContent" asp-action="Wedding" class="btn btn-light">Разгледайте</a>
+        </div>
     </div>
     <!-- Portfolio Grid-->
     <section class="page-section bg-light" id="portfolio">
@@ -190,6 +218,22 @@
 
     .row-portfolio .col-prom{
         background-image: url(@Url.Content("~/resources/images/prom.jpg"));
+    }
+
+    .row-portfolio .col-automobile{
+            background-image: url(@Url.Content("~/resources/images/automobile.jpg"));
+    }
+
+    .row-portfolio .col-product{
+            background-image: url(@Url.Content("~/resources/images/product.jpg"));
+    }
+
+    .row-portfolio .col-kids {
+        background-image: url(@Url.Content("~/resources/images/kids.jpg"));
+    }
+
+    .row-portfolio .col-pregnancy {
+        background-image: url(@Url.Content("~/resources/images/pregnancy.jpg"));
     }
 
     @@media only screen and (max-width: 900px) {
