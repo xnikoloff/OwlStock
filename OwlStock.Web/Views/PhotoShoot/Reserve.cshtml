@@ -543,7 +543,7 @@
                 $(".card-weather").each(function (i) {
                     let cardBody = $(this).find(".card-body-weather");
                     cardBody.find(".icon").css("background-image", `url(${json.forecast.forecastDays[i].day.condition.icon})`);
-                    cardBody.find("h5").text(json.forecast.forecastDays[i].day.averageTemperature != 0 ? (Math.round(json.forecast.forecastDays[i].day.averageTemperature) + 'C°') : '');
+                    cardBody.find("h5").text(json.forecast.forecastDays[i].day.averageTemperature != 0 ? (Math.round(json.forecast.forecastDays[i].day.maxTemperature) + 'C°') : '');
                     cardBody.find(".forecastText").text(json.forecast.forecastDays[i].day.condition.text);
                     //cardBody.find(".precipitation").text('Precipitation: ' + json.forecast.forecastDays[i].day.totalPrecipitation + '%');
                     i++;
