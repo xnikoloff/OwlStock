@@ -81,7 +81,6 @@ namespace OwlStock.Services
 
             for(int i = 0; i < GetRemainingDates().Count(); i++)
             {
-
                 calendar.Add(DateOnly.FromDateTime(_remainingDates.ToList()[i]), _timeSlots);
             }
 
@@ -98,7 +97,11 @@ namespace OwlStock.Services
             
             for(int i = 0; i < _daysCount; i++)
             {
-                remainingDates.Add(_currentDateTime.AddDays(i));
+                if(i >= _daysCount)
+                {
+                    break;
+                }
+                remainingDates.Add(_currentDateTime.AddDays(i + 1));
             }
 
             return remainingDates;
