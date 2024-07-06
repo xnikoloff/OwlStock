@@ -389,7 +389,7 @@
                 $(".row-dates-weather-remaining").css("display", "flex");
                 $(".place-addition-info").css("display", "block");
             }
-            updatePrice();
+            //updatePrice();
         });
 
         $("#Region").change(function () {
@@ -681,10 +681,19 @@
             }
         }*/
 
-        if ($("#Settlement").val() != null || $("#Settlement").val() != '') {
-            let fuelPrice = calculatePriceByDistance($("#Region option:selected").text(), false);
-            calculateTotalPrice(photoshootType, fuelPrice);
+        if ($("#IsDecidedByUs").is(":checked")) {
+            if ($("#Region").val() != null && $("#Region").val() != '') {
+                let fuelPrice = calculatePriceByDistance($("#Region option:selected").text(), false);
+                calculateTotalPrice(photoshootType, fuelPrice);
+            }
         }
+        else{
+            if ($("#Settlement").val() != null && $("#Settlement").val() != '') {
+                let fuelPrice = calculatePriceByDistance($("#Region option:selected").text(), false);
+                calculateTotalPrice(photoshootType, fuelPrice);
+            }
+        }
+        
         
     }
 
