@@ -13,6 +13,8 @@ namespace OwlStock.Web.DTOs.PhotoShootDTOs
 
         public Guid PhotoShootId{ get; set; }
         
+        public string? PersonFirstName{ get; set; }
+        public string? PersonLastName{ get; set; }
         public string? PersonFullName{ get; set; }
 
         [Required]

@@ -5,6 +5,7 @@ namespace OwlStock.Services.Interfaces
 {
     public interface IPhotoService
     {
+        Task<IEnumerable<PhotoShootPhoto>> AllByPhotoshoot(Guid? photoshootId);
         Task<PhotoByIdDTO> GetById(Guid? id);
         Task<Guid> Create(PhotoBase? photo);
         Task<PhotoBase> Delete(PhotoBase photo);

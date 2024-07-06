@@ -2,20 +2,25 @@
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Services.Interfaces;
+using System.IO.Compression;
 
 namespace OwlStock.Web.Controllers
 {
     public class DownloadController : Controller
     {
+        private readonly IPhotoService _photoService;
         private readonly IPhotoResizer _photoResizer;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IOrderService _orderService;
+        private readonly IPhotoShootService _photoShootService;
         
-        public DownloadController(IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService)
+        public DownloadController(IPhotoService photoService, IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService, IPhotoShootService photoShootService)
         {
+            _photoService = photoService;
             _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
             _orderService = orderService;
+            _photoShootService = photoShootService;
         }
 
         [HttpGet]
@@ -62,6 +67,39 @@ namespace OwlStock.Web.Controllers
             }
 
             throw new NullReferenceException($"{nameof(photo.FileType)} is null");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadAll(Guid photoshootId)
+        {
+            string photoshootPersonName = await _photoShootService.GetPersonName(photoshootId);
+            string photoshootFolderName = $"{photoshootPersonName}_{photoshootId}";
+            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "resources", "photoshoots", photoshootFolderName);
+            string[] files = Directory.GetFiles(folderPath);
+
+            if (files.Any())
+            {
+                using MemoryStream memoryStream = new();
+                using (ZipArchive zipArchive = new(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (string file in files)
+                    {
+                        FileInfo fileInfo = new(file);
+                        ZipArchiveEntry entry = zipArchive.CreateEntry(fileInfo.Name);
+
+                        using Stream entryStream = entry.Open();
+                        using FileStream fileStream = new(file, FileMode.Open, FileAccess.Read);
+                            
+                        fileStream.CopyTo(entryStream);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return File(memoryStream.ToArray(), "application/zip", "album.zip");
+            }
+
+
+            return StatusCode(500, "An error cccured while zipping files");
         }
     }
 }

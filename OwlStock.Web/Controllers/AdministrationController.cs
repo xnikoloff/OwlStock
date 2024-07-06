@@ -87,6 +87,8 @@ namespace OwlStock.Web.Controllers
 
             UpdatePhotoShootPhotosDTO filesToSPhotoShoot = new()
             {
+                PersonFirstName = photoShootById.PersonFirstName,
+                PersonLastName = photoShootById.PersonLastName,
                 PersonFullName = photoShootById.PersonFullName,
                 PhotoShootId = photoShootById.Id,
             };
@@ -104,7 +106,7 @@ namespace OwlStock.Web.Controllers
 
             string webRootPath = _webHostEnvironment.WebRootPath;
 
-            IEnumerable<PhotoShootPhoto> photos = BuildPhotoShootPhotoList(dto.Files, new() { Id = dto.PhotoShootId, PersonFullName = dto.PersonFullName }, webRootPath);
+            IEnumerable<PhotoShootPhoto> photos = BuildPhotoShootPhotoList(dto.Files, new() { Id = dto.PhotoShootId, PersonFirstName = dto.PersonFirstName, PersonLastName = dto.PersonLastName }, webRootPath);
 
             foreach (PhotoShootPhoto photo in photos)
             {
@@ -176,7 +178,7 @@ namespace OwlStock.Web.Controllers
                         FileName = file.FileName,
                         FileType = file.ContentType,
                         PhotoShoot = photoShoot,
-                        FilePath = Path.Combine(webRootPath, $"resources/photoshoots/{photoShoot.PersonFullName}_{photoShoot.Id}").Replace('\\', '/')
+                        FilePath = Path.Combine(webRootPath, $"resources/photoshoots/{photoShoot.PersonFirstName}{photoShoot.PersonLastName}_{photoShoot.Id}").Replace('\\', '/')
                     }
                 );
             }

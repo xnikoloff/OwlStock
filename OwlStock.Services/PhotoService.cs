@@ -16,6 +16,21 @@ namespace OwlStock.Services
             _context = context;
         }
 
+        public async Task<IEnumerable<PhotoShootPhoto>> AllByPhotoshoot(Guid? photoshootId)
+        {
+            if(photoshootId == Guid.Empty)
+            {
+                throw new NullReferenceException($"GUID {nameof(photoshootId)} is empty");
+            }
+
+            if (_context.PhotoShootPhotos is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.GalleryPhotos)} is null");
+            }
+
+            return await _context.PhotoShootPhotos.Where(p => p.PhotoShootId == photoshootId).ToListAsync();
+        }
+
         public async Task<PhotoByIdDTO> GetById(Guid? id)
         {
             if(id is null)

@@ -14,5 +14,12 @@ namespace OwlStock.Services.Interfaces
         Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId);
         Task<Dictionary<DateOnly, IEnumerable<TimeSlot>>> GetPhotoShootsCalendar();
         Task<PhotoShoot> ChangeStatus(Guid id, PhotoshootStatus status);
+        
+        /// <summary>
+        /// Returns name of the person that the photoshoot belongs to
+        /// </summary>
+        /// <param name="id">Id of the photoshoor</param>
+        /// <returns>Name of the person as string</returns>
+        Task<string> GetPersonName(Guid id);
     }
 }

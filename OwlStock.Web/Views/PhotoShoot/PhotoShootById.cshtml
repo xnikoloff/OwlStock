@@ -36,42 +36,52 @@
     </div>
 </div>
 <div class="container mt-5">
-    <div class="row">
-        @if (Model.PhotoShootPhotos.Count == 0)
-        {
-            <p class="text-center"><i>Снимките Ви ще се покажат скоро тук :)</i></p>
-        }
-
-
-
-        else
-        {
-
-            <h2 class="text-center mb-3">Photos</h2>
-            
-            foreach(PhotoShootPhoto photo in Model.PhotoShootPhotos)
+    @if (Model.PhotoShootPhotos.Count == 0)
+    {
+        <div class="row">
+            <div class="col-12">
+                <p class="text-center"><i>Снимките Ви ще се покажат скоро тук :)</i></p>
+            </div>
+        </div>
+    }
+    
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-3">Снимки</h2>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-2 mb-5">
+                <a asp-action="DownloadAll" asp-controller="Download" asp-route-photoshootId="@(Model.Id)" class="btn btn-secondary btn-sm">Свали албум</a>
+            </div>
+        </div>
+        
+        <div class="row">
+            @foreach(PhotoShootPhoto photo in Model.PhotoShootPhotos)
             {
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <img src="~/resources/@(photo.FilePath + '/' + photo.FileName)">
-                        </div>
-                        <div class="card-footer">
-                            <form asp-action="DownloadPhotoShootPhoto" asp-controller="Download">
-                                <input type="hidden" asp-for="@photo.FileName">
-                                <input type="hidden" asp-for="@photo.FileType">
-                                <input type="hidden" asp-for="@photo.FilePath">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="~/resources/@(photo.FilePath + '/' + photo.FileName)">
+                    </div>
+                    <div class="card-footer">
+                        <form asp-action="DownloadPhotoShootPhoto" asp-controller="Download">
+                            <input type="hidden" asp-for="@photo.FileName">
+                            <input type="hidden" asp-for="@photo.FileType">
+                            <input type="hidden" asp-for="@photo.FilePath">
 
-                                <button type="submit" class="btn btn-primary">Download</button>
-                            </form>
-                        </div>
+                            <button type="submit" class="btn btn-primary">Download</button>
+                        </form>
                     </div>
                 </div>
+            </div>
             }
-                
-        }
-
-    </div>
+        </div>
+        
+    }
 </div>
 
 <style>

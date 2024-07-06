@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
@@ -227,6 +228,26 @@ namespace OwlStock.Services
             await _context.SaveChangesAsync();
 
             return photoShoot;
+        }
+
+        public async Task<string> GetPersonName(Guid id)
+        {
+            if (_context.PhotoShoots is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
+            }
+
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Guid is empty", $"{nameof(id)}");
+            }
+
+            string? name = await _context.PhotoShoots
+                .Where(ps => ps.Id == id)
+                .Select(ps => ps.PersonFirstName + ps.PersonLastName)
+                .FirstOrDefaultAsync();
+
+            return name ?? throw new NullReferenceException($"{nameof(name)} is null or empty");
         }
     }
 }
