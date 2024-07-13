@@ -111,7 +111,7 @@
                 <div class="col-12 col-md-6 col-lg-6 col-price" style="display:none">
                     <label><b>Разход за пътни</b></label>
                     <br />
-                    <p id="priceDesciption">Тъй като избраното населено масто се намира на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв (<i>изчислява се на км</i>).</p>
+                    <p id="priceDesciption">Тъй като избраното населено място се намира на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв. (Такса пътни @(DefaultValue.TripTax).00 лв. + @(DefaultValue.FuelPriceByKilometer) лв. за всеки километър)</p>
                 </div>
             </div>
         </div>
@@ -190,7 +190,7 @@
             <div class="row row-total-price mt-5" style="display:none">
                 <div class="col-12 text-center">
                     <h3>Цена</h3>
-                    <h1 class="mt-2"><span id="total-price"></span> лв</h1>
+                    <h1 class="mt-2"><span id="total-price"></span> <span id="currency">лв</span></h1>
                 </div>
             </div>
         </div>
@@ -465,8 +465,8 @@
         $("#PhotoShootType").change(function () {
             let option = $('#PhotoShootType').find(":selected").val();
             
-            //9 is {Other}
-            if (option == 9) {
+            //10 is {Other}
+            if (option == 10) {
                 $("#photo-shoot-type-description").css("display", "block");
             }
 
@@ -526,9 +526,9 @@
 
     function checkPhotoShootTypeDescriptionEmpty(){
         let selected = $('#PhotoShootType').find(":selected").val();
-
-        //7 is "Other"
-        if (selected == 7) {
+        console.log(selected);
+        //10 is "Other"
+        if (selected == 10) {
             $("#PhotoShootTypeDescription").prop("required", true);
         }
     }
@@ -655,7 +655,16 @@
             data: { 'photoshootType': photoshootType, 'fuelPrice': fuelPrice },
             success: function (response) {
                 price = response;
-                $("#total-price").html(response);
+
+                if ($("#PhotoShootType").find(":selected").val() == 7 || $("#PhotoShootType").find(":selected").val() == 10) {
+                    $("#total-price").html("По договаряне");
+                    $("#currency").css("display", "none");
+                }
+                else{
+                    $("#total-price").html(response);
+                    $("#currency").css("display", "inline");
+                }
+
                 $(".row-total-price").css("display", "block");
             },
             error: function (response) {
@@ -693,8 +702,6 @@
                 calculateTotalPrice(photoshootType, fuelPrice);
             }
         }
-        
-        
     }
 
 </script>

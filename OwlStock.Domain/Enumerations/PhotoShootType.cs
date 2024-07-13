@@ -13,22 +13,25 @@ namespace OwlStock.Domain.Enumerations
         [Display(Name = "Сватба")]
         Wedding = 3,
 
+        [Display(Name = "Сватба+")]
+        WeddingPlus = 4,
+
         [Display(Name = "Абитуриентски бал")]
-        Prom = 4,
+        Prom = 5,
 
         [Display(Name = "Детска фотосесия")]
-        Kids = 5,
+        Kids = 6,
 
         [Display(Name = "Имот/сграда")]
-        Property = 6,
+        Property = 7,
 
-        [Display(Name = "Събитие")]
-        Event = 7,
+        //[Display(Name = "Събитие")]
+        //Event = 8,
 
         [Display(Name = "Автомобил")]
-        Automotive = 8,
+        Automotive = 9,
 
         [Display(Name = "Друг")]
-        Other = 9
+        Other = 10
     }
 }

@@ -1,19 +1,20 @@
 ﻿namespace OwlStock.Services.Common
 {
-    internal static class DefaultValue
+    public static class DefaultValue
     {
         //Photoshoots
         internal const decimal PortrairPhotoShoot = 150m;
         internal const decimal PregnantPhotoshoot = 100m;
-        internal const decimal WeddingPhotoshoot = 200m;
-        internal const decimal PromPhotoshoot = 400m;
+        internal const decimal WeddingPhotoshoot = 400m;
+        internal const decimal WeddingPlusPhotoshoot = 800m;
+        internal const decimal PromPhotoshoot = 300m;
         internal const decimal KidsPhotoshoot = 200m;
         internal const decimal Automotive = 100m;
         internal const decimal Baptism = 300m;
 
         //Fuel
-        internal const decimal FuelPriceByKilometer = 0.18m;
-        internal const decimal TripTax = 6m;
+        public const decimal FuelPriceByKilometer = 0.18m;
+        public const decimal TripTax = 5m;
 
         //not used for now
         //Speed (in KM/h)

@@ -32,6 +32,16 @@ namespace OwlStock.Services
                     return DefaultValue.WeddingPhotoshoot + fuelPrice;
                 }
 
+                case PhotoShootType.WeddingPlus:
+                    {
+                        if (fuelPrice == 0)
+                        {
+                            return DefaultValue.WeddingPlusPhotoshoot;
+                        }
+
+                        return DefaultValue.WeddingPlusPhotoshoot + fuelPrice;
+                    }
+
                 case PhotoShootType.Prom:
                 {
                     if (fuelPrice == 0)
