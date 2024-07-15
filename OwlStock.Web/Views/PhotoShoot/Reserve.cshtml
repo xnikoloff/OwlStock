@@ -187,10 +187,10 @@
                     }
                 </div>
             </div>
-            <div class="row row-total-price mt-5" style="display:none">
+            <div class="row row-total-price mt-5">
                 <div class="col-12 text-center">
                     <h3>Цена</h3>
-                    <h1 class="mt-2"><span id="total-price"></span> <span id="currency">лв</span></h1>
+                    <h1 class="mt-2"><span id="total-price"></span> <span id="currency"> лв</span></h1>
                 </div>
             </div>
         </div>
@@ -221,12 +221,6 @@
                 </div>
             </div>
             <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <button type="submit" class="btn btn-outline-secondary btn-lg" id="btn-book" disabled>Резервирай</button>
-                </div>
-            </div>
-
-            <div class="row mt-5">
                 <div class="col-12">
                     <span class="alert-text text-muted">*С натискането на бутона „<b>Резервирай</b>“ се съгласявате да изполваме въведетите от вас данни. Те ще бъдат използвани единствено за целите на работния процес на DreamPix.</span>
                 </div>
@@ -235,6 +229,11 @@
                 <div class="col-12">
                     <span class="alert-text text-muted">*С избирането на опцията „<b>Не желая снимките ми да бъдат запазени в профила ми</b>“ отказвате снимките Ви да бъдат качени на уебсайта на DreamPix.</span>
                 </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-outline-secondary btn-lg" id="btn-book" disabled>Резервирай</button>
             </div>
         </div>
     </form>
@@ -389,7 +388,8 @@
                 $(".row-dates-weather-remaining").css("display", "flex");
                 $(".place-addition-info").css("display", "block");
             }
-            //updatePrice();
+
+            updatePrice();
         });
 
         $("#Region").change(function () {
@@ -399,7 +399,7 @@
             getSettlementsByRegion($("#Region option:selected").text());
             $("#RegionId").val($(this).val());
             $(".dates-container").css("display", "block");
-        })
+        });
 
         $("#Settlement").change(function () {
             updatePrice();
@@ -576,45 +576,54 @@
     }*/
 
     function getSettlementsByRegion(region) {
-        //destroy Selectize before repopulating the select list with new data
-        $('#Settlement').selectize()[0].selectize.destroy();
-        $.ajax({
-            url: "@Url.Action("settlementsByRegion", "Settlement")",
-            method: "GET",
-            data: { region: region },
-            success: function (response) {
-                $("#Settlement").selectize({
-                    respect_word_boundaries: false,
-                    plugins: ["restore_on_backspace", "clear_button"],
-                    delimiter: " - ",
-                    persist: false,
-                    maxItems: 1,
-                    valueField: "id",
-                    labelField: "name",
-                    searchField: ["name"],
-                    options: response,
-                    onChange: function (value) {
-                        updatePrice();
-                        getForecast(value);
-                        $("#SelectedSettlementId").val(value);
-                        //not used for now
-                        //$("#SettlementName").val($(this).val());
+        //else destroy settlements list
+        if (region != '') {
+            //destroy Selectize before repopulating the select list with new data
+            $('#Settlement').selectize()[0].selectize.destroy();
+            $.ajax({
+                url: "@Url.Action("settlementsByRegion", "Settlement")",
+                method: "GET",
+                data: { region: region },
+                success: function (response) {
+                    $("#Settlement").selectize({
+                        respect_word_boundaries: false,
+                        plugins: ["restore_on_backspace", "clear_button"],
+                        delimiter: " - ",
+                        persist: false,
+                        maxItems: 1,
+                        valueField: "id",
+                        labelField: "name",
+                        searchField: ["name"],
+                        options: response,
+                        onChange: function (value) {
 
-                        if ($("#IsDecidedByUs").prop('checked') == false) {
-                            $(".place-addition-info").css("display", "block");
-                            $(".row-dates-weather-first-three").css("transition", ".4s");
-                            $(".row-dates-weather-remaining").css("transition", ".4s");
-                            $(".row-dates-weather-first-three").css("display", "flex");
-                            $(".row-dates-weather-remaining").css("display", "flex");
+                            updatePrice();
+                            getForecast(value);
+                            $("#SelectedSettlementId").val(value);
+                            //not used for now
+                            //$("#SettlementName").val($(this).val());
+
+                            if ($("#IsDecidedByUs").prop('checked') == false) {
+                                $(".place-addition-info").css("display", "block");
+                                $(".row-dates-weather-first-three").css("transition", ".4s");
+                                $(".row-dates-weather-remaining").css("transition", ".4s");
+                                $(".row-dates-weather-first-three").css("display", "flex");
+                                $(".row-dates-weather-remaining").css("display", "flex");
+                            }
                         }
-                    }
-                });
-            },
-            error: function (response) {
-                console.log("error");
-                console.log(response);
-            },
-        });
+                    });
+                },
+                error: function (response) {
+                    console.log("error");
+                    console.log(response);
+                },
+            });
+        }
+        else {
+            //destroy selectize if no region is selected
+            $('#Settlement').selectize()[0].selectize.destroy();
+        }
+        
     }
     
     function calculatePriceByDistance(settlement, isRegion = false) {
@@ -675,7 +684,7 @@
     }
 
     function updatePrice(){
-        $("#total-price").html('');
+        $("#total-price").html('0');
 
         let photoshootType = $("#PhotoShootType").find(":selected").val();
 
