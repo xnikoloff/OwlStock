@@ -18,222 +18,231 @@
         <input type="hidden" asp-for="FuelPrice" />
         @*not used for now*@
         @*<input type="hidden" asp-for="SettlementName" />*@
-        <div class="row bg-light mt-3">
-            <div class="col-12 p-1">
-                <h4>Вашите данни</h4>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PersonFirstName" class="required"></label>
-                <input asp-for="PersonFirstName" class="form-control" required />
-                <span asp-validation-for="PersonFirstName" class="text-danger"></span>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PersonLastName" class="required"></label>
-                <input asp-for="PersonLastName" class="form-control" required />
-                <span asp-validation-for="PersonLastName" class="text-danger"></span>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PersonPhone" class="required"></label>
-                <input asp-for="PersonPhone" class="form-control" required />
-                <span asp-validation-for="PersonPhone" class="text-danger"></span>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="PhotoShootType" class="required"></label>
-                <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control" required></select>
-                <span asp-validation-for="PhotoShootType" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row">
-            <!--<div class="col-12 col-md-6 col-lg-3 form-group">
-                <label asp-for="ReservationDate"></label>
-                <input asp-for="ReservationDate" class="form-control" />
-                <span asp-validation-for="ReservationDate" class="text-danger"></span>
-            </div>-->
-            <div class="col-12 form-group" id="photo-shoot-type-description">
-                <label asp-for="PhotoShootTypeDescription" class="required"></label>
-                <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="6" class="form-control"></textarea>
-                <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row bg-light mt-3">
-            <div class="col-12 p-1">
-                <h4>Място</h4>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-12 col-md-6 col-lg-4 form-group is-decided-by-us">
-                <input asp-for="IsDecidedByUs" />
-                <label asp-for="IsDecidedByUs"></label>
-            </div>
-        </div>
-        <div class="row mt-3 row-decided-by-us-info" style="display:none">
-            <div class="col-12">
-                <h6>Ще изберем подходящо място в областта, която сте избрали, и ще се свържем допълнително с вас за повече информация.</h6>
-            </div>
-        </div>
-        <div class="place-container">
-            <div class="row mt-3">
-                <div class="col-12 col-md-6 col-lg-6 form-group">
-                    <label for="Region" class="required">Област</label>
-                    <input type="hidden" id="RegionId" />
-                    <select id="Region" class="form-control" asp-items="@(new SelectList(Model.ServicedRegions, "Id", "Name"))" required>
-                        <option value="0" selected></option>
-                    </select>
-                </div>
-                <div class="col-12 col-md-6 col-lg-6 form-group settlement" style="display:none">
-                    <label for="Settlement">Населено място</label>
-                    <input type="hidden" id="SettlementId" />
-                    <select id="Settlement" class="form-control"></select>
-                    <span class="decided-by-us-settlement-info text-info" style="display:none">Това не е задължително</span>
-                </div>
-            </div>
-            <div class="place-addition-info" style="display:none">
-                <div class="row">
-                    <div class="col-12 form-group user-place">
-                        <label asp-for="UserPlace" class="required"></label>
-                        <input asp-for="UserPlace" class="form-control" />
-                    </div>
-                </div>
-                <div class="row">
 
-                    <div class="col-12 form-group google-maps-link">
-                        <label asp-for="GoogleMapsLink"></label>
-                        <input asp-for="GoogleMapsLink" class="form-control" />
-                        <br />
-                        <span class="text-info"><i>Това не е задължително, но е силно препоръчително :)</i></span>
+
+        <div class="row">
+            <div class="col-12 col-md-8 left-column">
+                <div class="row bg-light">
+                    <div class="col-12 p-1">
+                        <h4>Вашите данни</h4>
                     </div>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-12 col-md-6 col-lg-6 col-price" style="display:none">
-                    <label><b>Разход за пътни</b></label>
-                    <br />
-                    <p id="priceDesciption">Тъй като избраното населено място се намира на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв. (Такса пътни @(DefaultValue.TripTax).00 лв. + @(DefaultValue.FuelPriceByKilometer) лв. за всеки километър)</p>
-                </div>
-            </div>
-        </div>
-        <div class="dates-container" style="display:none">
-            <div class="row bg-light mt-3">
-                <div class="col-12 p-1">
-                    <h4>Дата и час</h4>
-                </div>
-            </div>
-            <div class="row mt-5 row-dates-all" style="display:none;">
-                <div class="col-12 scrollmenu" id="dates-list">
-                    <div id="date-buttons-slider">
-                        @for (int i = 0; i < remainingDates.Count; i++)
-                        {
-                            <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
-                                <div class="card-header card-header-date">
-                                    <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
-                                </div>
-                            </div>
-                        }
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 col-lg-6 form-group">
+                        <label asp-for="PersonFirstName" class="required"></label>
+                        <input asp-for="PersonFirstName" class="form-control" required />
+                        <span asp-validation-for="PersonFirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 form-group">
+                        <label asp-for="PersonLastName" class="required"></label>
+                        <input asp-for="PersonLastName" class="form-control" required />
+                        <span asp-validation-for="PersonLastName" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-5 row-dates-weather-first-three" style="display:none;">
-                @for (int i = 0; i < 3; i++)
-                {
-                    <div class="col-12 col-md-6 col-lg-4 mx-auto">
-                        <div class="card card-weather text-center mx-auto btn-date btn-date-weather">
-                            <div class="card-header card-header-date">
-                                <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 form-group">
+                        <label asp-for="PersonPhone" class="required"></label>
+                        <input asp-for="PersonPhone" class="form-control" required />
+                        <span asp-validation-for="PersonPhone" class="text-danger"></span>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 form-group">
+                        <label asp-for="PhotoShootType" class="required"></label>
+                        <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control" required></select>
+                        <span asp-validation-for="PhotoShootType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--<div class="col-12 col-md-6 col-lg-3 form-group">
+                        <label asp-for="ReservationDate"></label>
+                        <input asp-for="ReservationDate" class="form-control" />
+                        <span asp-validation-for="ReservationDate" class="text-danger"></span>
+                    </div>-->
+                    <div class="col-12 form-group" id="photo-shoot-type-description">
+                        <label asp-for="PhotoShootTypeDescription" class="required"></label>
+                        <textarea asp-for="PhotoShootTypeDescription" cols="20" rows="6" class="form-control"></textarea>
+                        <span asp-validation-for="PhotoShootTypeDescription" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row bg-light mt-3">
+                    <div class="col-12 p-1">
+                        <h4>Място</h4>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 col-lg-6 form-group is-decided-by-us">
+                        <input asp-for="IsDecidedByUs" />
+                        <label asp-for="IsDecidedByUs"></label>
+                    </div>
+                </div>
+                <div class="row mt-3 row-decided-by-us-info" style="display:none">
+                    <div class="col-12">
+                        <h6>Ще изберем подходящо място в областта, която сте избрали, и ще се свържем допълнително с вас за повече информация.</h6>
+                    </div>
+                </div>
+                <div class="place-container">
+                    <div class="row mt-3">
+                        <div class="col-12 col-md-6 col-lg-6 form-group">
+                            <label for="Region" class="required">Област</label>
+                            <input type="hidden" id="RegionId" />
+                            <select id="Region" class="form-control" asp-items="@(new SelectList(Model.ServicedRegions, "Id", "Name"))" required>
+                                <option value="0" selected></option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 form-group settlement" style="display:none">
+                            <label for="Settlement">Населено място</label>
+                            <input type="hidden" id="SettlementId" />
+                            <select id="Settlement" class="form-control"></select>
+                            <span class="decided-by-us-settlement-info text-info" style="display:none">Това не е задължително</span>
+                        </div>
+                    </div>
+                    <div class="place-addition-info" style="display:none">
+                        <div class="row">
+                            <div class="col-12 form-group user-place">
+                                <label asp-for="UserPlace" class="required"></label>
+                                <input asp-for="UserPlace" class="form-control" />
                             </div>
-                            <div class="card-body card-body-weather text-center">
-                                <h5 class="temperatureCurrent"></h5>
-                                <div class="icon"></div>
-                                <p class="forecastText">Нямаме информация за времето :(</p>
-                                @*<p class="precipitation"></p>*@
+                        </div>
+                        <div class="row">
+
+                            <div class="col-12 form-group google-maps-link">
+                                <label asp-for="GoogleMapsLink"></label>
+                                <input asp-for="GoogleMapsLink" class="form-control" />
+                                <br />
+                                <span class="text-info"><i>Това не е задължително, но е силно препоръчително :)</i></span>
                             </div>
                         </div>
                     </div>
-                }
-            </div>
-            <div class="row mt-5 row-dates-weather-remaining" style="display:none;">
-                <div class="col-12 scrollmenu" id="dates-list">
-                    <div id="date-buttons-slider">
-                        @for (int i = 3; i < remainingDates.Count; i++)
+
+                    <div class="row">
+                        <div class="col-12 col-price" style="display:none">
+                            <label><b>Разход за пътни</b></label>
+                            <br />
+                            <p id="priceDesciption">Тъй като избраното населено място се намира на разстояние по-голямо от 20 км от нас, това ще ви струва допълнителни <b><i><span id="price"></span></i></b>лв. (Такса пътни @(DefaultValue.TripTax).00 лв. + @(DefaultValue.FuelPriceByKilometer) лв. за всеки километър)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dates-container" style="display:none">
+                    <div class="row bg-light mt-3">
+                        <div class="col-12 p-1">
+                            <h4>Дата и час</h4>
+                        </div>
+                    </div>
+                    <div class="row mt-5 row-dates-all" style="display:none;">
+                        <div class="col-12 scrollmenu" id="dates-list">
+                            <div id="date-buttons-slider">
+                                @for (int i = 0; i < remainingDates.Count; i++)
+                                {
+                                    <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
+                                        <div class="card-header card-header-date">
+                                            <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5 row-dates-weather-first-three" style="display:none;">
+                        @for (int i = 0; i < 3; i++)
                         {
-                            <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
-                                <div class="card-header card-header-date">
-                                    <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
+                            <div class="col-12 col-md-6 col-lg-4 mx-auto">
+                                <div class="card card-weather text-center mx-auto btn-date btn-date-weather">
+                                    <div class="card-header card-header-date">
+                                        <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
+                                    </div>
+                                    <div class="card-body card-body-weather text-center">
+                                        <h5 class="temperatureCurrent"></h5>
+                                        <div class="icon"></div>
+                                        <p class="forecastText">Нямаме информация за времето :(</p>
+                                        @*<p class="precipitation"></p>*@
+                                    </div>
                                 </div>
                             </div>
-                            @*This will be used when more expensive Weather APIsubscription is bought*@
-                            @*The current is for 3 days only*@
-                            @*<button type="button" class="btn-date">
-                            <b>@remainingDates[i].ToString("dd.MM")</b>
-                            <hr />
-                            <p><span class="temperatureCurrent">0</span>C°</p>
-                            <p><span class="forecastText"></span></p>
-                            <p>Precipitation:<span class="precipitation"> 0</span>%</p>
-                            </button>*@
                         }
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 hours-container mx-auto text-center" id="hours-container" style="display:none">
-                    <hr />
-                    @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
-                    {
-                        <button type="button" class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-lg btn-time-slot" id="time-slot">
-                            @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
-                        </button>
-                    }
-                </div>
-            </div>
-            <div class="row row-total-price mt-5">
-                <div class="col-12 text-center">
-                    <h3>Цена</h3>
-                    <h1 class="mt-2"><span id="total-price"></span> <span id="currency"> лв</span></h1>
-                </div>
-            </div>
-        </div>
-        <div class="book-container" style="display:none">
-        <hr />
-            <div class="row mt-2">
-                <div class="col-12">
-                    <div class="form-group">
-                        <input asp-for="DoNotUploadPhotos" />
-                        <label asp-for="DoNotUploadPhotos"></label>
+                    <div class="row mt-5 row-dates-weather-remaining" style="display:none;">
+                        <div class="col-12 scrollmenu" id="dates-list">
+                            <div id="date-buttons-slider">
+                                @for (int i = 3; i < remainingDates.Count; i++)
+                                {
+                                    <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
+                                        <div class="card-header card-header-date">
+                                            <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
+                                        </div>
+                                    </div>
+                                    @*This will be used when more expensive Weather APIsubscription is bought*@
+                                    @*The current is for 3 days only*@
+                                    @*<button type="button" class="btn-date">
+                                <b>@remainingDates[i].ToString("dd.MM")</b>
+                                <hr />
+                                <p><span class="temperatureCurrent">0</span>C°</p>
+                                <p><span class="forecastText"></span></p>
+                                <p>Precipitation:<span class="precipitation"> 0</span>%</p>
+                                </button>*@
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 hours-container mx-auto text-center" id="hours-container" style="display:none">
+                            <hr />
+                            @foreach (TimeSlot slot in Model?.AllTimeSlots ?? throw new NullReferenceException("Time slots are null"))
+                            {
+                                <button type="button" class="btn @(slot.IsAvailable ? "btn-success" : "btn-secondary") btn-lg btn-time-slot" id="time-slot">
+                                    @(slot.Time.Hour < 10 ? $"0{slot.Time.Hour}" : slot.Time.Hour):@(slot.Time.Minute == 0 ? "00" : "30");
+                                </button>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row delivery-method" style="display:none">
-                <div class="col-12 col-md-4">
-                    <div class="form-group">
-                        <label asp-for="PhotoDeliveryMethod" class="required"></label>
-                        <select asp-for="PhotoDeliveryMethod" asp-items="@Html.GetEnumSelectList<PhotoDeliveryMethod>()" class="form-control">
-                            <option value=""></option>
-                        </select>
+            <div class="col-12 col-md-4 mt-5 right-colum">
+                <div class="book-container">
+                    <div class="row row-total-price">
+                        <div class="col-12 text-center">
+                            <h3>Цена: <span id="total-price"></span> <span id="currency" style="display:none"> лв</span></h3>
+                            
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input asp-for="DoNotUploadPhotos" />
+                                <label asp-for="DoNotUploadPhotos"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row delivery-method" style="display:none">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="PhotoDeliveryMethod" class="required"></label>
+                                <select asp-for="PhotoDeliveryMethod" asp-items="@Html.GetEnumSelectList<PhotoDeliveryMethod>()" class="form-control">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-photo-delivery" style="display:none">
+                            <div class="form-group">
+                                <label asp-for="PhotoDeliveryAddress" class="required"></label>
+                                <input asp-for="PhotoDeliveryAddress" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="alert-text text-muted">*С натискането на бутона „<b>Резервирай</b>“ се съгласявате да изполваме въведетите от вас данни. Те ще бъдат използвани единствено за целите на работния процес на DreamPix.</span>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <span class="alert-text text-muted">*С избирането на опцията „<b>Не желая снимките ми да се качват тук</b>“ отказвате снимките Ви да бъдат качени на уебсайта на DreamPix.</span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-photo-delivery" style="display:none">
-                    <div class="form-group">
-                        <label asp-for="PhotoDeliveryAddress" class="required"></label>
-                        <input asp-for="PhotoDeliveryAddress" class="form-control" />
+                <div class="row mt-5">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-outline-secondary btn-lg" id="btn-book" disabled>Резервирай</button>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-5">
-                <div class="col-12">
-                    <span class="alert-text text-muted">*С натискането на бутона „<b>Резервирай</b>“ се съгласявате да изполваме въведетите от вас данни. Те ще бъдат използвани единствено за целите на работния процес на DreamPix.</span>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-12">
-                    <span class="alert-text text-muted">*С избирането на опцията „<b>Не желая снимките ми да бъдат запазени в профила ми</b>“ отказвате снимките Ви да бъдат качени на уебсайта на DreamPix.</span>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-5">
-            <div class="col-12 text-center">
-                <button type="submit" class="btn btn-outline-secondary btn-lg" id="btn-book" disabled>Резервирай</button>
             </div>
         </div>
     </form>
@@ -242,6 +251,16 @@
     
 
 <style>
+    .left-column {
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid #d9d7d7;
+    }
+
+    .right-column {
+        height: 100vh;
+        overflow-y: auto;
+    }
     .required:after {
         content: " *";
         color: red;
@@ -685,6 +704,9 @@
 
     function updatePrice(){
         $("#total-price").html('0');
+        console.log('hello');
+        //hide curreny by default
+        $("#currency").css("display", "none");
 
         let photoshootType = $("#PhotoShootType").find(":selected").val();
 
@@ -700,15 +722,20 @@
         }*/
 
         if ($("#IsDecidedByUs").is(":checked")) {
-            if ($("#Region").val() != null && $("#Region").val() != '') {
+            if ($("#Region").val() != 0) {
+                console.log($("#Region").val());
                 let fuelPrice = calculatePriceByDistance($("#Region option:selected").text(), false);
                 calculateTotalPrice(photoshootType, fuelPrice);
+                $("#currency").css("display", "inline");
+                console.log('hello if');
             }
         }
         else{
             if ($("#Settlement").val() != null && $("#Settlement").val() != '') {
                 let fuelPrice = calculatePriceByDistance($("#Region option:selected").text(), false);
                 calculateTotalPrice(photoshootType, fuelPrice);
+                $("#currency").css("display", "inline");
+                console.log('hello if');
             }
         }
     }

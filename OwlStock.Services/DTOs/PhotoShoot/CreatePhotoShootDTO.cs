@@ -61,7 +61,7 @@ namespace OwlStock.Services.DTOs.PhotoShoot
 
         public decimal Price { get; set; }
 
-        [Display(Name = "Не желая снимките ми да бъдат запазени в профила ми")]
+        [Display(Name = "Не желая снимките ми да се качват тук")]
         public bool DoNotUploadPhotos { get; set; }
 
         [Display(Name = "Начин на получаване на снимки")]
