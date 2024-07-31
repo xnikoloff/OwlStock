@@ -130,14 +130,26 @@
             <div class="row mt-5 row-dates-all" style="display:none;">
                 <div class="col-12 scrollmenu" id="dates-list">
                     <div id="date-buttons-slider">
-                        @for (int i = 0; i < remainingDates.Count; i++)
+                        @foreach(KeyValuePair<DateOnly, IEnumerable<TimeSlot>> calendarKVP in calendar)
+                        {
+                            <div class="card text-center btn-date btn-date-simple text-white @(calendarKVP.Value.FirstOrDefault().IsAvailable ? "bg-success" : "bg-danger")" id="date-button-simple">
+                                <div class="card-header card-header-date">
+                                    <h6 class="date-text">@calendarKVP.Key.ToString("dd.MM")</h6>
+                                </div>
+                                <div class="card-body">
+                                    <span>@(calendarKVP.Value.FirstOrDefault().IsAvailable ? Html.Raw("<i class=\"fa-solid fa-check fa-lg\"></i>") : Html.Raw("<i class=\"fa-solid fa-xmark fa-lg\"></i>"))</span>
+                                </div>
+                            </div>
+                            
+                        }
+                        @*@for (int i = 0; i < remainingDates.Count; i++)
                         {
                             <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
                                 <div class="card-header card-header-date">
                                     <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
                                 </div>
                             </div>
-                        }
+                        }*@
                     </div>
                 </div>
             </div>
@@ -349,7 +361,6 @@
 
 <script>
     $(document).ready(function(){
-
         $("#PhotoDeliveryMethod").change(function () {
             //2 is USB, 3 is CD 
             if ($('#PhotoDeliveryMethod').find(":selected").val() == 2 ||
@@ -366,7 +377,6 @@
 
         $("#DoNotUploadPhotos").change(function () {
             if (this.checked) {
-                console.log()
                 $(".delivery-method").css("display", "block");
                 $("#PhotoDeliveryMethod").prop('required', true);
             }
@@ -425,10 +435,10 @@
         });
 
         $(".card-weather").click(function () {
-            $(".card-weather").css("box-shadow", "unset")
+            $(".card-weather").css("box-shadow", "unset");
             $(".btn-date-simple").css("background", "unset");
             $(".btn-date-simple").css("color", "unset");
-            $(this).css("box-shadow", "0px 0px 15px 2px #6cab65")
+            $(this).css("box-shadow", "0px 0px 15px 2px #6cab65");
         });
 
         $(".btn-date-simple").click(function () {
@@ -482,13 +492,14 @@
             else{
                 $("#PhotoShootTypeDescription").removeAttr("required");
                 $("#photo-shoot-type-description").css("display", "none");
-                console.log('false');
             }
 
             checkPhotoShootTypeDescriptionEmpty();
             updatePrice();
         });
-    });;
+
+        checkBookedDates();
+    });
 
     
 
@@ -505,6 +516,16 @@
         return `${new Date().getUTCFullYear()}-${selectedDateSplit[1]}-${selectedDateSplit[0]}`;
     }
 
+    function formatToBulgarianDate(selectedDate) {
+        let selectedDateSplit = selectedDate.split('-');
+        return `${selectedDateSplit[0]}.${selectedDateSplit[1]}.${selectedDateSplit[2]}`;
+    }
+    
+    function getMonthAndDay(date) {
+        let selectedDateSplit = date.split('.');
+        return `${selectedDateSplit[2]}.${selectedDateSplit[1]}`;
+    }
+
     function showTimeSlots(selectedDate){
 
         let selectedDateFormated = formatSelectedDate(selectedDate);
@@ -513,6 +534,8 @@
         let isAvailable = false;
         let time = '';
         let timeSubstring = '';
+
+        console.log(calendar);
 
         $('#hours-container').empty();
         $('#hours-container').css("display", "block");
@@ -537,7 +560,6 @@
 
     function checkPhotoShootTypeDescriptionEmpty(){
         let selected = $('#PhotoShootType').find(":selected").val();
-        console.log(selected);
         //10 is "Other"
         if (selected == 10) {
             $("#PhotoShootTypeDescription").prop("required", true);
@@ -655,7 +677,6 @@
                     $(".col-price").css("display", "block");
                 }
                 else{
-                    console.log(response);
                     $(".col-price").css("display", "none");
                 }
             },
@@ -696,7 +717,6 @@
 
     function updatePrice(){
         $("#total-price").html('0');
-        console.log('hello');
         //hide curreny by default
         $("#currency").css("display", "none");
 
@@ -717,7 +737,6 @@
             let fuelPrice = calculatePriceByDistance($("#Region option:selected").text(), false);
             
             if ($("#Region").val() != 0) {
-                console.log($("#Region").val());
                 $("#currency").css("display", "inline");
             }
 
@@ -732,6 +751,18 @@
 
             calculateTotalPrice(photoshootType, fuelPrice);
         }
+    }
+
+    function checkBookedDates() {
+        let calendar = @Html.Raw(Json.Serialize(calendar));
+        Object.keys(calendar).forEach(value => {
+            let monthAndDay = getMonthAndDay(formatToBulgarianDate(value));
+            
+            if (monthAndDay) {
+
+            }
+        });
+        
     }
 
 </script>

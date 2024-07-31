@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OwlStock.Services.Common.HelperClasses;
+﻿using OwlStock.Services.Common.HelperClasses;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services
