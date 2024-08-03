@@ -103,7 +103,6 @@
                     </div>
                 </div>
                 <div class="row">
-
                     <div class="col-12 form-group google-maps-link">
                         <label asp-for="GoogleMapsLink"></label>
                         <span class="text-warning"><i>Това не е задължително, но е силно препоръчително</i></</span>
@@ -112,7 +111,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-12 col-price" style="display:none">
                     <label><b>Разход за пътни</b></label>
@@ -127,7 +125,7 @@
                     <h4>Дата и час</h4>
                 </div>
             </div>
-            <div class="row mt-5 row-dates-all" style="display:none;">
+            <div class="row mt-5" id="row-dates-no-weather" style="display:none;">
                 <div class="col-12 scrollmenu" id="dates-list">
                     <div id="date-buttons-slider">
                         @foreach(KeyValuePair<DateOnly, IEnumerable<TimeSlot>> calendarKVP in calendar)
@@ -140,56 +138,29 @@
                                     <span>@(calendarKVP.Value.FirstOrDefault().IsAvailable ? Html.Raw("<i class=\"fa-solid fa-check fa-lg\"></i>") : Html.Raw("<i class=\"fa-solid fa-xmark fa-lg\"></i>"))</span>
                                 </div>
                             </div>
-                            
                         }
-                        @*@for (int i = 0; i < remainingDates.Count; i++)
-                        {
-                            <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
-                                <div class="card-header card-header-date">
-                                    <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
-                                </div>
-                            </div>
-                        }*@
                     </div>
                 </div>
             </div>
-            <div class="row mt-5 row-dates-weather-first-three" style="display:none;">
-                @for (int i = 0; i < 3; i++)
-                {
-                    <div class="col-12 col-md-6 col-lg-4 mx-auto">
-                        <div class="card card-weather text-center mx-auto btn-date btn-date-weather">
-                            <div class="card-header card-header-date">
-                                <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
-                            </div>
-                            <div class="card-body card-body-weather text-center">
-                                <h5 class="temperatureCurrent"></h5>
-                                <div class="icon"></div>
-                                <p class="forecastText">Нямаме информация за времето :(</p>
-                                <p class="precipitation"></p>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="row mt-5 row-dates-weather-remaining" style="display:none;">
+            <div class="row mt-5" id="row-dates-weather" style="display:none;">
                 <div class="col-12 scrollmenu" id="dates-list">
                     <div id="date-buttons-slider">
-                        @for (int i = 3; i < remainingDates.Count; i++)
+                        @foreach (KeyValuePair<DateOnly, IEnumerable<TimeSlot>> calendarKVP in calendar)
                         {
-                            <div class="card text-center btn-date btn-date-simple" id="date-button-simple">
+                            <div class="card card-weather text-center btn-date btn-date-simple text-white @(calendarKVP.Value.FirstOrDefault().IsAvailable ? "bg-success" : "bg-danger")" id="date-button-simple">
                                 <div class="card-header card-header-date">
-                                    <h6 class="date-text">@remainingDates[i].ToString("dd.MM")</h6>
+                                    <h6 class="date-text">@calendarKVP.Key.ToString("dd.MM")</h6>
+                                </div>
+                                <div class="card-body card-body-weather text-center" style="background: @(calendarKVP.Value.FirstOrDefault().IsAvailable ? Html.Raw("#8dba8d") : Html.Raw("#f57976"))">
+                                    <h5 class="temperatureCurrent"></h5>
+                                    <div class="icon"></div>
+                                    <p class="forecastText">Нямаме информация за времето</p>
+                                    <p class="precipitation"></p>
+                                </div>
+                                <div class="card-footer">
+                                    <span>@(calendarKVP.Value.FirstOrDefault().IsAvailable ? Html.Raw("<i class=\"fa-solid fa-check fa-lg\"></i>") : Html.Raw("<i class=\"fa-solid fa-xmark fa-lg\"></i>"))</span>
                                 </div>
                             </div>
-                            @*This will be used when more expensive Weather APIsubscription is bought*@
-                            @*The current is for 3 days only*@
-                            @*<button type="button" class="btn-date">
-                        <b>@remainingDates[i].ToString("dd.MM")</b>
-                        <hr />
-                        <p><span class="temperatureCurrent">0</span>C°</p>
-                        <p><span class="forecastText"></span></p>
-                        <p>Precipitation:<span class="precipitation"> 0</span>%</p>
-                        </button>*@
                         }
                     </div>
                 </div>
@@ -316,6 +287,10 @@
     .hours-container button {
         margin: 5px;
     }
+    
+    .card{
+        width: 148px;
+    }
 
     .btn-date-weather .card-body .icon {
         background-repeat: no-repeat;
@@ -324,6 +299,7 @@
         width: 80px;
         margin: 10px auto;
     }
+
 
     .ui-autocomplete{
         font-family: "Helvetica";
@@ -393,17 +369,17 @@
                 $("#Settlement").val('');
                 $(".row-decided-by-us-info").css("display", "block");
                 $(".decided-by-us-settlement-info").css("display", "unset");
-                $(".row-dates-all").css("display", "flex");
-                $(".row-dates-weather-first-three").css("display", "none");
-                $(".row-dates-weather-remaining").css("display", "none");
+                $("#row-dates-no-weather").css("display", "flex");
+                $("#row-dates-weather").css("display", "none");
+                //$(".row-dates-weather-remaining").css("display", "none");
                 $(".place-addition-info").css("display", "none");
             }
             else {
                 $(".row-decided-by-us-info").css("display", "none");
                 $(".decided-by-us-settlement-info").css("display", "none");
-                $(".row-dates-all").css("display", "none");
-                $(".row-dates-weather-first-three").css("display", "flex");
-                $(".row-dates-weather-remaining").css("display", "flex");
+                $("#row-dates-no-weather").css("display", "none");
+                $("#row-dates-weather").css("display", "flex");
+                //$(".row-dates-weather-remaining").css("display", "flex");
                 $(".place-addition-info").css("display", "block");
             }
 
@@ -427,10 +403,10 @@
             
             if ($("#IsDecidedByUs").prop('checked') == false) {
                 $(".place-addition-info").css("display", "block");
-                $(".row-dates-weather-first-three").css("transition", ".4s");
-                $(".row-dates-weather-remaining").css("transition", ".4s");
-                $(".row-dates-weather-first-three").css("display", "flex");
-                $(".row-dates-weather-remaining").css("display", "flex");
+                $("#row-dates-weather").css("transition", ".4s");
+                //$(".row-dates-weather-remaining").css("transition", ".4s");
+                $("#row-dates-weather").css("display", "flex");
+                //$(".row-dates-weather-remaining").css("display", "flex");
             }
         });
 
@@ -573,6 +549,7 @@
             data: { settlementId: settlementId },
             success: function (response) {
                 let json = JSON.parse(JSON.stringify(response));
+
                 $(".card-weather").each(function (i) {
                     let cardBody = $(this).find(".card-body-weather");
                     cardBody.find(".icon").css("background-image", `url(${json.forecast.forecastDays[i].day.condition.icon})`);
@@ -580,6 +557,10 @@
                     cardBody.find(".forecastText").text(json.forecast.forecastDays[i].day.condition.text);
                     cardBody.find(".precipitation").text('Валежи: ' + json.forecast.forecastDays[i].day.totalPrecipitation + '%');
                     i++;
+
+                    if(i == 3){
+                        return false;
+                    }
                 });
             },
             error: function (response) {
@@ -638,10 +619,10 @@
 
                             if ($("#IsDecidedByUs").prop('checked') == false) {
                                 $(".place-addition-info").css("display", "block");
-                                $(".row-dates-weather-first-three").css("transition", ".4s");
-                                $(".row-dates-weather-remaining").css("transition", ".4s");
-                                $(".row-dates-weather-first-three").css("display", "flex");
-                                $(".row-dates-weather-remaining").css("display", "flex");
+                                $("#row-dates-weather").css("transition", ".4s");
+                                //$(".row-dates-weather-remaining").css("transition", ".4s");
+                                $("#row-dates-weather").css("display", "flex");
+                                //$(".row-dates-weather-remaining").css("display", "flex");
                             }
                         }
                     });
