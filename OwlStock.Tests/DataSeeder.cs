@@ -55,7 +55,7 @@ namespace OwlStock.Tests
                     PersonLastName = "Test",
                     PersonFullName = "Test",
                     ReservationDate = DateTime.Now,
-                    PhotoShootType = PhotoShootType.Event,
+                    //PhotoShootType = PhotoShootType.Event,
                     PersonPhone = "0123456789",
                     PersonEmail = "test@test.test"
                 },
@@ -68,7 +68,7 @@ namespace OwlStock.Tests
                     PersonLastName = "Test 2",
                     PersonFullName = "Test 2",
                     ReservationDate = DateTime.Now,
-                    PhotoShootType = PhotoShootType.Event,
+                    //PhotoShootType = PhotoShootType.Event,
                     PersonPhone = "0123456789",
                     PersonEmail = "test@test.test"
                 }

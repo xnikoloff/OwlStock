@@ -15,25 +15,6 @@ namespace OwlStock.Services
             _context = context;
         }
 
-        public string GetCategoryDescription(Category category)
-        {
-            if (string.IsNullOrEmpty(category.ToString()))
-            {
-                throw new ArgumentNullException(nameof(category));
-            }
-
-            CategoryDescriptions categoryDescriptions = new();
-
-            object field = categoryDescriptions
-                .GetType()
-                .GetFields()
-                .Where(f => f.Name.Contains(category.ToString()))
-                .Select(f => f.GetValue(categoryDescriptions))
-                .FirstOrDefault() ?? throw new NullReferenceException($"Member that contains name {category} does not exists");
-
-            return field.ToString();
-        }
-
         public async Task<int> Create(IEnumerable<Category> categories, Guid photoId)
         {
             IEnumerable<PhotoCategory> photoCategories = BuildPhotoCateoriesList(categories, photoId);

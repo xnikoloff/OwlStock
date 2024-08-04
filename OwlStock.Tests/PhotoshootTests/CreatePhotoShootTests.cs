@@ -1,6 +1,5 @@
 ﻿using Moq;
 using OwlStock.Domain.Entities;
-using OwlStock.Domain.Enumerations;
 using OwlStock.Services;
 using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
@@ -18,7 +17,7 @@ namespace OwlStock.Tests.PhotoshootTests
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
             CalendarService calendarService = new();
-            PhotoShootService photoShootService = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationServiceMock.Object);
+            PhotoShootService photoShootService = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService);
 
             CreatePhotoShootDTO dto = new()
             {
@@ -26,7 +25,7 @@ namespace OwlStock.Tests.PhotoshootTests
                 PersonLastName = "User",
                 PersonEmail = "email@email.com",
                 PersonPhone = "0878131828",
-                PhotoShootType = PhotoShootType.Event,
+                //PhotoShootType = PhotoShootType.Event,
                 ReservationDate = DateTime.Now,
                 ReservationTime = new TimeOnly(),
                 IdentityUserId = new Guid().ToString()

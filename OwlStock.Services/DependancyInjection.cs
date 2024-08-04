@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OwlStock.Services.Common;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services
@@ -23,6 +24,7 @@ namespace OwlStock.Services
             services.AddTransient<IWeatherService, WeatherService>();
             services.AddTransient<ICalculationsService, CalculationsService>();
             services.AddTransient<IDynamicContentService, DynamicContentService>();
+            services.AddTransient<ICommonServices, CommonServices>();
 
             return services;
         }

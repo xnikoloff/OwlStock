@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace OwlStock.Domain.Enumerations
 {
@@ -32,6 +33,12 @@ namespace OwlStock.Domain.Enumerations
         Automotive = 9,
 
         [Display(Name = "Друг")]
-        Other = 10
+        Other = 10,
+
+        [Display(Name = "Продукт")]
+        Product = 11,
+
+        [Display(Name = "Свето кръщение")]
+        Baptism = 12
     }
 }

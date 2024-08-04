@@ -23,5 +23,12 @@
         public const string NightDescription = $"Lorem Night";
         public const string AstroDescription = $"Lorem Astro";
         public const string MacroDescription = $"Lorem Macro";
+        public const string WeddingDescription = $"Сватбена фотоградия";
+        public const string PromDescription = $"Абитуриетски бал";
+        public const string BaptismDescription = $"Свето кръщение";
+        public const string PersonalDescription = $"Портретна фотография";
+        public const string KidsDescription = $"Детска фотосесия";
+        public const string ProductDescription = $"Продуктова фотография";
+        public const string PregnancyDescription = $"Бременност";
     }
 }

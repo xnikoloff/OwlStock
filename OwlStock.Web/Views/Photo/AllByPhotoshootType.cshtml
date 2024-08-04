@@ -1,0 +1,21 @@
+﻿@model List<PhotoShootPhoto>
+
+<div class="container">
+    <div class="row bg-light my-3 p-3 rounded">
+        <div class="col-12 col-md-6 col-lg-12"> 
+            <h4>@(ViewData["categoryDescription"] ?? "")</h4>
+        </div>
+    </div>
+    <div class="row">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            @if (!Model[i].IsDeleted)
+            {
+                <div class="col-12 col-md-6 col-lg-3 column">
+                    <a asp-controller="Photo" asp-action="PhotoById" asp-route-id="@(Model[i].Id)">
+                        <img src="~/resources/@(Model[i].FilePath + '/' + Model[i].FileName)">
+                    </a>
+                </div>
+            }
+        }
+    </div>

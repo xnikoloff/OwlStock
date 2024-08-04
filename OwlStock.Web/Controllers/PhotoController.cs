@@ -17,10 +17,11 @@ namespace OwlStock.Web.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IPhotoTagService _photoTagService;
         private readonly IFileService _fileService;
+        private readonly ICommonServices _commonServices;
         
         public PhotoController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment,
             ICategoryService categoryService, IPhotoTagService photoTagService, IGalleryService galleryService,
-             IFileService fileService)
+             IFileService fileService, ICommonServices commonServices)
         {
             _photoService = photoService;
             _webHostEnvironment = webHostEnvironment;
@@ -28,6 +29,7 @@ namespace OwlStock.Web.Controllers
             _photoTagService = photoTagService;
             _galleryService = galleryService;
             _fileService = fileService;
+            _commonServices = commonServices;
         }
 
         [HttpGet]
@@ -45,8 +47,15 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> AllByCategory(Category category)
         {
-            ViewData["categoryDescription"] = _categoryService.GetCategoryDescription(category);
+            ViewData["categoryDescription"] = _commonServices.GetEnumDescription(category);
             return View(await _galleryService.AllByCategory(category));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllByPhotoshootType(PhotoShootType photoshootType)
+        {
+            ViewData["categoryDescription"] = _commonServices.GetEnumDescription(photoshootType);
+            return View(await _galleryService.AllByPhotoshootType(photoshootType));
         }
 
         [HttpGet]
