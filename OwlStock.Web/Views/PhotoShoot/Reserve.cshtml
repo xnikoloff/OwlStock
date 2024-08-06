@@ -337,6 +337,9 @@
 
 <script>
     $(document).ready(function(){
+        let lastClickedDateBtn = null;
+        let lastClickedTimeSlotBtn = null;
+
         $("#PhotoDeliveryMethod").change(function () {
             //2 is USB, 3 is CD 
             if ($('#PhotoDeliveryMethod').find(":selected").val() == 2 ||
@@ -428,6 +431,21 @@
         });
 
         $(".btn-date").click(function () {
+            //reset the styles for the last clicked button
+            //bg-success is set as default because style is change for available buttons only
+            if(lastClickedDateBtn != null){
+                lastClickedDateBtn.removeClass('bg-primary');
+                lastClickedDateBtn.addClass('bg-success');
+            }
+
+            if ($(this).hasClass('bg-success')){
+                $(this).removeClass("bg-success");
+                $(this).addClass("bg-primary");
+            }
+            
+            //set the currect clicked button as last clicked
+            lastClickedDateBtn = $(this);
+
             showTimeSlots($(this).find(".card-header h6").html());
         });
 
@@ -438,15 +456,28 @@
 
         $(document).on("click", ".btn-time-slot", function (event) {
             event.preventDefault();
+
+            //reset the styles for the last clicked button
+            //bg-success is set as default because style is change for available buttons only
+            if (lastClickedTimeSlotBtn != null) {
+                lastClickedTimeSlotBtn.removeClass('btn-primary');
+                lastClickedTimeSlotBtn.addClass('btn-outline-success');
+            }
+
             if ($(this).hasClass("btn-outline-success")) {
                 $("#ReservationTime").val($(this).text());
                 $("#btn-book").prop("disabled", false);
+                $(this).removeClass('btn-outline-success');
+                $(this).addClass('btn-primary');
             }
             
             else {
                 alert("Избраният час е зает");
                 $("#btn-book").prop("disabled", true);
             }
+
+            //set the currect clicked button as last clicked
+            lastClickedTimeSlotBtn = $(this);
 
             $(".book-container").css("display", "block");
         });
