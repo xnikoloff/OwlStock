@@ -33,4 +33,8 @@
     <ProjectReference Include="..\OwlStock.Services\OwlStock.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\resources\photoshoots\" />
+  </ItemGroup>
+
 </Project>
