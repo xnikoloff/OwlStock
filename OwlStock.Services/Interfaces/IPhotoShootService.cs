@@ -11,6 +11,7 @@ namespace OwlStock.Services.Interfaces
         Task<PhotoShoot> Add(CreatePhotoShootDTO dto);
         Task<PhotoShoot> Update(ManagePhotoshootDTO dto);
         Task<PhotoShoot> PhotoShootById(Guid id);
+        Task<PhotoShoot?> PhotoShootById(Guid id, string userId);
         Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId);
         Task<Dictionary<DateOnly, IEnumerable<TimeSlot>>> GetPhotoShootsCalendar();
         Task<PhotoShoot> ChangeStatus(Guid id, PhotoshootStatus status);

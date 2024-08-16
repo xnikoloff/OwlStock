@@ -61,6 +61,24 @@ namespace OwlStock.Services
             return dto;
         }
 
+        public async Task<PhotoShoot?> PhotoShootById(Guid id, string userId)
+        {
+            if (_context.PhotoShoots is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.PhotoShoots)} is null");
+            }
+
+            //List<string> files = await _fileService.GetFilesNamesForPhotoShoot(id);
+
+            PhotoShoot? dto = await _context.PhotoShoots
+                .Include(phs => phs.PhotoShootPhotos)
+                .Include(phs => phs.City)
+                .Where(phs => phs.Id == id && phs.IdentityUserId!.Equals(userId))
+                .FirstOrDefaultAsync();
+
+            return dto;
+        }
+
         public async Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId)
         {
             if (userId == null)

@@ -17,7 +17,7 @@ namespace OwlStock.Tests.PhotoshootTests
             Mock<IEmailService> emailServiceMock = new();
             Mock<ICalculationsService> calculationServiceMock = new();
             CalendarService calendarService = new();
-            PhotoShootService photoShootService = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService);
+            PhotoShootService photoShootService = new(await seeder.ArrangeDbContext(), emailServiceMock.Object, calendarService, calculationServiceMock.Object);
 
             CreatePhotoShootDTO dto = new()
             {

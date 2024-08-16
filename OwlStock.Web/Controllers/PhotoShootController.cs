@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Services.DTOs.PhotoShoot;
 using OwlStock.Services.Interfaces;
@@ -87,7 +88,13 @@ namespace OwlStock.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> PhotoShootById(Guid id)
         {
-            return View(await _photoShootService.PhotoShootById(id));
+            PhotoShoot? photoshoot = await _photoShootService.PhotoShootById(id, GetUserId());
+            
+            if (photoshoot == null)
+            {
+                return View("Error", "Несъществуваща фотосесия");
+            }
+            return View(photoshoot);
         }
 
         private string GetUserId()

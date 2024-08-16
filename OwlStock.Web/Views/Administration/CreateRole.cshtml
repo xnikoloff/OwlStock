@@ -1,0 +1,25 @@
+﻿@model CreateRoleDTO
+
+@{
+    ViewData["Title"] = "Create Role";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-2" class="text-center">
+            <h4>Create New Role</h4>
+        </div>
+    </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 my-5">
+            <form action="CreateRole" method="POST">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control"/>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Create</button>
+            </form>
+        </div>
+    </div>
+</div>

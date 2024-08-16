@@ -15,7 +15,7 @@
                     @{
                         foreach(IdentityUser user in Model)
                         {
-                            <tr>
+                            <tr onclick="location.href = '@Url.Action("UserById", "Administration", new { id = user.Id })'">
                                 <td>@user.Id</td>
                                 <td>@user.Email</td>
                                 <td>@user.UserName</td>
