@@ -65,14 +65,14 @@ namespace OwlStock.Web.Controllers
             return View("AllByCategory", await _galleryService.AllByTags(tag));
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateGalleryPhotoDTO? dto)
         {
@@ -123,7 +123,7 @@ namespace OwlStock.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> Delete(PhotoByIdDTO dto)
         {
@@ -146,7 +146,7 @@ namespace OwlStock.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> ChangeDownloadPermissions(PhotoByIdDTO dto)
         {

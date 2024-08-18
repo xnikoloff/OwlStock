@@ -51,8 +51,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                    @if (this.User.IsInRole("Administrator"))
+                    {
+                        <li class="nav-item"><a asp-controller="Administration" asp-action="Index" class="nav-link text-primary"><b>Admin</b></a></li>
+                    }
                     <li class="nav-item"><a asp-controller="PhotoShoot" asp-action="Reserve" class="nav-link">Резервирай фотосесия</a></li>
-
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item"><a asp-controller="PhotoShoot" asp-action="MyPhotoShoots" class="nav-link">Моите фотосесии</a></li>
