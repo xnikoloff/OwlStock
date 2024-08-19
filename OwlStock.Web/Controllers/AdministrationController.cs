@@ -21,18 +21,20 @@ namespace OwlStock.Web.Controllers
     {
         private readonly IPhotoShootService _photoShootService;
         private readonly IPhotoService _photoService;
+        private readonly IGalleryService _galleryService;
         private readonly IFileService _fileService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailService _emailService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdministrationController(IPhotoShootService photoShootService, IPhotoService photoService, 
+        public AdministrationController(IPhotoShootService photoShootService, IPhotoService photoService, IGalleryService galleryService, 
             IFileService fileService, IWebHostEnvironment webHostEnvironment, IEmailService emailService, 
             UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _photoShootService = photoShootService;
             _photoService = photoService;
+            _galleryService = galleryService;
             _fileService = fileService;
             _webHostEnvironment = webHostEnvironment;
             _emailService = emailService;
@@ -166,6 +168,18 @@ namespace OwlStock.Web.Controllers
             });
             
             return RedirectToAction(nameof(Photoshoots));
+        }
+
+        [HttpGet]
+        public IActionResult PhotosIndex()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Photos()
+        {
+            return View(await _galleryService.All());
         }
 
         [HttpGet]

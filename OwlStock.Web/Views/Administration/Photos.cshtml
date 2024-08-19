@@ -1,0 +1,29 @@
+﻿@model IEnumerable<GalleryPhoto>
+
+@{
+    ViewData["Title"] = "ManagePhotos";
+}    
+
+<div class="container">
+    <div class="row">
+        @foreach(GalleryPhoto photo in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h4>@photo.Name</h4>
+                    </div>
+                    <div class="card-body">
+                        <a asp-action="PhotoById" asp-controller="Photo" asp-route-id="@photo.Id"><img src="~/resources/@(photo.FilePathSmall)"></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card{
+        min-height: 400px;
+    }
+</style>
