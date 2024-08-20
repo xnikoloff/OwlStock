@@ -537,7 +537,6 @@
 
         let selectedDateFormated = formatSelectedDate(selectedDate);
         let calendar = @Html.Raw(Json.Serialize(calendar));
-        let timeSlots = $(".btn-time-slot");
         let isAvailable = false;
         let time = '';
         let timeSubstring = '';
@@ -672,7 +671,6 @@
     }
     
     function calculatePriceByDistance(settlement, isRegion = false) {
-        let price = 0;
         let regionId = $("#Region").find(":selected").val();
         var request = $.ajax({
             contentType: 'application/json',
@@ -685,7 +683,8 @@
                 $("#price").text(response);
                 $("#FuelPrice").val(response);
                 
-                if (response > 0) {
+                
+                if (response > 0 && ($("#IsDecidedByUs").is(":checked"))) {
                     $(".col-price").css("display", "block");
                 }
                 else{

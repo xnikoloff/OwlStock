@@ -62,6 +62,16 @@ namespace OwlStock.Services
                     return DefaultValue.KidsPhotoshoot + fuelPrice;
                 }
 
+                case PhotoShootType.Pregnant:
+                {
+                    if (fuelPrice == 0)
+                    {
+                        return DefaultValue.PregnantPhotoshoot;
+                    }
+
+                    return DefaultValue.PregnantPhotoshoot + fuelPrice;
+                }
+
                 case PhotoShootType.Automotive:
                 {
                     if (fuelPrice == 0)
