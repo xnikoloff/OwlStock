@@ -23,8 +23,37 @@
                 <tbody>
                     @foreach(PhotoShoot photoShoot in Model)
                     {
+                        string tableRowColor = "";
+                        switch (photoShoot.Status)
+                        {
+                            case PhotoshootStatus.New:
+                            {
+                                tableRowColor = "#ffc800";
+                                break;       
+                            }
+                            case PhotoshootStatus.Completed:
+                            {
+                                tableRowColor = "#198754";
+                                break;
+                            }
+                            case PhotoshootStatus.Declined:
+                            {
+                                tableRowColor = "#c21e1e";
+                                break;
+                            }
+                            case PhotoshootStatus.Cancelled:
+                            {
+                                tableRowColor = "#d4d4d4";
+                                break;
+                            }
+                            default:
+                            {
+                                tableRowColor = "#bd79b5";
+                                break;
+                            }
+                        }
                         <a asp-controller="PhotoShoot" asp-action="PhotoShootById" asp-route-id="@photoShoot.Id">
-                        <tr style="background-color:@(photoShoot.Status == PhotoshootStatus.New ? "#ffc800" : "#198754")">
+                        <tr style="background-color:@tableRowColor; color:#fff">
                                 <td><a asp-controller="Administration" asp-action="ManagePhotoshoot" asp-route-id="@photoShoot.Id" class="btn btn-light btn-sm">Управление</a></td>
                                 <td>@photoShoot.Id</td>
                                 <td>@photoShoot.Status</td>

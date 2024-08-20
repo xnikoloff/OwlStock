@@ -134,13 +134,6 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AcceptPhotoshoot(Guid id)
-        {
-            await _photoShootService.ChangeStatus(id, PhotoshootStatus.Accepted);
-            return RedirectToAction(nameof(Photoshoots));
-        }
-
-        [HttpGet]
         public async Task<IActionResult> DeclinePhotoshoot(Guid id)
         {
             await _photoShootService.ChangeStatus(id, PhotoshootStatus.Declined);

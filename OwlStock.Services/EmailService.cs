@@ -101,12 +101,28 @@ namespace OwlStock.Services
                 }
 
                 case EmailTemplate.UpdatePhotosForPhotoShoot:
-                    {
-                        return PhotoShootEmailTemplates.UpdatePhotoShootTemplate
-                            (
-                                ((UpdatePhotoShootEmailTemplateDTO)dto).PhotoShootId
-                            );
-                    }
+                {
+                    return PhotoShootEmailTemplates.UpdatePhotoShootTemplate
+                        (
+                            ((UpdatePhotoShootEmailTemplateDTO)dto).PhotoShootId
+                        );
+                }
+
+                case EmailTemplate.DeclinePhotoShoot:
+                {
+                    return PhotoShootEmailTemplates.DeclinePhotoShootTemplate
+                        (
+                            ((UpdatePhotoShootEmailTemplateDTO)dto).PhotoShootId
+                        );
+                }
+
+                case EmailTemplate.CancelPhotoShoot:
+                {
+                    return PhotoShootEmailTemplates.CancelPhotoShootTemplate
+                        (
+                            ((UpdatePhotoShootEmailTemplateDTO)dto).PhotoShootId
+                        );
+                }
 
                 default:
                 {
@@ -123,7 +139,6 @@ namespace OwlStock.Services
                 {
                         return PhotoShootEmailTemplates.CreatePhotoShootTemplateDreampix
                     (
-                         ((PhotoShootEmailTemplateDTO)dto).PersonFullName ?? "",
                          ((PhotoShootEmailTemplateDTO)dto).Date,
                          ((PhotoShootEmailTemplateDTO)dto).Type
                     );
