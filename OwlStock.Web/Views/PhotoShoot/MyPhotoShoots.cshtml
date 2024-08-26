@@ -28,7 +28,6 @@
                             <th>Тип</th>
                             <th>Създаден на</th>
                             <th>Резервиран за</th>
-                            <th>Получаване на снимки</th>
                         </tr>
                     </thead>
 
@@ -39,7 +38,6 @@
                             <td>@dto.PhotoShootType</td>
                             <td>@dto.CreatedOn</td>
                             <td>@dto.ReservationFor</td>
-                            <td>@(dto.PhotoDeliveryMethod == null ? "На профила Ви" : dto.PhotoDeliveryMethod)</td>
                         </tr>
                     }
 

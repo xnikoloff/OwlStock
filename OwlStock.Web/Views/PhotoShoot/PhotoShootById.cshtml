@@ -4,14 +4,13 @@
     <div class="row">
     </div>
     <div class="row">
-        <div class="col-12 col-md-6 col-lg-4 mx-auto text-center">
-            <h1>Фотосесия #@Model.Id</h1>
+        <div class="col-12 mx-auto text-center">
+            <h1>Фотосесия</h1>
+            <h3>#@Model.Id</h3>
         </div>
     </div>
-    <hr />
     <div class="row">
         <div class="col-12 mx-auto mt-5">
-            <h4 class="mx-auto text-center">Детайли</h4>
             <table class="table mt-4">
                 <thead>
                     <tr>
@@ -19,6 +18,10 @@
                         <th>Дата</th>
                         <th>Тип</th>
                         <th>Създаден на</th>
+                        <th>Място</th>
+                        <th>Област</th>
+                        <th>Получаване на снимки</th>
+                        <th>Адрес за получаване</th>
                         <th>Цена</th>
                     </tr>
                 </thead>
@@ -28,7 +31,11 @@
                         <td>@Model.ReservationDate</td>
                         <td>@Model.PhotoShootType</td>
                         <td>@Model.CreatedOn</td>
-                        <td>@Model.Price лв</td>
+                        <td>@(Model?.City?.Name ?? "N/A")</td>
+                        <td>@(Model?.City?.Region?.Name ?? "N/A")</td>
+                        <td>@(string.IsNullOrEmpty(Model?.PhotoDeliveryMethod.ToString()) ? "В профила Ви" : Model?.PhotoDeliveryMethod)</td>
+                        <td>@(Model?.PhotoDeliveryAddress ?? "N/A")</td>
+                        <td>@(Model?.Price.ToString() ?? "N/A") лв</td>
                     </tr>
                 </tbody>
             </table>
@@ -36,7 +43,7 @@
     </div>
 </div>
 <div class="container mt-5">
-    @if (Model.PhotoShootPhotos.Count == 0)
+    @if (Model?.PhotoShootPhotos.Count == 0)
     {
         <div class="row">
             <div class="col-12">
@@ -55,12 +62,12 @@
         <hr />
         <div class="row">
             <div class="col-12 col-md-6 col-lg-2 mb-5">
-                <a asp-action="DownloadAll" asp-controller="Download" asp-route-photoshootId="@(Model.Id)" class="btn btn-secondary btn-sm">Свали албум</a>
+                <a asp-action="DownloadAll" asp-controller="Download" asp-route-photoshootId="@(Model?.Id)" class="btn btn-secondary btn-sm">Свали албум</a>
             </div>
         </div>
         
         <div class="row">
-            @foreach(PhotoShootPhoto photo in Model.PhotoShootPhotos)
+            @foreach(PhotoShootPhoto photo in Model?.PhotoShootPhotos ?? new List<PhotoShootPhoto>())
             {
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card">
