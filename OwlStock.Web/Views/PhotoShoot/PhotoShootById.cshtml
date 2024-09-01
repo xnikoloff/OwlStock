@@ -31,8 +31,8 @@
                         <td>@Model.ReservationDate</td>
                         <td>@Model.PhotoShootType</td>
                         <td>@Model.CreatedOn</td>
-                        <td>@(Model?.City?.Name ?? "N/A")</td>
-                        <td>@(Model?.City?.Region?.Name ?? "N/A")</td>
+                        <td>@(Model?.Place?.City?.Name ?? "N/A")</td>
+                        <td>@(Model?.Place?.City?.Region?.Name ?? "N/A")</td>
                         <td>@(string.IsNullOrEmpty(Model?.PhotoDeliveryMethod.ToString()) ? "В профила Ви" : Model?.PhotoDeliveryMethod)</td>
                         <td>@(Model?.PhotoDeliveryAddress ?? "N/A")</td>
                         <td>@(Model?.Price.ToString() ?? "N/A") лв</td>

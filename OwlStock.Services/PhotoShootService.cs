@@ -49,7 +49,10 @@ namespace OwlStock.Services
 
             PhotoShoot? dto = await _context.PhotoShoots
                 .Include(phs => phs.PhotoShootPhotos)
-                .Include(phs => phs.City)
+                .Include(phs => phs.Place)
+                    .ThenInclude(p => p.City)
+                    .ThenInclude(c => c.Municipality)
+                    .ThenInclude(m => m.Region)
                 .Where(phs => phs.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -72,7 +75,8 @@ namespace OwlStock.Services
 
             PhotoShoot? dto = await _context.PhotoShoots
                 .Include(phs => phs.PhotoShootPhotos)
-                .Include(phs => phs.City)
+                .Include(phs => phs.Place)
+                    .ThenInclude(p => p.City)
                     .ThenInclude(c => c.Region)
                 .Where(phs => phs.Id == id && phs.IdentityUserId!.Equals(userId))
                 .FirstOrDefaultAsync();
@@ -136,8 +140,8 @@ namespace OwlStock.Services
                 PhotoShootType = dto.PhotoShootType,
                 PhotoShootTypeDescription = dto.PhotoShootTypeDescription,
                 CreatedOn = DateTime.Now,
-                UserPlace = dto.UserPlace,
-                GoogleMapsLink = dto.GoogleMapsLink,
+                //UserPlace = dto.UserPlace,
+                //GoogleMapsLink = dto.GoogleMapsLink,
                 IsDecidedByUs = dto.IsDecidedByUs,
                 DoNotUploadPhotos = dto.DoNotUploadPhotos,
                 PhotoDeliveryMethod = dto.PhotoDeliveryMethod,
@@ -147,10 +151,10 @@ namespace OwlStock.Services
                 Status = PhotoshootStatus.New
             };
 
-            if (!dto.IsDecidedByUs)
+            /*if (!dto.IsDecidedByUs)
             {
                 photoShoot.CityId = int.Parse(dto.SelectedSettlementId ?? throw new ArgumentNullException(dto.SelectedSettlementId));
-            }
+            }*/
 
             //not used for now
             //double timeForTravel = _calculationsService.CalculateTimeForTravel(DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude,
@@ -199,8 +203,8 @@ namespace OwlStock.Services
             existingPhotoShoot.ReservationDate = dto.ReservationDate;
             existingPhotoShoot.PersonPhone = dto.PersonPhone;
             existingPhotoShoot.PhotoShootType = dto.PhotoShootType;
-            existingPhotoShoot.UserPlace = dto.UserPlace;
-            existingPhotoShoot.GoogleMapsLink = dto.GoogleMapsLink;
+            //existingPhotoShoot.UserPlace = dto.UserPlace;
+            //existingPhotoShoot.GoogleMapsLink = dto.GoogleMapsLink;
             existingPhotoShoot.Price = dto.Price;
             existingPhotoShoot.PhotoDeliveryMethod = dto.PhotoDeliveryMethod;
             existingPhotoShoot.PhotoDeliveryAddress = dto.PhotoDeliveryAddress;

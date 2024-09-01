@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Place>
+
+@{
+    ViewData["Title"] = "All Places";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>IsPopular</th>
+                        <th>City</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(Place place in Model)
+                    {
+                        <tr class="clickable" id="@place.Id">
+                            <td>@place.Name</td>
+                            <td>@(place.Description ?? "N/A")</td>
+                            <td>@(place.IsPopular ? "Popular" : "User")</td>
+                            <td>@(place?.City?.Name ?? "N/A")</td>
+                            <td>
+                                <form asp-action="PlaceById" method="GET">
+                                    <input type="hidden" name="id" value="@place?.Id"/>
+                                    <input type="hidden" name="isUpdate" value="true"/>
+                                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    tr:hover {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        let scheme = "@Context.Request.Scheme";
+        let host = "@Context.Request.Host";
+        let path = "/Place/PlaceById"
+        let id = 0;
+
+        $("tr").mouseover(function () {
+            id = this.id;
+        });
+
+        $(".clickable").click(function (){
+            window.location = scheme + "://" + host + path + '/' + id;
+        });
+    });
+</script>

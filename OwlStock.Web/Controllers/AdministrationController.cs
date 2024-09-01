@@ -70,9 +70,9 @@ namespace OwlStock.Web.Controllers
                 PhotoShootType = photoshoot.PhotoShootType,
                 PhotoShootTypeDescription = photoshoot.PhotoShootTypeDescription,
                 PhotoDeliveryAddress = photoshoot.PhotoDeliveryAddress,
-                GoogleMapsLink = photoshoot.GoogleMapsLink,
+                //GoogleMapsLink = photoshoot.GoogleMapsLink,
                 PhotoDeliveryMethod = photoshoot.PhotoDeliveryMethod,
-                UserPlace = photoshoot.UserPlace
+               // UserPlace = photoshoot.UserPlace
             };
             return View(dto);
         }

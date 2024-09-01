@@ -52,16 +52,16 @@
                                 break;
                             }
                         }
-                        <a asp-controller="PhotoShoot" asp-action="PhotoShootById" asp-route-id="@photoShoot.Id">
+                        <a asp-controller="PhotoShoot" asp-action="PhotoShootById" asp-route-id="@photoShoot?.Id">
                         <tr style="background-color:@tableRowColor; color:#fff">
                                 <td><a asp-controller="Administration" asp-action="ManagePhotoshoot" asp-route-id="@photoShoot.Id" class="btn btn-light btn-sm">Управление</a></td>
                                 <td>@photoShoot.Id</td>
                                 <td>@photoShoot.Status</td>
                                 <td>@photoShoot.PersonFullName</td>
-                                <td>@photoShoot.UserPlace</td>
-                                <td>@photoShoot.ReservationDate.ToString("dd.MM.yyyy")</td>
-                                <td>@photoShoot.CreatedOn.ToString("dd.MM.yyyy")</td>
-                                <td>@photoShoot.IdentityUser?.Email</td>
+                                <td>@photoShoot?.Place?.Name</td>
+                                <td>@photoShoot?.ReservationDate.ToString("dd.MM.yyyy")</td>
+                                <td>@photoShoot?.CreatedOn.ToString("dd.MM.yyyy")</td>
+                                <td>@photoShoot?.IdentityUser?.Email</td>
                             </tr>
                         </a>
                     }

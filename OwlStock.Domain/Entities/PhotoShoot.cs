@@ -20,21 +20,20 @@ namespace OwlStock.Domain.Entities
         public string? PersonFullName { get; set; }
         public string? PersonEmail { get; set; }
         public string? PersonPhone { get; set; }
-        public DateTime ReservationDate { get; set; }
         public DateTime CreatedOn { get; set; }
         public PhotoShootType PhotoShootType { get; set; }
         public string? PhotoShootTypeDescription { get; set; }
-        public string? UserPlace { get; set; }
-        public string? GoogleMapsLink { get; set; }
+        public DateTime ReservationDate { get; set; }
         public bool IsDecidedByUs { get; set; }
         public decimal Price { get; set; }
         public bool DoNotUploadPhotos { get; set; }
         public PhotoDeliveryMethod? PhotoDeliveryMethod { get; set; }
         public string? PhotoDeliveryAddress { get; set; }
-        public City? City { get; set; }
+        //public City? City { get; set; }
+        public Place? Place { get; set; }
 
-        [ForeignKey(nameof(City))]
-        public int? CityId { get; set; }
+        [ForeignKey(nameof(Place))]
+        public Guid? PlaceId { get; set; }
         
         [ForeignKey(nameof(IdentityUser))]
         public string? IdentityUserId { get; set; }
