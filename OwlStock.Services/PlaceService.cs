@@ -34,6 +34,8 @@ namespace OwlStock.Services
             }
 
             Place? place = await _context.Places
+                .Include(p => p.PhotoBase)
+                .Include(p => p.City)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 

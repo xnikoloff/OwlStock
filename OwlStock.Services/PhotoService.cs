@@ -90,6 +90,12 @@ namespace OwlStock.Services
                     break;
                 }
 
+                case PhotoBase:
+                {
+                    await _context.PhotosBase!.AddAsync(photo);
+                    break;
+                }
+
                 default: throw new ArgumentException($"{nameof(photo)} has invalid type");
                 
             }
@@ -203,6 +209,11 @@ namespace OwlStock.Services
                     
                     photoShootPhoto.PhotoBaseId = basePhotoId;
                     break;
+                }
+
+                default:
+                {
+                    return;
                 }
             }
 

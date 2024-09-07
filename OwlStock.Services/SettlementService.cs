@@ -66,6 +66,27 @@ namespace OwlStock.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<City>> GetCitiesByServicedRegions()
+        {
+            if (_context.Cities is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
+            }
+
+            List<City> allSettlements = await _context.Cities
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+            List<City> cities = new();
+            List<Region> servicedRegions = (await GetServicedRegion()).ToList();
+
+            foreach (Region region in servicedRegions) 
+            {
+                cities.AddRange(allSettlements.Where(c => c.Region == region).ToList());
+            }
+
+            return cities;
+        }
+
         public async Task<IEnumerable<City>> GetCitiesByRegion(string region)
         {
             if (_context.Cities is null)

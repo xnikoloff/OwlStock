@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OwlStock.Domain.Entities;
+using OwlStock.Services.DTOs;
 
 namespace OwlStock.Services
 {
@@ -52,6 +53,28 @@ namespace OwlStock.Services
             return false;
         }
 
+        public async Task<bool> CreatePlacePhotoFile(CreatePlacePhotoFileDTO dto)
+        {
+            if (dto.PhotoBase == null)
+            {
+                throw new NullReferenceException($"{nameof(dto.PhotoBase)} is null");
+            }
+
+            int lastIndexOfSlash = dto.PhotoBase.FilePath.LastIndexOf('\\');
+            string directoryPath = dto.PhotoBase.FilePath.Substring(0, lastIndexOfSlash);
+
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            byte[] bytes = await CreateByteArray(dto.File);
+            using FileStream streamSmallSize = File.OpenWrite(dto?.PhotoBase?.FilePath);
+            streamSmallSize.Write(bytes, 0, bytes.Length);
+
+            return true;
+        }
+
         public async Task CreateIFormFile(IFormFile file, string webRootPath)
         {
             if(file == null) 
@@ -65,7 +88,14 @@ namespace OwlStock.Services
                 using Stream fileStream = new FileStream(filePath, FileMode.Create);
                 await file.CopyToAsync(fileStream);
             }
-            
+        }
+
+        private async Task<byte[]> CreateByteArray(IFormFile file)
+        {
+            MemoryStream memoryStream = new();
+            using Stream stream = file.OpenReadStream();
+            await stream.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }
