@@ -39,6 +39,11 @@ namespace OwlStock.Services
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
+            if(place?.PhotoBase == null)
+            {
+                place.PhotoBase = new();
+            }
+
             return place; //?? throw new NullReferenceException($"{nameof(place)} with Id {id} cannot be found");
         }
         
