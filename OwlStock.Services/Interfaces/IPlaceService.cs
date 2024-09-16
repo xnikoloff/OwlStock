@@ -8,5 +8,6 @@ namespace OwlStock.Services.Interfaces
         Task<Place?> PlaceById(Guid id);
         Task<Place?> Create(Place place);
         Task<Place?> Update(Place place);
+        Task<Place?> UpdatePhotoId(Guid placeId, Guid photoId);
     }
 }

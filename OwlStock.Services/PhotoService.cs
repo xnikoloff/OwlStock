@@ -47,8 +47,7 @@ namespace OwlStock.Services
                 .Include(gf => gf.Tags)
                 .Include(gf => gf.PhotoCategories)
                 .Include(gf => gf.Gear)
-                .FirstOrDefaultAsync(gf => gf.Id == id) ?? 
-                throw new NullReferenceException($"{nameof(photo)} is null");
+                .FirstOrDefaultAsync(gf => gf.Id == id);
             
             return new PhotoByIdDTO
             {
@@ -57,7 +56,29 @@ namespace OwlStock.Services
             };
         }
 
-        public async Task<Guid> Create(PhotoBase? photo)
+        public async Task<PhotoBase> GetPhotoBaseById(Guid? id)
+        {
+            if (id is null)
+            {
+                throw new NullReferenceException($"{nameof(id)} is null");
+            }
+
+            if (_context.GalleryPhotos is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.GalleryPhotos)} is null");
+            }
+
+            PhotoBase? photo = await _context.PhotosBase.FirstOrDefaultAsync(gf => gf.Id == id);
+
+            if (photo == null)
+            {
+                throw new NullReferenceException($"{nameof(photo)} with Id {id} cannot be found");
+            }
+
+            return photo;
+        }
+
+        public async Task<PhotoBase> Create(PhotoBase? photo)
         {
             if(photo is null)
             {
@@ -104,7 +125,7 @@ namespace OwlStock.Services
 
             await UpdateBasePhotoId(photo);
 
-            return photo.Id;
+            return photo;
         }
 
         public async Task<PhotoBase> Delete(PhotoBase photo)

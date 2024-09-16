@@ -55,6 +55,7 @@ namespace OwlStock.Services
 
         public async Task<bool> CreatePlacePhotoFile(CreatePlacePhotoFileDTO dto)
         {
+            //photobase is null when updating place with new photo
             if (dto.PhotoBase == null)
             {
                 throw new NullReferenceException($"{nameof(dto.PhotoBase)} is null");

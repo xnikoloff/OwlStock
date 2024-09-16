@@ -6,6 +6,7 @@ using System.Security.Claims;
 using OwlStock.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using OwlStock.Domain.Entities;
 
 namespace OwlStock.Web.Controllers
 {
@@ -113,10 +114,10 @@ namespace OwlStock.Web.Controllers
 
                 _fileService.CreatePhotoFile(dto.GalleryPhoto);
 
-                Guid photoId = await _photoService.Create(dto.GalleryPhoto);
-                await _categoryService.Create(dto.Categories, photoId);
+                PhotoBase photo = await _photoService.Create(dto.GalleryPhoto);
+                await _categoryService.Create(dto.Categories, photo.Id);
 
-                await _photoTagService.Add(dto.Tags, photoId);
+                await _photoTagService.Add(dto.Tags, photo.Id);
 
             }
             

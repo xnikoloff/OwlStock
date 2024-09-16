@@ -4,7 +4,6 @@ using OwlStock.Services;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
 using OwlStock.Web.DTOs.PlaceDTOs;
-using System.Transactions;
 
 namespace OwlStock.Web.Controllers
 {
@@ -33,7 +32,7 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PlaceById(Guid id, bool isUpdate)
+        public async Task<IActionResult> PlaceById(Guid id)
         {
             Place? place = await _placeService.PlaceById(id);
 
@@ -42,27 +41,74 @@ namespace OwlStock.Web.Controllers
                 return View("Error", "Мястото не може да бъде намерено");
             }
 
-            ViewData["Title"] = place?.Name;
-
-            if (isUpdate)
-            {
-                return View("Update", place);
-            }
-
             return View(place);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            return View(new CreatePlaceDTO()
+            return View(new PlaceDTO()
             {
                 Cities = (await _settlementService.GetCitiesByServicedRegions()).ToList()
             });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreatePlaceDTO dto)
+        public async Task<IActionResult> Create(PlaceDTO dto)
+        {
+            dto.Place.PhotoBaseId = (await CreatePlacePhoto(dto)).Id;
+            Place? createdPlace = await _placeService.Create(dto.Place);
+
+            await CreatePlacePhotoFile(createdPlace, dto.File);
+
+            if (createdPlace != null)
+            {
+                return RedirectToAction(nameof(PlaceById), new { id = createdPlace.Id, isUpdate = false });
+            }
+
+            return View("Error", "An error occured while updating the place");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            Place? place = await _placeService.PlaceById(id);
+
+            if (place == null)
+            {
+                return View("Error", "Мястото не може да бъде намерено");
+            }
+
+            return View(new PlaceDTO()
+            {
+                Place = place,
+                Cities = (await _settlementService.GetCitiesByServicedRegions()).ToList(),
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(PlaceDTO dto)
+        {
+            Place? updatedPlace = await _placeService.Update(dto.Place);
+
+            PhotoBase photoBase = await _photoService.GetPhotoBaseById(updatedPlace.PhotoBaseId);
+
+            if(photoBase == null)
+            {
+                PhotoBase createdPhoto = dto.Place.PhotoBase = await CreatePlacePhoto(dto);
+                await CreatePlacePhotoFile(dto.Place, dto.File);
+                await _placeService.UpdatePhotoId(updatedPlace.Id, createdPhoto.Id);
+            }
+            
+            if (updatedPlace != null)
+            {
+                return RedirectToAction(nameof(PlaceById), new{ id = updatedPlace.Id, isUpdate = false });
+            }
+
+            return View("Error", "An error occured while updating the place");
+        }
+
+        private async Task<PhotoBase> CreatePlacePhoto(PlaceDTO dto)
         {
             string resourcesPath = Path.Combine("resources", "places");
 
@@ -75,36 +121,17 @@ namespace OwlStock.Web.Controllers
             };
 
 
-            Guid photoId = await _photoService.Create(photoBase);
-            dto.Place.PhotoBaseId = photoId;
-            Place? createdPlace = await _placeService.Create(dto.Place);
-
-            await _fileService.CreatePlacePhotoFile(new CreatePlacePhotoFileDTO()
-            {
-                PlaceId = createdPlace!.Id,
-                PhotoBase = createdPlace.PhotoBase,
-                File = dto.File
-            });
-
-            if (createdPlace != null)
-            {
-                return RedirectToAction(nameof(PlaceById), new { id = createdPlace.Id, isUpdate = false });
-            }
-
-            return View("Error", "An error occured while updating the place");
+            return await _photoService.Create(photoBase);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(Place place)
+        private async Task CreatePlacePhotoFile(Place place, IFormFile file)
         {
-            Place? updatedPlace = await _placeService.Update(place);
-
-            if (updatedPlace != null)
+            await _fileService.CreatePlacePhotoFile(new CreatePlacePhotoFileDTO()
             {
-                return RedirectToAction(nameof(PlaceById), new{ id = updatedPlace.Id, isUpdate = false });
-            }
-
-            return View("Error", "An error occured while updating the place");
+                PlaceId = place!.Id,
+                PhotoBase = place.PhotoBase,
+                File = file
+            });
         }
     }
 }

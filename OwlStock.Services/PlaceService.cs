@@ -41,7 +41,7 @@ namespace OwlStock.Services
 
             if(place?.PhotoBase == null)
             {
-                place.PhotoBase = new();
+                place!.PhotoBase = new();
             }
 
             return place; //?? throw new NullReferenceException($"{nameof(place)} with Id {id} cannot be found");
@@ -80,6 +80,25 @@ namespace OwlStock.Services
             }
 
             return await PlaceById(place.Id);
+
+        }
+
+        public async Task<Place?> UpdatePhotoId(Guid placeId, Guid photoId)
+        {
+            if (_context.Places is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Places)} is null");
+            }
+
+            Place? existingPlace = await PlaceById(placeId);
+
+            if (existingPlace != null)
+            {
+                existingPlace.PhotoBaseId = photoId;
+                await _context.SaveChangesAsync();
+            }
+
+            return await PlaceById(placeId);
 
         }
     }
