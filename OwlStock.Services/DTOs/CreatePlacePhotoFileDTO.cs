@@ -9,7 +9,7 @@ namespace OwlStock.Services.DTOs
 
         public PhotoBase? PhotoBase { get; set; }
 
-        public IFormFile? File { get; set; }
+        public byte[]? FileData { get; set; }
 
     }
 }

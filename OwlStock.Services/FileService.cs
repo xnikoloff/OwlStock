@@ -69,7 +69,7 @@ namespace OwlStock.Services
                 Directory.CreateDirectory(directoryPath);
             }
 
-            byte[] bytes = await CreateByteArray(dto.File);
+            byte[]? bytes = dto.FileData;
             using FileStream streamSmallSize = File.OpenWrite(dto?.PhotoBase?.FilePath);
             streamSmallSize.Write(bytes, 0, bytes.Length);
 
@@ -89,14 +89,6 @@ namespace OwlStock.Services
                 using Stream fileStream = new FileStream(filePath, FileMode.Create);
                 await file.CopyToAsync(fileStream);
             }
-        }
-
-        private async Task<byte[]> CreateByteArray(IFormFile file)
-        {
-            MemoryStream memoryStream = new();
-            using Stream stream = file.OpenReadStream();
-            await stream.CopyToAsync(memoryStream);
-            return memoryStream.ToArray();
         }
     }
 }
