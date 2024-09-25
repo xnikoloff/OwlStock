@@ -26,6 +26,18 @@ namespace OwlStock.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Place>> AllPopular()
+        {
+            if(_context.Places is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Places)} is null");
+            }
+
+            return await _context.Places
+                .Where(p => p.IsPopular)
+                .ToListAsync();
+        }
+
         public async Task<Place?> PlaceById(Guid id)
         {
             if (_context.Places is null)
@@ -80,7 +92,6 @@ namespace OwlStock.Services
             }
 
             return await PlaceById(place.Id);
-
         }
 
         public async Task<Place?> UpdatePhotoId(Guid placeId, Guid photoId)

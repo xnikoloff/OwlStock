@@ -70,15 +70,15 @@
         </div>
         <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-6 form-group is-decided-by-us">
-                <input asp-for="IsDecidedByUs" />
+                <input asp-for="IsDecidedByUs" disabled/>
                 <label asp-for="IsDecidedByUs"></label>
             </div>
         </div>
-        <div class="row row-decided-by-us-info" style="display:none">
+        <!--<div class="row row-decided-by-us-info" style="display:none">
             <div class="col-12">
                 <h6>Ще изберем подходящо място в околността на населеното място, което сте избрали.</h6>
             </div>
-        </div>
+        </div>-->
         <div class="place-container mt-3">
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-6 form-group">
@@ -92,6 +92,12 @@
                     <label for="Settlement" class="required">Населено място</label>
                     <input type="hidden" id="SettlementId" />
                     <select id="Settlement" class="form-control"></select>
+                    <!--<span class="decided-by-us-settlement-info text-warning" style="display:none"><i>Това не е задължително</i></span>-->
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 form-group popular-places" style="display:none">
+                    <label for="PopularSettlement" class="required">Населено място</label>
+                    <input type="hidden" id="PopularSettlementId" />
+                    <select id="PopularSettlements" class="form-control"></select>
                     <!--<span class="decided-by-us-settlement-info text-warning" style="display:none"><i>Това не е задължително</i></span>-->
                 </div>
             </div>
@@ -370,7 +376,7 @@
         $("#IsDecidedByUs").change(function () {
             if (this.checked) {
                 $("#Settlement").val('');
-                $(".row-decided-by-us-info").css("display", "block");
+                //$(".row-decided-by-us-info").css("display", "block");
                 //$(".decided-by-us-settlement-info").css("display", "unset");
                 //$("#row-dates-no-weather").css("display", "flex");
                 //$("#row-dates-weather").css("display", "none");
@@ -378,7 +384,7 @@
                 $(".place-addition-info").css("display", "none");
             }
             else {
-                $(".row-decided-by-us-info").css("display", "none");
+                //$(".row-decided-by-us-info").css("display", "none");
                 //$(".decided-by-us-settlement-info").css("display", "none");
                 //$("#row-dates-no-weather").css("display", "none");
                 //$("#row-dates-weather").css("display", "flex");
@@ -390,10 +396,19 @@
         });
 
         $("#Region").change(function () {
-            $("#Settlement").val('');
             updatePrice();
-            $(".settlement").css("display", "block");
-            getSettlementsByRegion($("#Region option:selected").text());
+                $("#PopularPlace").val('');
+            if ($("#IsDecidedByUs").prop('checked')) {
+                $(".settlement").css("display", "none");
+                $(".popular-places").css("display", "block");
+                getPopularPlacesByRegion($("#Region option:selected").text());
+            }
+            else{
+                $("#Settlement").val('');
+                $(".popular-places").css("display", "none");
+                $(".settlement").css("display", "block");
+                getSettlementsByRegion($("#Region option:selected").text());
+            }
             $("#RegionId").val($(this).val());
             $(".dates-container").css("display", "block");
         });
@@ -578,9 +593,9 @@
         }
     }
 
-    function getForecast(settlementId) {
+    function getForecast(settlementId, isSettlement) {
         var request = $.ajax({
-            url: "@Url.Action("forecast", "Weather")",
+            url: isSettlement ? "@Url.Action("forecast", "Weather")" : "@Url.Action("forecastForPlace", "Weather")",
             method: "GET",
             data: { settlementId: settlementId },
             success: function (response) {
@@ -625,6 +640,39 @@
         });
     }*/
 
+    function getPopularPlacesByRegion() {
+        var request = $.ajax({
+            url: "@Url.Action("allPopular", "Place")",
+            method: "GET",
+            success: function (response) {
+                let json = JSON.parse(JSON.stringify(response));
+                console.log(json);
+
+                $("#PopularSettlements").selectize({
+                    respect_word_boundaries: false,
+                    plugins: ["restore_on_backspace", "clear_button"],
+                    delimiter: " - ",
+                    persist: false,
+                    maxItems: 1,
+                    valueField: "id",
+                    labelField: "name",
+                    searchField: ["name"],
+                    options: response,
+                    onChange: function (value) {
+                        updatePrice();
+                        //getForecast(value);
+                        $("#SelectedPopularSettlementId").val(value);
+                        if ($("#IsDecidedByUs").prop('checked') == false) {
+                            $(".place-addition-info").css("display", "block");
+                            $("#row-dates-weather").css("transition", ".4s");
+                            $("#row-dates-weather").css("display", "flex");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     function getSettlementsByRegion(region) {
         //else destroy settlements list
         if (region != '') {
@@ -646,7 +694,6 @@
                         searchField: ["name"],
                         options: response,
                         onChange: function (value) {
-
                             updatePrice();
                             getForecast(value);
                             $("#SelectedSettlementId").val(value);

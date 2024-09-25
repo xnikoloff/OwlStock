@@ -51,7 +51,7 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         [Required(ErrorMessage = "Място на фотосесията е задължително")]
         public string? UserPlace { get; set; }
 
-        [Display(Name = "Нека ние изберем място за Вас")]
+        [Display(Name = "Избор от популярни места")]
         public bool IsDecidedByUs { get; set; }
 
         [Display(Name = "Линк към Google Maps")]
