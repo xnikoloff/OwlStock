@@ -6,6 +6,7 @@ namespace OwlStock.Services.Interfaces
     {
         Task<IEnumerable<Place>> All();
         Task<IEnumerable<Place>> AllPopular();
+        Task<IEnumerable<Place>> GetPopularPlacesByRegion(int regionId);
         Task<Place?> PlaceById(Guid id);
         Task<Place?> Create(Place place);
         Task<Place?> Update(Place place);

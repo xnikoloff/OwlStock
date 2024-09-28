@@ -414,8 +414,23 @@
             }
             $("#RegionId").val($(this).val());
             $(".dates-container").css("display", "block");
-            $("#showPopularPlaces").css("display", "block");
-            getSettlementsByRegion($("#Region option:selected").text());
+            
+            if (!($("#showPopularPlaces").is(":visible")) && !($("#hidePopularPlaces").is(":visible"))) {
+                $("#hidePopularPlaces").css("display", "none");
+                $("#showPopularPlaces").css("display", "block");
+                getSettlementsByRegion($("#Region option:selected").text());
+            }
+
+            else if (!($("#showPopularPlaces").is(":visible")) && ($("#hidePopularPlaces").is(":visible"))) {
+                $("#showPopularPlaces").css("display", "none");
+                $("#hidePopularPlaces").css("display", "block");
+                getPopularPlacesByRegion($("#Region option:selected").text());
+            }
+            else{
+                $("#hidePopularPlaces").css("display", "none");
+                $("#showPopularPlaces").css("display", "block");
+                getSettlementsByRegion($("#Region option:selected").text());
+            }
         });
 
         /*$("#Settlement").change(function () {
@@ -662,8 +677,10 @@
     function getPopularPlacesByRegion() {
         $(".settlement").css("display", "none");
         $(".popular-places").css("display", "block");
+        $('#PopularPlaces').selectize()[0].selectize.destroy();
         var request = $.ajax({
-            url: "@Url.Action("allPopular", "Place")",
+            url: "@Url.Action("popularPlacesByRegion", "Place")",
+            data: { "regionId": $("#Region").find(":selected").val() },
             method: "GET",
             success: function (response) {
                 let json = JSON.parse(JSON.stringify(response));

@@ -14,9 +14,17 @@ namespace OwlStock.Web.Controllers.API
         }
 
         [HttpGet]
+        [Route("allPopular")]
         public async Task<IEnumerable<Place>> AllPopular() 
         { 
             return await _placeService.AllPopular();
+        }
+
+        [HttpGet]
+        [Route("popularPlacesByRegion")]
+        public async Task<IEnumerable<Place>> PopularPlacesByRegion(int regionId)
+        {
+            return await _placeService.GetPopularPlacesByRegion(regionId);
         }
     }
 }

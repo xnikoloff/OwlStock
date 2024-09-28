@@ -38,6 +38,23 @@ namespace OwlStock.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Place>> GetPopularPlacesByRegion(int regionId)
+        {
+            if(regionId == 0)
+            {
+                throw new ArgumentNullException($"{nameof(regionId)} is {regionId}");
+            }
+
+            if(_context.Places is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Places)} is null");
+            }
+
+            return await _context.Places
+                .Where(p => p.City.RegionId == regionId)
+                .ToListAsync();
+        }
+
         public async Task<Place?> PlaceById(Guid id)
         {
             if (_context.Places is null)
