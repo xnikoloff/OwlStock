@@ -27,6 +27,14 @@ namespace OwlStock.Web.Controllers.API
         }
 
         [HttpGet]
+        [Route("forecastForPlace")]
+        public async Task<WeatherForecast> GetForecastForPlace(Guid settlementId)
+        {
+            WeatherForecast foreacast = await _weatherService.GetForecastForPlace(settlementId);
+            return foreacast;
+        }
+
+        [HttpGet]
         [Route("currentWeather")]
         public async Task<WeatherCurrent> GetCurrentWeather(string settlement)
         {

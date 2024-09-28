@@ -49,6 +49,8 @@ namespace OwlStock.Services
 
             PhotoShoot? dto = await _context.PhotoShoots
                 .Include(phs => phs.PhotoShootPhotos)
+                .Include(ph => ph.City) 
+                    .ThenInclude(c => c.Region)
                 .Include(phs => phs.Place)
                     .ThenInclude(p => p.City)
                     .ThenInclude(c => c.Municipality)
@@ -75,6 +77,8 @@ namespace OwlStock.Services
 
             PhotoShoot? dto = await _context.PhotoShoots
                 .Include(phs => phs.PhotoShootPhotos)
+                .Include(phs => phs.City)
+                    .ThenInclude(c => c.Region)
                 .Include(phs => phs.Place)
                     .ThenInclude(p => p.City)
                     .ThenInclude(c => c.Region)
@@ -148,13 +152,18 @@ namespace OwlStock.Services
                 PhotoDeliveryAddress = dto.PhotoDeliveryAddress,
                 Price = totalPrice,
                 IdentityUserId = dto.IdentityUserId,
-                Status = PhotoshootStatus.New
+                Status = PhotoshootStatus.New,
             };
 
-            /*if (!dto.IsDecidedByUs)
+            if(dto.IsPlace)
             {
-                photoShoot.CityId = int.Parse(dto.SelectedSettlementId ?? throw new ArgumentNullException(dto.SelectedSettlementId));
-            }*/
+                photoShoot.PlaceId = new Guid(dto.SelectedSettlementId ?? throw new ArgumentNullException(dto.SelectedSettlementId));
+            }
+
+            else
+            {
+                photoShoot.CityId = (Convert.ToInt32(dto.SelectedSettlementId));
+            }
 
             //not used for now
             //double timeForTravel = _calculationsService.CalculateTimeForTravel(DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude,

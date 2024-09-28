@@ -61,6 +61,27 @@ namespace OwlStock.Services
             return forecast ?? throw new NullReferenceException($"{nameof(forecast)} is null");
         }
 
+        public async Task<WeatherForecast> GetForecastForPlace(Guid placeId)
+        {
+            if (placeId == Guid.Empty)
+            {
+                throw new NullReferenceException($"{nameof(placeId)} is null or empty");
+            }
+
+            using HttpClient client = new();
+            client.BaseAddress = new Uri(_host);
+
+            string placeSettlementName = await _settlementService.GetPopularPlaceSettlementName(placeId);
+
+            string url = Path.Combine(_host, _configuration.GetSection("Weather").GetSection("Forecast").Value! + $"?q={placeSettlementName}&days={_days}&lang={_language}&key={_apiKey}");
+            HttpResponseMessage response = await client.GetAsync(url);
+
+            string json = await response.Content.ReadAsStringAsync();
+            WeatherForecast? forecast = JsonConvert.DeserializeObject<WeatherForecast>(json);
+
+            return forecast ?? throw new NullReferenceException($"{nameof(forecast)} is null");
+        }
+
         public async Task<IEnumerable<SettlementInfo>> Autocomplete(string name)
         {
                 using HttpClient client = new();

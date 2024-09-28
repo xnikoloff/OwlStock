@@ -11,6 +11,7 @@ namespace OwlStock.Services.Interfaces
         Task<IEnumerable<City>> GetCitiesByRegion(string region);
         Task<IEnumerable<City>> GetCitiesByServicedRegions();
         Task<IEnumerable<SettlementInfo>> GetSettlementInfo(string settlement);
+        Task<string> GetPopularPlaceSettlementName(Guid placeId);
         Task<double[]> GetLatitudeAndLongitude(int settlementId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using OwlStock.Domain.Entities;
 using OwlStock.Infrastructure;
@@ -135,5 +136,30 @@ namespace OwlStock.Services
 
             return autocomplete ?? throw new NullReferenceException($"{nameof(autocomplete)} is null");
         }
+        public async Task<string> GetPopularPlaceSettlementName(Guid placeId)
+        {
+            if(_context.Places is null)
+            {
+                throw new NullReferenceException($"{nameof(_context.Places)} is null");
+            }
+
+            Place? place = await _context.Places
+                .Include(p => p.City)
+                .Where(p => p.Id == placeId)
+                .FirstOrDefaultAsync();
+
+            if(place?.City == null)
+            {
+                throw new NullReferenceException($"{nameof(place.City)} is null");
+            }
+
+            if (place.City.NameLatin.IsNullOrEmpty())
+            {
+                throw new NullReferenceException($"{nameof(place.City.NameLatin)} is null");
+            }
+
+            return place.City.NameLatin;
+        }
     }
+
 }

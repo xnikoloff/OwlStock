@@ -15,6 +15,7 @@
         <input type="hidden" asp-for="ReservationDate" />
         <input type="hidden" asp-for="ReservationTime" />
         <input type="hidden" asp-for="SelectedSettlementId" />
+        <input type="hidden" asp-for="IsPlace" />
         <input type="hidden" asp-for="FuelPrice" />
         @*not used for now*@
         @*<input type="hidden" asp-for="SettlementName" />*@
@@ -70,15 +71,21 @@
         </div>
         <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-6 form-group is-decided-by-us">
-                <input asp-for="IsDecidedByUs" disabled/>
+                <input asp-for="IsDecidedByUs"/>
                 <label asp-for="IsDecidedByUs"></label>
             </div>
         </div>
-        <!--<div class="row row-decided-by-us-info" style="display:none">
+        <div class="row mt-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <input type="button" id="showPopularPlaces" style="display:none" class="btn btn-secondary btn-sm" value="Покажи популярни места" />
+                <input type="button" id="hidePopularPlaces" style="display:none" class="btn btn-secondary btn-sm" value="Скрий популярните места" />
+            </div>
+        </div>
+        <div class="row row-decided-by-us-info" style="display:none">
             <div class="col-12">
                 <h6>Ще изберем подходящо място в околността на населеното място, което сте избрали.</h6>
             </div>
-        </div>-->
+        </div>
         <div class="place-container mt-3">
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-6 form-group">
@@ -95,9 +102,8 @@
                     <!--<span class="decided-by-us-settlement-info text-warning" style="display:none"><i>Това не е задължително</i></span>-->
                 </div>
                 <div class="col-12 col-md-6 col-lg-6 form-group popular-places" style="display:none">
-                    <label for="PopularSettlement" class="required">Населено място</label>
-                    <input type="hidden" id="PopularSettlementId" />
-                    <select id="PopularSettlements" class="form-control"></select>
+                    <label for="PopularPlaces" class="required">Популярни места</label>
+                    <select id="PopularPlaces" class="form-control"></select>
                     <!--<span class="decided-by-us-settlement-info text-warning" style="display:none"><i>Това не е задължително</i></span>-->
                 </div>
             </div>
@@ -397,25 +403,21 @@
 
         $("#Region").change(function () {
             updatePrice();
-                $("#PopularPlace").val('');
+            $("#PopularPlace").val('');
             if ($("#IsDecidedByUs").prop('checked')) {
-                $(".settlement").css("display", "none");
-                $(".popular-places").css("display", "block");
-                getPopularPlacesByRegion($("#Region option:selected").text());
             }
             else{
                 $("#Settlement").val('');
-                $(".popular-places").css("display", "none");
-                $(".settlement").css("display", "block");
-                getSettlementsByRegion($("#Region option:selected").text());
             }
             $("#RegionId").val($(this).val());
             $(".dates-container").css("display", "block");
+            $("#showPopularPlaces").css("display", "block");
+            getSettlementsByRegion($("#Region option:selected").text());
         });
 
-        $("#Settlement").change(function () {
+        /*$("#Settlement").change(function () {
             updatePrice();
-            getForecast($(this).val());
+            getForecast($(this).val(), true);
             //not used for now
             //$("#SettlementName").val($(this).val());
             
@@ -427,7 +429,7 @@
                 //$(".row-dates-weather-remaining").css("transition", ".4s");
                 //$(".row-dates-weather-remaining").css("display", "flex");
             }
-        });
+        });*/
 
         $(".card-weather").click(function () {
             $(".card-weather").css("box-shadow", "unset");
@@ -521,6 +523,17 @@
             updatePrice();
         });
 
+        $("#showPopularPlaces").click(function(){
+            $("#showPopularPlaces").css("display", "none");
+            $("#hidePopularPlaces").css("display", "block");
+            getPopularPlacesByRegion($("#Region option:selected").text());
+        });
+
+        $("#hidePopularPlaces").click(function () {
+            $("#showPopularPlaces").css("display", "block");
+            $("#hidePopularPlaces").css("display", "none");
+            getSettlementsByRegion($("#Region option:selected").text());
+        });
         checkBookedDates();
         addasterisk();
     });
@@ -594,8 +607,11 @@
     }
 
     function getForecast(settlementId, isSettlement) {
+        let forecastURL = isSettlement ? "@Url.Action("forecast", "Weather")" : "@Url.Action("forecastForPlace", "Weather")";
+        console.log(isSettlement);
+        console.log(forecastURL);
         var request = $.ajax({
-            url: isSettlement ? "@Url.Action("forecast", "Weather")" : "@Url.Action("forecastForPlace", "Weather")",
+            url: forecastURL,
             method: "GET",
             data: { settlementId: settlementId },
             success: function (response) {
@@ -641,6 +657,8 @@
     }*/
 
     function getPopularPlacesByRegion() {
+        $(".settlement").css("display", "none");
+        $(".popular-places").css("display", "block");
         var request = $.ajax({
             url: "@Url.Action("allPopular", "Place")",
             method: "GET",
@@ -648,7 +666,7 @@
                 let json = JSON.parse(JSON.stringify(response));
                 console.log(json);
 
-                $("#PopularSettlements").selectize({
+                $("#PopularPlaces").selectize({
                     respect_word_boundaries: false,
                     plugins: ["restore_on_backspace", "clear_button"],
                     delimiter: " - ",
@@ -660,13 +678,16 @@
                     options: response,
                     onChange: function (value) {
                         updatePrice();
-                        //getForecast(value);
-                        $("#SelectedPopularSettlementId").val(value);
-                        if ($("#IsDecidedByUs").prop('checked') == false) {
+                        console.log('value: ' + value);
+                        getForecast(value, false);
+                        $("#row-dates-weather").css("display", "flex");
+                        $("#IsPlace").val(true);
+                        $("#SelectedSettlementId").val(value);
+                        /*if ($("#IsDecidedByUs").prop('checked') == false) {
                             $(".place-addition-info").css("display", "block");
                             $("#row-dates-weather").css("transition", ".4s");
                             $("#row-dates-weather").css("display", "flex");
-                        }
+                        }*/
                     }
                 });
             }
@@ -674,6 +695,8 @@
     }
 
     function getSettlementsByRegion(region) {
+        $(".settlement").css("display", "block");
+        $(".popular-places").css("display", "none");
         //else destroy settlements list
         if (region != '') {
             //destroy Selectize before repopulating the select list with new data
@@ -695,7 +718,9 @@
                         options: response,
                         onChange: function (value) {
                             updatePrice();
-                            getForecast(value);
+                            console.log('hello settlement');
+                            getForecast(value, true);
+                            $("#IsPlace").val(false);
                             $("#SelectedSettlementId").val(value);
                             //not used for now
                             //$("#SettlementName").val($(this).val());
@@ -781,6 +806,7 @@
 
     function updatePrice(){
         $("#total-price").html('0');
+        console.log('updateprice');
         //hide curreny by default
         $("#currency").css("display", "none");
 

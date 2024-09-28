@@ -18,7 +18,11 @@
                         <th>Дата</th>
                         <th>Тип</th>
                         <th>Създаден на</th>
-                        <th>Място</th>
+                        @if (Model?.PlaceId != null)
+                        {
+                            <th>Място</th>
+                        }
+                        <th>Град</th>
                         <th>Област</th>
                         <th>Получаване на снимки</th>
                         <th>Адрес за получаване</th>
@@ -27,12 +31,16 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>@Model.PersonFullName</td>
-                        <td>@Model.ReservationDate</td>
-                        <td>@Model.PhotoShootType</td>
-                        <td>@Model.CreatedOn</td>
-                        <td>@(Model?.Place?.City?.Name ?? "N/A")</td>
-                        <td>@(Model?.Place?.City?.Region?.Name ?? "N/A")</td>
+                        <td>@Model?.PersonFullName</td>
+                        <td>@Model?.ReservationDate</td>
+                        <td>@Model?.PhotoShootType</td>
+                        <td>@Model?.CreatedOn</td>
+                        @if (Model?.PlaceId != null)
+                        {
+                            <td>@Model?.Place?.Name</td>
+                        }
+                        <td>@(Model?.CityId == null ? Model?.Place?.City?.Name : Model?.City?.Name)</td>
+                        <td>@(Model?.CityId == null ? Model?.Place?.City?.Region?.Name : Model?.City?.Region?.Name)</td>
                         <td>@(string.IsNullOrEmpty(Model?.PhotoDeliveryMethod.ToString()) ? "В профила Ви" : Model?.PhotoDeliveryMethod)</td>
                         <td>@(Model?.PhotoDeliveryAddress ?? "N/A")</td>
                         <td>@(Model?.Price.ToString() ?? "N/A") лв</td>
