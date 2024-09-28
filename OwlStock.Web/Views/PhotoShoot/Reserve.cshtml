@@ -75,7 +75,7 @@
                 <label asp-for="IsDecidedByUs"></label>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-3 row-toggle-places">
             <div class="col-12 col-md-6 col-lg-4">
                 <input type="button" id="showPopularPlaces" style="display:none" class="btn btn-secondary btn-sm" value="Покажи популярни места" />
                 <input type="button" id="hidePopularPlaces" style="display:none" class="btn btn-secondary btn-sm" value="Скрий популярните места" />
@@ -381,8 +381,10 @@
 
         $("#IsDecidedByUs").change(function () {
             if (this.checked) {
+
                 $("#Settlement").val('');
-                //$(".row-decided-by-us-info").css("display", "block");
+                $(".row-decided-by-us-info").css("display", "block");
+                $(".row-toggle-places").css("display", "none");
                 //$(".decided-by-us-settlement-info").css("display", "unset");
                 //$("#row-dates-no-weather").css("display", "flex");
                 //$("#row-dates-weather").css("display", "none");
@@ -390,7 +392,8 @@
                 $(".place-addition-info").css("display", "none");
             }
             else {
-                //$(".row-decided-by-us-info").css("display", "none");
+                $(".row-decided-by-us-info").css("display", "none");
+                $(".row-toggle-places").css("display", "block");
                 //$(".decided-by-us-settlement-info").css("display", "none");
                 //$("#row-dates-no-weather").css("display", "none");
                 //$("#row-dates-weather").css("display", "flex");
