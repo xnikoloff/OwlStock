@@ -54,6 +54,8 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         [Display(Name = "Нека ние изберем място за Вас")]
         public bool IsDecidedByUs { get; set; }
 
+        public bool IsPlaceSelected { get; set; }
+
         [Display(Name = "Линк към Google Maps")]
         public string? GoogleMapsLink { get; set; }
 
@@ -78,10 +80,10 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         public TimeSlot[]? AllTimeSlots { get; set; }
 
         public string? IdentityUserId { get; set; }
+
+        [Required(ErrorMessage = "Изберете град или популярно място")]
         public string? SelectedSettlementId { get; set; }
 
         public bool IsPlace { get; set; }
-
-        public string? RootPath { get; set; }
     }
 }

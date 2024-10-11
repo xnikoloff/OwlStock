@@ -15,14 +15,12 @@ namespace OwlStock.Web.Controllers
         private readonly IPhotoShootService _photoShootService;
         private readonly ICalendarService _calendarService;
         private readonly ISettlementService _settlementService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         
-        public PhotoShootController(IPhotoShootService photoShootService, ICalendarService calendarService, ISettlementService settlementService, IWebHostEnvironment webHostEnvironment)
+        public PhotoShootController(IPhotoShootService photoShootService, ICalendarService calendarService, ISettlementService settlementService)
         {
             _photoShootService = photoShootService;
             _calendarService = calendarService;
             _settlementService = settlementService;
-            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -40,7 +38,6 @@ namespace OwlStock.Web.Controllers
                 AllTimeSlots = _calendarService.GetTimeSlots(),
                 RemainingDates = _calendarService.GetRemainingDates().ToList(),
                 ServicedRegions = (await _settlementService.GetServicedRegion()).ToList(),
-                RootPath = _webHostEnvironment.WebRootPath
             };
             
             return View(dto);
@@ -50,6 +47,10 @@ namespace OwlStock.Web.Controllers
         public async Task<IActionResult> Reserve(CreatePhotoShootDTO dto)
         {
             if (dto.IsDecidedByUs)
+            {
+                ModelState.Remove("SelectedSettlementId");
+            }
+            if (dto.IsDecidedByUs || dto.IsPlaceSelected)
             {
                 ModelState.Remove("UserPlace");
             }
@@ -65,7 +66,7 @@ namespace OwlStock.Web.Controllers
 
             if(dto.PhotoShootType == PhotoShootType.Other && dto.PhotoShootTypeDescription.IsNullOrEmpty())
             {
-                ModelState.AddModelError(string.Empty, "Provide photoshoot type description");
+                ModelState.AddModelError(string.Empty, "Описането на фотосесията е задължително");
 
                 dto.Calendar = await _photoShootService.GetPhotoShootsCalendar();
                 dto.AllTimeSlots = _calendarService.GetTimeSlots();

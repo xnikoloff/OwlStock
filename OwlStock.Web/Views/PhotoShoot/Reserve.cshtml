@@ -15,6 +15,7 @@
         <input type="hidden" asp-for="ReservationDate" />
         <input type="hidden" asp-for="ReservationTime" />
         <input type="hidden" asp-for="SelectedSettlementId" />
+        <input type="hidden" asp-for="IsPlaceSelected" />
         <input type="hidden" asp-for="IsPlace" />
         <input type="hidden" asp-for="FuelPrice" />
         @*not used for now*@
@@ -387,7 +388,7 @@
                 $(".row-toggle-places").css("display", "none");
                 //$(".decided-by-us-settlement-info").css("display", "unset");
                 //$("#row-dates-no-weather").css("display", "flex");
-                //$("#row-dates-weather").css("display", "none");
+                $("#row-dates-weather").css("display", "flex");
                 //$(".row-dates-weather-remaining").css("display", "none");
                 $(".place-addition-info").css("display", "none");
             }
@@ -683,15 +684,8 @@
             data: { "regionId": $("#Region").find(":selected").val() },
             method: "GET",
             success: function (response) {
-                console.log(response);
                 let json = JSON.parse(JSON.stringify(response));
-                //console.log(json);
-                for (let i = 0; i < response.length; i++){
-                    console.log(response[i].photoBase.filePath);
-                    $("#PopularPlaces").append(`<img src='../../${response[i].photoBase.filePath}'/><option value='${response[i].id}'>${response[i].name}</option>`);
-                }
-
-                /*$("#PopularPlaces").selectize({
+                $("#PopularPlaces").selectize({
                     respect_word_boundaries: false,
                     plugins: ["restore_on_backspace", "clear_button"],
                     delimiter: " - ",
@@ -708,13 +702,15 @@
                         $("#row-dates-weather").css("display", "flex");
                         $("#IsPlace").val(true);
                         $("#SelectedSettlementId").val(value);
+                        $("#IsPlaceSelected").val(true);
+                        console.log('value ' + value);
                         /*if ($("#IsDecidedByUs").prop('checked') == false) {
                             $(".place-addition-info").css("display", "block");
                             $("#row-dates-weather").css("transition", ".4s");
                             $("#row-dates-weather").css("display", "flex");
-                        }
+                        }*/
                     }
-                });*/
+                });
             }
         });
     }
@@ -752,11 +748,11 @@
 
                             if ($("#IsDecidedByUs").prop('checked') == false) {
                                 $(".place-addition-info").css("display", "block");
-                                $("#row-dates-weather").css("transition", ".4s");
                                 //$(".row-dates-weather-remaining").css("transition", ".4s");
-                                $("#row-dates-weather").css("display", "flex");
                                 //$(".row-dates-weather-remaining").css("display", "flex");
                             }
+                            $("#row-dates-weather").css("transition", ".4s");
+                            $("#row-dates-weather").css("display", "flex");
                         }
                     });
                 },

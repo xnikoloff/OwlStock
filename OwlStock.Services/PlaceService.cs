@@ -52,7 +52,7 @@ namespace OwlStock.Services
 
             return await _context.Places
                 .Include(p => p.PhotoBase)
-                .Where(p => p.City.RegionId == regionId)
+                .Where(p => p.City!.RegionId == regionId)
                 .ToListAsync();
         }
 
@@ -69,12 +69,12 @@ namespace OwlStock.Services
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
-            if(place?.PhotoBase == null)
+            if(place != null && place?.PhotoBase == null)
             {
                 place!.PhotoBase = new();
             }
 
-            return place; //?? throw new NullReferenceException($"{nameof(place)} with Id {id} cannot be found");
+            return place;
         }
         
         public async Task<Place?> Create(Place place)
