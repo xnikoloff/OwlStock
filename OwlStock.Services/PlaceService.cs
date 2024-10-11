@@ -51,6 +51,7 @@ namespace OwlStock.Services
             }
 
             return await _context.Places
+                .Include(p => p.PhotoBase)
                 .Where(p => p.City.RegionId == regionId)
                 .ToListAsync();
         }

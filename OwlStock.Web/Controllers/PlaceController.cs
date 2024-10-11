@@ -119,7 +119,7 @@ namespace OwlStock.Web.Controllers
             PhotoBase photoBase = new()
             {
                 FileName = dto?.File?.FileName,
-                FilePath = $"{Path.Combine(_webHostEnvironment.WebRootPath, resourcesPath, dto?.File?.FileName)}",
+                FilePath = $"{Path.Combine(resourcesPath, dto?.File?.FileName)}",
                 FileType = dto.File.ContentType,
                 IsDeleted = false,
             };
@@ -131,6 +131,7 @@ namespace OwlStock.Web.Controllers
         private async Task CreatePlacePhotoFile(Place place, byte[] fileData)
         {
             byte[] resized = _photoResizer.Resize(fileData, PhotoSize.Small);
+            place.PhotoBase.FilePath = Path.Combine(_webHostEnvironment.WebRootPath, place.PhotoBase.FilePath);
             await _fileService.CreatePlacePhotoFile(new CreatePlacePhotoFileDTO()
             {
                 PlaceId = place!.Id,

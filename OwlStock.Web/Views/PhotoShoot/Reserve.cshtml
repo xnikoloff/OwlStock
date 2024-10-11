@@ -33,7 +33,7 @@
         <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-3 form-group">
                 <label asp-for="PhotoShootType" class="required"></label>
-                <select asp-for=PhotoShootType asp-items="@Html.GetEnumSelectList<PhotoShootType>()" class="form-control" required></select>
+                <select asp-for=PhotoShootType asp-items="@(Html.GetEnumSelectList<PhotoShootType>())" class="form-control" required></select>
                 <span asp-validation-for="PhotoShootType" class="text-danger"></span>
             </div>
             <div class="col-12 col-md-6 col-lg-3 form-group">
@@ -206,7 +206,7 @@
                 <div class="col-12">
                     <div class="form-group">
                         <label asp-for="PhotoDeliveryMethod" class="required"></label>
-                        <select asp-for="PhotoDeliveryMethod" asp-items="@Html.GetEnumSelectList<PhotoDeliveryMethod>()" class="form-control">
+                        <select asp-for="PhotoDeliveryMethod" asp-items="@(Html.GetEnumSelectList<PhotoDeliveryMethod>())" class="form-control">
                             <option value=""></option>
                         </select>
                     </div>
@@ -683,10 +683,15 @@
             data: { "regionId": $("#Region").find(":selected").val() },
             method: "GET",
             success: function (response) {
+                console.log(response);
                 let json = JSON.parse(JSON.stringify(response));
-                console.log(json);
+                //console.log(json);
+                for (let i = 0; i < response.length; i++){
+                    console.log(response[i].photoBase.filePath);
+                    $("#PopularPlaces").append(`<img src='../../${response[i].photoBase.filePath}'/><option value='${response[i].id}'>${response[i].name}</option>`);
+                }
 
-                $("#PopularPlaces").selectize({
+                /*$("#PopularPlaces").selectize({
                     respect_word_boundaries: false,
                     plugins: ["restore_on_backspace", "clear_button"],
                     delimiter: " - ",
@@ -707,9 +712,9 @@
                             $(".place-addition-info").css("display", "block");
                             $("#row-dates-weather").css("transition", ".4s");
                             $("#row-dates-weather").css("display", "flex");
-                        }*/
+                        }
                     }
-                });
+                });*/
             }
         });
     }
