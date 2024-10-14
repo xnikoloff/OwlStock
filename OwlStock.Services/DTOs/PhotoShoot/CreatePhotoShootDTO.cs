@@ -85,5 +85,6 @@ namespace OwlStock.Services.DTOs.PhotoShoot
         public string? SelectedSettlementId { get; set; }
 
         public bool IsPlace { get; set; }
+        public Guid PlaceId { get; set; }
     }
 }

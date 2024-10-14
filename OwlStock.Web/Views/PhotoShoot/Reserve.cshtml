@@ -8,7 +8,7 @@
 <input type="hidden" id="priceForDistance"/>
 <div class="container">
     
-    <form asp-action="Reserve" method="post">
+    <form asp-action="Reserve" method="post" id="booking-form">
         <div asp-validation-summary="All" class="text-danger"></div>
 
         <input type="hidden" asp-for="IdentityUserId" />
@@ -98,9 +98,9 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-6 form-group settlement" style="display:none">
                     <label for="Settlement" class="required">Населено място</label>
-                    <input type="hidden" id="SettlementId" />
+                    <input type="hidden" id="SettlementId"/>
                     <select id="Settlement" class="form-control"></select>
-                    <!--<span class="decided-by-us-settlement-info text-warning" style="display:none"><i>Това не е задължително</i></span>-->
+                    <span id="settlement-validation-message" class="text-danger" style="display:none"><i>Населентот място е задължително</i></span>
                 </div>
                 <div class="col-12 col-md-6 col-lg-6 form-group popular-places" style="display:none">
                     <label for="PopularPlaces" class="required">Популярни места</label>
@@ -353,10 +353,21 @@
         let lastClickedDateBtn = null;
         let lastClickedTimeSlotBtn = null;
 
+        $("#booking-form").submit(function (event) {
+            if($("#Settlement").val() == ''){
+                event.preventDefault();
+                $("#settlement-validation-message").css("display", "block");
+                $(".selectize-control").addClass("border border-danger");
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#Settlement").offset().top
+                }, 500);
+            }
+        });
+
         $("#PhotoDeliveryMethod").change(function () {
             //2 is USB, 3 is CD 
             if ($('#PhotoDeliveryMethod').find(":selected").val() == 2 ||
-                    $('#PhotoDeliveryMethod').find(":selected").val() == 3) {
+                $('#PhotoDeliveryMethod').find(":selected").val() == 3) {
                 $(".col-photo-delivery").css("display", "block");
                 $("#PhotoDeliveryAddress").prop('required', true);
             }
@@ -545,6 +556,11 @@
         $("#showPopularPlaces").click(function(){
             $("#showPopularPlaces").css("display", "none");
             $("#hidePopularPlaces").css("display", "block");
+            if ($(".place-addition-info").is(":visible")) {
+                $(".place-addition-info").css("display", "none");
+                $("#UserPlace").val('');
+                $("#GoogleMapsLink").val('');
+            }
             getPopularPlacesByRegion($("#Region option:selected").text());
         });
 
@@ -554,14 +570,7 @@
             getSettlementsByRegion($("#Region option:selected").text());
         });
         checkBookedDates();
-        addasterisk();
     });
-
-
-    function addasterisk(inputId) {
-        let id = "label#" + inputId;
-        console.log($(id).html());
-    }
 
     function setDate(){
         $(".btn-date").click(function () {
@@ -750,6 +759,11 @@
                                 $(".place-addition-info").css("display", "block");
                                 //$(".row-dates-weather-remaining").css("transition", ".4s");
                                 //$(".row-dates-weather-remaining").css("display", "flex");
+                            }
+
+                            if($("#Settlement").val() != ''){
+                                $(".selectize-control").removeClass("border border-danger");
+                                $("#settlement-validation-message").css("display", "none");
                             }
                             $("#row-dates-weather").css("transition", ".4s");
                             $("#row-dates-weather").css("display", "flex");

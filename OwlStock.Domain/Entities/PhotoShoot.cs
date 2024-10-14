@@ -29,10 +29,6 @@ namespace OwlStock.Domain.Entities
         public bool DoNotUploadPhotos { get; set; }
         public PhotoDeliveryMethod? PhotoDeliveryMethod { get; set; }
         public string? PhotoDeliveryAddress { get; set; }
-        public City? City { get; set; }
-
-        [ForeignKey(nameof(City))]
-        public int? CityId { get; set; }
         public Place? Place { get; set; }
 
         [ForeignKey(nameof(Place))]

@@ -49,8 +49,6 @@ namespace OwlStock.Services
 
             PhotoShoot? dto = await _context.PhotoShoots
                 .Include(phs => phs.PhotoShootPhotos)
-                .Include(ph => ph.City) 
-                    .ThenInclude(c => c.Region)
                 .Include(phs => phs.Place)
                     .ThenInclude(p => p.City)
                     .ThenInclude(c => c.Municipality)
@@ -77,8 +75,6 @@ namespace OwlStock.Services
 
             PhotoShoot? dto = await _context.PhotoShoots
                 .Include(phs => phs.PhotoShootPhotos)
-                .Include(phs => phs.City)
-                    .ThenInclude(c => c.Region)
                 .Include(phs => phs.Place)
                     .ThenInclude(p => p.City)
                     .ThenInclude(c => c.Region)
@@ -144,8 +140,8 @@ namespace OwlStock.Services
                 PhotoShootType = dto.PhotoShootType,
                 PhotoShootTypeDescription = dto.PhotoShootTypeDescription,
                 CreatedOn = DateTime.Now,
-                //UserPlace = dto.UserPlace,
-                //GoogleMapsLink = dto.GoogleMapsLink,
+                //UserPlace = dto.UserPlace, //not used anymore
+                //GoogleMapsLink = dto.GoogleMapsLink, //not used anymore
                 IsDecidedByUs = dto.IsDecidedByUs,
                 DoNotUploadPhotos = dto.DoNotUploadPhotos,
                 PhotoDeliveryMethod = dto.PhotoDeliveryMethod,
@@ -153,9 +149,13 @@ namespace OwlStock.Services
                 Price = totalPrice,
                 IdentityUserId = dto.IdentityUserId,
                 Status = PhotoshootStatus.New,
+                PlaceId = dto.PlaceId
             };
 
-            if(dto.IsPlace)
+            //not used anymore
+            //now the PhotoShoot has PlaceId that contains the 
+            //full information about Place's City and Region
+            /*if(dto.IsPlace)
             {
                 photoShoot.PlaceId = new Guid(dto.SelectedSettlementId ?? throw new ArgumentNullException(dto.SelectedSettlementId));
             }
@@ -163,7 +163,7 @@ namespace OwlStock.Services
             else
             {
                 photoShoot.CityId = (Convert.ToInt32(dto.SelectedSettlementId));
-            }
+            }*/
 
             //not used for now
             //double timeForTravel = _calculationsService.CalculateTimeForTravel(DefaultValue.DefaultSettlementLatitude, DefaultValue.DefaultSettlementLongitude,

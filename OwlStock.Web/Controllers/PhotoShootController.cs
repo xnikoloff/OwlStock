@@ -15,12 +15,15 @@ namespace OwlStock.Web.Controllers
         private readonly IPhotoShootService _photoShootService;
         private readonly ICalendarService _calendarService;
         private readonly ISettlementService _settlementService;
+        private readonly IPlaceService _placeService;
         
-        public PhotoShootController(IPhotoShootService photoShootService, ICalendarService calendarService, ISettlementService settlementService)
+        public PhotoShootController(IPhotoShootService photoShootService, ICalendarService calendarService, 
+            ISettlementService settlementService, IPlaceService placeService)
         {
             _photoShootService = photoShootService;
             _calendarService = calendarService;
             _settlementService = settlementService;
+            _placeService = placeService;
         }
 
         [HttpGet]
@@ -78,6 +81,22 @@ namespace OwlStock.Web.Controllers
             dto.IdentityUserId = GetUserId();
             dto.PersonEmail = User.FindFirstValue(ClaimTypes.Email);
 
+            Place? place = await _placeService.Create(new()
+            {
+                CityId = Convert.ToInt32(dto.SelectedSettlementId),
+                IsPopular = false,
+                Name = dto.UserPlace,
+                GoogleMapsURL = dto.GoogleMapsLink,
+                
+            });
+
+            if (place == null)
+            {
+                return View("Error", "Нещо се обърка повреме на резервирането...");
+            }
+
+            dto.PlaceId = place.Id;
+           
             await _photoShootService.Add(dto);
             return View("_SucessfulReservation");
         }

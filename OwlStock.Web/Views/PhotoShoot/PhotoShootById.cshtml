@@ -39,8 +39,8 @@
                         {
                             <td>@Model?.Place?.Name</td>
                         }
-                        <td>@(Model?.CityId == null ? Model?.Place?.City?.Name : Model?.City?.Name)</td>
-                        <td>@(Model?.CityId == null ? Model?.Place?.City?.Region?.Name : Model?.City?.Region?.Name)</td>
+                        <td>@Model?.Place?.City?.Name</td>
+                        <td>@Model?.Place?.City?.Region?.Name</td>
                         <td>@(string.IsNullOrEmpty(Model?.PhotoDeliveryMethod.ToString()) ? "В профила Ви" : Model?.PhotoDeliveryMethod)</td>
                         <td>@(Model?.PhotoDeliveryAddress ?? "N/A")</td>
                         <td>@(Model?.Price.ToString() ?? "N/A") лв</td>
