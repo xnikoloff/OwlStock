@@ -73,8 +73,8 @@
         </div>
         <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-6 form-group is-decided-by-us">
-                <input asp-for="IsDecidedByUs"/>
-                <label asp-for="IsDecidedByUs"></label>
+                <input asp-for="IsDecidedByUs" class="form-check-input"/>
+                <label asp-for="IsDecidedByUs" class="form-check-label"></label>
             </div>
         </div>
         <div class="row mt-3 row-toggle-places">
@@ -164,10 +164,10 @@
                         {
                             <div class="card card-weather text-center btn-date btn-date-simple text-white @(calendarKVP.Value.FirstOrDefault().IsAvailable ? "bg-success" : "bg-danger")" id="date-button-simple">
                                 <div class="card-header card-header-date">
-                                    <h6 class="date-text">@calendarKVP.Key.ToString("dd.MM")</h6>
+                                    <h4 class="date-text">@calendarKVP.Key.ToString("dd.MM")</h4>
                                 </div>
                                 <div class="card-body card-body-weather text-center" style="background: @(calendarKVP.Value.FirstOrDefault().IsAvailable ? Html.Raw("#8dba8d") : Html.Raw("#f57976"))">
-                                    <h5 class="temperatureCurrent"></h5>
+                                    <h6 class="temperatureCurrent"></h6>
                                     <div class="icon"></div>
                                     <p class="forecastText">Нямаме информация за времето</p>
                                     <p class="precipitation"></p>
@@ -191,17 +191,24 @@
                     }
                 </div>
             </div>
-            <div class="row row-total-price my-5">
+        </div>
+        <div class="price-container my-5" style="display:none">
+            <div class="row row-total-price">
                 <div class="col-12 mt-5 text-center ">
                     <h1>Цена: <span id="total-price"></span> <span id="currency"> лв</span></h1>
                             
                 </div>
             </div>
-            <div class="row mt-3">
+        </div>
+        <div class="gdpr-container mt-5">
+            <div class="col-12">
+                <h4>GDPR</h4>
+            </div>
+            <div class="row mt-4">
                 <div class="col-12">
                     <div class="form-group">
-                        <input asp-for="DoNotUploadPhotos" />
-                        <label asp-for="DoNotUploadPhotos"></label>
+                        <input asp-for="DoNotUploadPhotos" class="form-check-input"/>
+                        <label asp-for="DoNotUploadPhotos" class="form-check-label"></label>
                     </div>
                 </div>
             </div>
@@ -348,6 +355,10 @@
         font-style: italic;
     }
 
+    #DoNotUploadPhotos, #IsDecidedByUs {
+        transform: scale(1.2);
+    }
+
 </style>
 
 <script>
@@ -431,6 +442,7 @@
             let photoshootType = $('#PhotoShootType').find(":selected").val();
             updatePrice();
             getSettlementsByRegion($("#Region option:selected").text());
+            $(".price-container").css("display", "block");
             $("#PopularPlace").val('');
             $("#Settlement").val('');
             
@@ -692,7 +704,7 @@
                 $(".card-weather").each(function (i) {
                     let cardBody = $(this).find(".card-body-weather");
                     cardBody.find(".icon").css("background-image", `url(${json.forecast.forecastDays[i].day.condition.icon})`);
-                    cardBody.find("h5").text(json.forecast.forecastDays[i].day.averageTemperature != 0 ? (Math.round(json.forecast.forecastDays[i].day.maxTemperature) + 'C°') : '');
+                    cardBody.find(".temperatureCurrent").text(json.forecast.forecastDays[i].day.averageTemperature != 0 ? (Math.round(json.forecast.forecastDays[i].day.maxTemperature) + 'C°') : '');
                     cardBody.find(".forecastText").text(json.forecast.forecastDays[i].day.condition.text);
                     cardBody.find(".precipitation").text('Валежи: ' + json.forecast.forecastDays[i].day.totalPrecipitation + '%');
                     i++;
