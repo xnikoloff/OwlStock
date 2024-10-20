@@ -17,6 +17,7 @@
         <input type="hidden" asp-for="SelectedSettlementId" />
         <input type="hidden" asp-for="IsPlaceSelected" />
         <input type="hidden" asp-for="IsPlace" />
+        <input type="hidden" asp-for="PlaceId" />
         <input type="hidden" asp-for="FuelPrice" />
         @*not used for now*@
         @*<input type="hidden" asp-for="SettlementName" />*@
@@ -77,9 +78,9 @@
             </div>
         </div>
         <div class="row mt-3 row-toggle-places">
-            <div class="col-12 col-md-6 col-lg-4">
-                <input type="button" id="showPopularPlaces" style="display:none" class="btn btn-secondary btn-sm" value="Избор от популярни места" />
-                <input type="button" id="hidePopularPlaces" style="display:none" class="btn btn-secondary btn-sm" value="Скрий популярните места" />
+            <div class="col-12 text-end">
+                <input type="button" id="showPopularPlaces" style="display:none" class="btn btn-success btn" value="Популярни места" />
+                <input type="button" id="hidePopularPlaces" style="display:none" class="btn btn-info" value="Населени места" />
             </div>
         </div>
         <div class="row row-decided-by-us-info" style="display:none">
@@ -105,6 +106,7 @@
                 <div class="col-12 col-md-6 col-lg-6 form-group popular-places" style="display:none">
                     <label for="PopularPlaces" class="required">Популярни места</label>
                     <select id="PopularPlaces" class="form-control"></select>
+                    <span id="popular-place-validation-message" class="text-danger" style="display:none"><i>Мястото е задължително</i></span>
                     <!--<span class="decided-by-us-settlement-info text-warning" style="display:none"><i>Това не е задължително</i></span>-->
                 </div>
             </div>
@@ -354,12 +356,21 @@
         let lastClickedTimeSlotBtn = null;
 
         $("#booking-form").submit(function (event) {
-            if($("#Settlement").val() == ''){
+            console.log($(".settlement:visible").length > 0);
+            if ($(".settlement:visible").length > 0 && $("#SelectedSettlementId").val() == undefined) {
                 event.preventDefault();
                 $("#settlement-validation-message").css("display", "block");
                 $(".selectize-control").addClass("border border-danger");
                 $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#Settlement").offset().top
+                    scrollTop: $(".settlement").offset().top
+                }, 500);
+            }
+            else if ($(".popular-places:visible").length > 0 && $("#SelectedSettlementId").val() == undefined) {
+                event.preventDefault();
+                $("#popular-place-validation-message").css("display", "block");
+                $(".selectize-control").addClass("border border-danger");
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $(".popular-places").offset().top
                 }, 500);
             }
         });
@@ -417,34 +428,29 @@
         });
 
         $("#Region").change(function () {
+            let photoshootType = $('#PhotoShootType').find(":selected").val();
             updatePrice();
+            getSettlementsByRegion($("#Region option:selected").text());
             $("#PopularPlace").val('');
-            if ($("#IsDecidedByUs").prop('checked')) {
-            }
-            else{
-                $("#Settlement").val('');
-            }
+            $("#Settlement").val('');
+            
             $("#RegionId").val($(this).val());
             $(".dates-container").css("display", "block");
-            
+
             if (!($("#showPopularPlaces").is(":visible")) && !($("#hidePopularPlaces").is(":visible"))) {
-                $("#hidePopularPlaces").css("display", "none");
-                $("#showPopularPlaces").css("display", "block");
                 getSettlementsByRegion($("#Region option:selected").text());
             }
 
             else if (!($("#showPopularPlaces").is(":visible")) && ($("#hidePopularPlaces").is(":visible"))) {
-                $("#showPopularPlaces").css("display", "none");
-                $("#hidePopularPlaces").css("display", "block");
                 getPopularPlacesByRegion($("#Region option:selected").text());
             }
-            else{
-                $("#hidePopularPlaces").css("display", "none");
-                $("#showPopularPlaces").css("display", "block");
+            else {
                 getSettlementsByRegion($("#Region option:selected").text());
             }
+            
+            togglePlacesButton();
         });
-
+        
         /*$("#Settlement").change(function () {
             updatePrice();
             getForecast($(this).val(), true);
@@ -543,19 +549,26 @@
                 $("#photo-shoot-type-description").css("display", "block");
                 $("#PhotoShootTypeDescription").attr("required", "required");
             }
-
-            else{
+            else {
                 $("#PhotoShootTypeDescription").removeAttr("required");
                 $("#photo-shoot-type-description").css("display", "none");
             }
+            //switch to settlements when photoshoot type 7 is selected
+            if(option == 7){
+                $(".settlement").css("display", "block");
+                $(".popular-places").css("display", "none");
+            }
+
+            
 
             checkPhotoShootTypeDescriptionEmpty();
             updatePrice();
+            togglePlacesButton();
         });
 
         $("#showPopularPlaces").click(function(){
             $("#showPopularPlaces").css("display", "none");
-            $("#hidePopularPlaces").css("display", "block");
+            $("#hidePopularPlaces").css("display", "inline-block");
             if ($(".place-addition-info").is(":visible")) {
                 $(".place-addition-info").css("display", "none");
                 $("#UserPlace").val('');
@@ -565,12 +578,43 @@
         });
 
         $("#hidePopularPlaces").click(function () {
-            $("#showPopularPlaces").css("display", "block");
+            $("#showPopularPlaces").css("display", "inline-block");
             $("#hidePopularPlaces").css("display", "none");
             getSettlementsByRegion($("#Region option:selected").text());
         });
         checkBookedDates();
     });
+
+    function togglePlacesButton() {
+        let regionId = $("#RegionId").val();
+        let photoshootType = $('#PhotoShootType').find(":selected").val();
+        
+        if (regionId != "" && photoshootType != '7') {
+            if ($("#hidePopularPlaces").is(":visible")) {
+                $("#showPopularPlaces").css("display", "none");
+                $("#hidePopularPlaces").css("display", "inline-block");
+            }
+            else {
+                //this is additional checked because when photoshoot type is 7
+                //both buttons are hidden and if this check was not present
+                //one the photoshoot become different than 7
+                //it would always show the popular places button
+                //instead of the appropriate one
+                if ($(".popular-places").is(":visible")) {
+                    $("#hidePopularPlaces").css("display", "inline-block");
+                    $("#showPopularPlaces").css("display", "none");
+                }
+                else {
+                    $("#hidePopularPlaces").css("display", "none");
+                    $("#showPopularPlaces").css("display", "inline-block");
+                }
+            }
+        }
+        else{
+            $("#hidePopularPlaces").css("display", "none");
+            $("#showPopularPlaces").css("display", "none");
+        }
+    }
 
     function setDate(){
         $(".btn-date").click(function () {
@@ -693,6 +737,7 @@
             data: { "regionId": $("#Region").find(":selected").val() },
             method: "GET",
             success: function (response) {
+                console.log(response);
                 let json = JSON.parse(JSON.stringify(response));
                 $("#PopularPlaces").selectize({
                     respect_word_boundaries: false,
@@ -705,12 +750,14 @@
                     searchField: ["name"],
                     options: response,
                     onChange: function (value) {
+                        json.find
                         updatePrice();
                         console.log('value: ' + value);
                         getForecast(value, false);
                         $("#row-dates-weather").css("display", "flex");
                         $("#IsPlace").val(true);
-                        $("#SelectedSettlementId").val(value);
+                        $("#PlaceId").val(value);
+                        $("#SelectedSettlementId").val((findElementById(json, value)).cityId);
                         $("#IsPlaceSelected").val(true);
                         console.log('value ' + value);
                         /*if ($("#IsDecidedByUs").prop('checked') == false) {
@@ -722,6 +769,14 @@
                 });
             }
         });
+    }
+
+    function findElementById(array, id){
+        for (let i = 0; i < array.length; i++){
+            if(array[i].id == id){
+                return array[i];
+            }
+        }
     }
 
     function getSettlementsByRegion(region) {

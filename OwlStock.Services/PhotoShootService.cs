@@ -149,7 +149,7 @@ namespace OwlStock.Services
                 Price = totalPrice,
                 IdentityUserId = dto.IdentityUserId,
                 Status = PhotoshootStatus.New,
-                PlaceId = dto.PlaceId
+                PlaceId = dto.PlaceId == Guid.Empty ? null : dto.PlaceId
             };
 
             //not used anymore

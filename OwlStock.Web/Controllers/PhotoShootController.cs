@@ -81,21 +81,25 @@ namespace OwlStock.Web.Controllers
             dto.IdentityUserId = GetUserId();
             dto.PersonEmail = User.FindFirstValue(ClaimTypes.Email);
 
-            Place? place = await _placeService.Create(new()
-            {
-                CityId = Convert.ToInt32(dto.SelectedSettlementId),
-                IsPopular = false,
-                Name = dto.UserPlace,
-                GoogleMapsURL = dto.GoogleMapsLink,
-                
-            });
 
-            if (place == null)
+            if (!string.IsNullOrEmpty(dto.UserPlace))
             {
-                return View("Error", "Нещо се обърка повреме на резервирането...");
+                Place? place = await _placeService.Create(new()
+                {
+                    CityId = Convert.ToInt32(dto.SelectedSettlementId),
+                    IsPopular = false,
+                    Name = dto.UserPlace,
+                    GoogleMapsURL = dto.GoogleMapsLink,
+
+                });
+
+                if (place == null)
+                {
+                    return View("Error", "Нещо се обърка повреме на резервирането...");
+                }
+            
+                dto.PlaceId = place.Id;
             }
-
-            dto.PlaceId = place.Id;
            
             await _photoShootService.Add(dto);
             return View("_SucessfulReservation");
