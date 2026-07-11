@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using OwlStock.Domain.Entities;
+using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
 using OwlStock.Services.Interfaces;
 
@@ -15,6 +17,33 @@ namespace OwlStock.Services
         {
             _context = context ?? new OwlStockDbContext();
             _logger = logger;
+        }
+
+        public async Task<IEnumerable<GiftCard>> GetAll()
+        {
+            if (_context.GiftCards is null)
+            {
+                _logger.LogError($"{nameof(_context.GiftCards)} is null at {DateTime.UtcNow} in {nameof(GiftCardService)}, {nameof(GetAll)}");
+                return new List<GiftCard>();
+            }
+
+            try
+            {
+                return await _context.GiftCards
+                    .OrderByDescending(gf => gf.Id)
+                    .ToListAsync();
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred at {Time}", DateTime.UtcNow);
+                return new List<GiftCard>();
+            }
+        }
+
+        public Task<GiftCard> GetById(Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> Create(GiftCard giftCard)
@@ -32,6 +61,8 @@ namespace OwlStock.Services
             }
 
             giftCard.CreatedOn = DateTime.Now;
+            giftCard.GiftCardNumber = GenerateGiftCardNumber(giftCard.PhotoShootType);
+            giftCard.Status = GiftCardStatus.New;
 
             try
             {
@@ -43,6 +74,37 @@ namespace OwlStock.Services
             {
                 _logger.LogError(ex, "An error occurred at {Time}", DateTime.UtcNow);
                 return false;
+            }
+        }
+        
+        private string GenerateGiftCardNumber(PhotoShootType photoShootType)
+        {
+            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            //generate three random numbers to get three random letters from the alphabet
+            Random random = new();
+            int randomNumber1 = random.Next(0, alphabet.Length);
+            int randomNumber2 = random.Next(0, alphabet.Length);
+            int randomNumber3 = random.Next(0, alphabet.Length);
+
+            try
+            {
+                string number =
+                    "GC-" +
+                    DateTime.Now.Year.ToString()[2..] +
+                    DateTime.Now.Month +
+                    DateTime.Now.Day + "-" +
+                    photoShootType.ToString()[..3].ToUpper() + "-" +
+                    Guid.NewGuid().ToString().ToUpper()[..4] + "-" +
+                    alphabet[randomNumber1] + alphabet[randomNumber2] + alphabet[randomNumber3];
+
+                return number;
+            }
+
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred at {Time}", DateTime.UtcNow);
+                return string.Empty;
             }
         }
     }

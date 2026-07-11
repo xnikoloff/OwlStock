@@ -18,14 +18,15 @@ namespace OwlStock.Domain.Entities
         [Required]
         public PhotoShootType PhotoShootType { get; set; }
 
-        [ForeignKey(nameof(IdentityUser))]
-        public string? IdentityUserId { get; set; }
-
-        public IdentityUser? IdentityUser { get; set; }
-
         public DateTime CreatedOn { get; set; }
 
         public string? GiftCardNumber { get; set; }
 
+        public GiftCardStatus Status { get; set; }
+
+        [ForeignKey(nameof(IdentityUser))]
+        public string? IdentityUserId { get; set; }
+
+        public IdentityUser? IdentityUser { get; set; }
     }
 }

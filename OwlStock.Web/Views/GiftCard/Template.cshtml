@@ -1,191 +1,111 @@
 ﻿@model GiftCard
 
 @{
-    ViewData["Title"] = "Template";
+    ViewData["Title"] = "Подаръчен ваучер";
 }
 
 
-<div class="certificate-wrap">
-    <div class="certificate">
-        <div class="header">
-            <span class="small-title">Подаръчен ваучер</span>
-            <h1><img src="~/img/icons/icon-1.png" alt="logo"/></h1>
-        </div>
-        <div class="content">
-            <p class="presented">Този ваучер е създаден специално за</p>
-            <div class="recipient">
-                @Model.Receiver
-            </div>
-            <div class="details">
-                <div class="item">
-                    <span class="label">Фотосесия</span>
-                    <span class="value">@(Model.PhotoShootType.GetAttribute<DisplayAttribute>().Name)</span>
-                </div>
-                <div class="item">
-                    <span class="label">Валиден до</span>
-                    <span class="value">@Model.CreatedOn.AddYears(1).ToString("dd.MM.yyyy")</span>
-                </div>
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1><i class="fa-solid fa-heart fa-2xl text-primary"></i></h1>
             </div>
         </div>
-        <div class="footer">
-            <div class="signature">
-                <div class="line"></div>
-                <span><b>PHOTONIC.bg | +359 878 131828</b></span>
+        <div class="text-center mx-auto wow fadeInUp mt-4" data-wow-delay="0.1s" style="max-width: 500px;">
+            <p class="text-primary text-uppercase mb-2">@ViewData["Title"]</p>
+            <h1 class="display-6 mb-5">Благодарим Ви за поръчката!</h1>
+            <h4 class="mt-4">Вашият подаръчен ваучер е създаден <span class="text-primary"><b><i>успешно</i></b></span>!</h4>
+        </div>
+        <div class="row g-0 justify-content-center">
+            <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.1s">
+                <p class="text-center mb-4">Можете да го изтеглите като PDF, като натиснете „<b><i>Изтегли PDF</i></b>“</p>
             </div>
-            <div class="certificate-number">
-                Certificate #PS-2026-00124
+        </div>
+        <div class="row g-0 justify-content-center">
+            <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.1s">
+                <p class="text-center mb-4"><i><b>ВАЖНО</b>: Ваучерът все още <b>не е активен</b>. За да бъде активиран, е необходимо да извършите плащане по посочената банкова сметка. Плащането може да бъде направено чрез банков превод от мобилното приложение на Вашата банка, Revolut или друга банкова услуга. След като плащането бъде получено и потвърдено, ваучерът ще бъде активиран и ще получите уведомление по имейл, че вече е готов за използване.</i></p>
             </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="background:#ececec;">
+    <div class="row">
+        <div class="col-12 mx-auto text-center">
+            <form asp-action="DownloadPDF" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-primary py-3 px-5"><i class="fa-solid fa-file-arrow-down fa-xl"></i>&nbsp;&nbsp;ИЗТЕГЛИ PDF</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="certificate-wrap" style="background:#ececec;font-family:'Montserrat',sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:40px;box-sizing:border-box;margin:0;">
+    
+    <div class="certificate" style="width:1000px;max-width:100%;box-shadow:0 15px 40px rgba(0,0,0,.12);padding:90px 100px;position:relative;background:#dae0e3;box-sizing:border-box;">
+
+        <div class="header" style="text-align:center;margin-bottom:60px;position:relative;z-index:2;">
+            <span class="small-title" style="text-transform:uppercase;letter-spacing:6px;color:#627582;font-size:13px;">
+                Подаръчен ваучер
+            </span>
+
+            <h1 style="font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:600;color:#222;margin:15px 0;">
+                <img src="~/img/icons/icon-1.png" alt="logo" />
+            </h1>
+        </div>
+
+        <div class="content" style="position:relative;z-index:2;">
+
+            <p class="presented" style="text-align:center;color:#777;letter-spacing:1px;margin-top:100px;margin-bottom:20px;font-size:24px;">
+                Този ваучер е създаден специално за
+            </p>
+
+            <div class="recipient" style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:bold;color:#111;border-bottom:2px solid #627582;display:block;width:100%;padding-bottom:12px;margin-bottom:60px;box-sizing:border-box;">
+                <i>__receiver__</i>
+            </div>
+
+            <div class="details" style="display:flex;justify-content:space-between;gap:40px;margin-bottom:70px;">
+
+                <div class="item" style="flex:1;text-align:center;border:1px solid #627582;border-radius:8px;padding:30px;box-sizing:border-box;">
+                    <span class="label" style="display:block;color:#999;text-transform:uppercase;letter-spacing:2px;font-size:13px;margin-bottom:12px;">
+                        Фотосесия
+                    </span>
+                    <span class="value" style="font-size:22px;color:#222;font-weight:500;">
+                        __photoshoot__
+                    </span>
+                </div>
+
+                <div class="item" style="flex:1;text-align:center;border:1px solid #627582;border-radius:8px;padding:30px;box-sizing:border-box;">
+                    <span class="label" style="display:block;color:#999;text-transform:uppercase;letter-spacing:2px;font-size:13px;margin-bottom:12px;">
+                        Валиден до
+                    </span>
+                    <span class="value" style="font-size:22px;color:#222;font-weight:500;">
+                        __date__ г
+                    </span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer" style="display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:2;">
+
+            <div class="signature" style="width:240px;">
+                <div class="line" style="height:1px;background:#222;margin-bottom:8px;"></div>
+                <span style="font-size:14px;color:#555;">
+                    <b>PHOTONIC.bg | +359 878 131828</b>
+                </span>
+            </div>
+
+            <div class="certificate-number" style="font-size:13px;color:#888;letter-spacing:2px;">
+                Certificate #__number__
+            </div>
+
         </div>
     </div>
 </div>
 
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    .certificate-wrap {
-        background: #ececec;
-        font-family: 'Montserrat', sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 40px;
-    }
-
-    .certificate {
-        width: 1000px;
-        max-width: 100%;
-        box-shadow: 0 15px 40px rgba(0,0,0,.12);
-        padding: 22px;
-        padding: 90px 100px;
-        position: relative;
-        background: #dae0e3;
-    }
-
-    .header,
-    .content,
-    .footer {
-        position: relative;
-        z-index: 2;
-    }
-
-    .header {
-        text-align: center;
-        margin-bottom: 60px;
-    }
-
-    .small-title {
-        text-transform: uppercase;
-        letter-spacing: 6px;
-        color: #627582;
-        font-size: 13px;
-    }
-
-    .header h1 {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 62px;
-        font-weight: 600;
-        color: #222;
-        margin: 15px 0;
-    }
-
-    .header p {
-        color: #777;
-        font-size: 18px;
-    }
-
-    .presented {
-        text-align: center;
-        color: #777;
-        letter-spacing: 1px;
-        margin-bottom: 20px;
-    }
-
-    .recipient {
-        text-align: center;
-        font-family: "Cormorant Garamond", serif;
-        font-size: 56px;
-        font-weight: bold;
-        color: #111;
-        border-bottom: 2px solid #627582;
-        display: inline-block;
-        width: 100%;
-        padding-bottom: 12px;
-        margin-bottom: 60px;
-    }
-
-    .details {
-        display: flex;
-        justify-content: space-between;
-        gap: 40px;
-        margin-bottom: 70px;
-    }
-
-    .item {
-        flex: 1;
-        text-align: center;
-        border: 1px solid #627582;
-        border-radius: 8px;
-        padding: 30px;
-    }
-
-    .label {
-        display: block;
-        color: #999;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-size: 13px;
-        margin-bottom: 12px;
-    }
-
-    .value {
-        font-size: 22px;
-        color: #222;
-        font-weight: 500;
-    }
-
-    .footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
-
-    .signature {
-        width: 240px;
-    }
-
-    .line {
-        height: 1px;
-        background: #222;
-        margin-bottom: 8px;
-    }
-
-    .signature span {
-        font-size: 14px;
-        color: #555;
-    }
-
-    .certificate-number {
-        font-size: 13px;
-        color: #888;
-        letter-spacing: 2px;
-    }
-
-    @@media print {
-
-        body {
-            background: white;
-            padding: 0;
-        }
-
-        .certificate {
-            box-shadow: none;
-            width: 100%;
-        }
+    .info-text{
+        font-size: 1.2rem
     }
 </style>

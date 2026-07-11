@@ -21,6 +21,7 @@ namespace OwlStock.Web.Controllers
     {
         private readonly IAdministrationService _administrationService;
         private readonly IPhotoShootService _photoShootService;
+        private readonly IGiftCardService _giftCardService;
         private readonly IPhotoService _photoService;
         private readonly IGalleryService _galleryService;
         private readonly IFileService _fileService;
@@ -32,13 +33,26 @@ namespace OwlStock.Web.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdministrationController(IAdministrationService administrationService, IPhotoShootService photoShootService, IPhotoService photoService, IGalleryService galleryService, 
-            IFileService fileService, IPhotoshootFacade photoshootFacade, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, 
-            SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager,
-            ITestimonyService testimonyService, IAnnouncementService announcementService)
+        public AdministrationController
+        (
+            IAdministrationService administrationService, 
+            IPhotoShootService photoShootService, 
+            IGiftCardService giftCardService, 
+            IPhotoService photoService, 
+            IGalleryService galleryService, 
+            IFileService fileService, 
+            IPhotoshootFacade photoshootFacade, 
+            IWebHostEnvironment webHostEnvironment, 
+            UserManager<IdentityUser> userManager, 
+            SignInManager<IdentityUser> signInManager, 
+            RoleManager<IdentityRole> roleManager,
+            ITestimonyService testimonyService, 
+            IAnnouncementService announcementService
+        )
         {
             _administrationService = administrationService;
             _photoShootService = photoShootService;
+            _giftCardService = giftCardService;
             _photoService = photoService;
             _galleryService = galleryService;
             _fileService = fileService;
@@ -222,6 +236,12 @@ namespace OwlStock.Web.Controllers
         {
             bool isSuccessful = await _photoshootFacade.ChangeStatus(id, PhotoshootStatus.Completed);
             return RedirectToAction(nameof(Photoshoots));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GiftCards()
+        {
+            return View(await _giftCardService.GetAll());
         }
 
         [HttpGet]

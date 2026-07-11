@@ -1,0 +1,72 @@
+﻿@model IEnumerable<GiftCard>
+
+@{
+    ViewData["Title"] = "Фотосесии";
+}
+
+<div class="container container-all-giftcards mt-5">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-stripe">
+                <thead>
+                    <tr>
+                        <th>Управление</th>
+                        <th>Номер</th>
+                        <th>Статус</th>
+                        <th>Създаден</th>
+                        <th>Създаден от</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (GiftCard giftCard in Model)
+                    {
+                        string tableRowColor = "";
+                        switch (giftCard.Status)
+                        {
+                            case GiftCardStatus.New:
+                                {
+                                    tableRowColor = "#ffc800";
+                                    break;
+                                }
+                            case GiftCardStatus.Used:
+                                {
+                                    tableRowColor = "#198754";
+                                    break;
+                                }
+                            case GiftCardStatus.Declined:
+                                {
+                                    tableRowColor = "#c21e1e";
+                                    break;
+                                }
+                            case GiftCardStatus.Validated:
+                                {
+                                    tableRowColor = "#d4d4d4";
+                                    break;
+                                }
+                            default:
+                                {
+                                    tableRowColor = "#bd79b5";
+                                    break;
+                                }
+                        }
+                        <a asp-controller="GiftCard" asp-action="GiftCardyId" asp-route-id="@giftCard?.Id">
+                            <tr style="background-color:@tableRowColor; color:#fff">
+                                <td><a asp-controller="Administration" asp-action="ManageGiftCard" asp-route-id="@giftCard.Id" class="btn btn-light btn-sm">Управление</a></td>
+                                <td>@giftCard.GiftCardNumber</td>
+                                <td>@giftCard.Status</td>
+                                <td>@giftCard?.CreatedOn.ToString("dd.MM.yyyy")</td>
+                                <td>@(giftCard?.IdentityUser?.Email ?? "-")</td>
+                            </tr>
+                        </a>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container-all-giftcards {
+        margin-bottom: 200px;
+    }
+</style>
