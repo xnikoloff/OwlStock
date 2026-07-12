@@ -41,9 +41,30 @@ namespace OwlStock.Services
             }
         }
 
-        public Task<GiftCard> GetById(Guid id)
+        public async Task<GiftCard> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            if (_context.GiftCards is null)
+            {
+                _logger.LogError($"{nameof(_context.GiftCards)} is null at {DateTime.UtcNow} in {nameof(GiftCardService)}, {nameof(GetById)}");
+                return new();
+            }
+
+            if(id == Guid.Empty)
+            {
+                _logger.LogError($"{nameof(id)} is empty at {DateTime.UtcNow} in {nameof(GiftCardService)}, {nameof(GetById)}");
+                return new();
+            }
+
+            try
+            {
+               return await _context.GiftCards.FindAsync(id) ?? new GiftCard();
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred at {Time}", DateTime.UtcNow);
+                return new();
+            }
         }
 
         public async Task<bool> Create(GiftCard giftCard)
@@ -70,9 +91,55 @@ namespace OwlStock.Services
                 await _context.SaveChangesAsync();
                 return true;
             }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred at {Time}", DateTime.UtcNow);
+                return false;
+            }
+        }
+
+        public async Task<bool> ChangeStatus(Guid id, GiftCardStatus status)
+        {
+            if (_context.GiftCards is null)
+            {
+                _logger.LogError($"{nameof(_context.GiftCards)} is null at {DateTime.UtcNow} in {nameof(GiftCardService)}, {nameof(GetById)}");
+                return false;
+            }
+
+            if (id == Guid.Empty)
+            {
+                _logger.LogError($"{nameof(id)} is empty at {DateTime.UtcNow} in {nameof(GiftCardService)}, {nameof(GetById)}");
+                return false;
+            }
+
+            if(status > 0)
+            {
+                try
+                {
+                    GiftCard? giftCard = await _context.GiftCards.FindAsync(id);
+
+                    if (giftCard != null) 
+                    {
+                        giftCard.Status = status;
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An error occurred at {Time}", DateTime.UtcNow);
+                    return false;
+                }
+            }
+            else
+            {
                 return false;
             }
         }

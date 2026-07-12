@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<GiftCard>
 
 @{
-    ViewData["Title"] = "Фотосесии";
+    ViewData["Title"] = "Подаръчни ваучери";
 }
 
 <div class="container container-all-giftcards mt-5">
@@ -30,7 +30,7 @@
                                 }
                             case GiftCardStatus.Used:
                                 {
-                                    tableRowColor = "#198754";
+                                    tableRowColor = "#17a2b8";
                                     break;
                                 }
                             case GiftCardStatus.Declined:
@@ -40,7 +40,7 @@
                                 }
                             case GiftCardStatus.Validated:
                                 {
-                                    tableRowColor = "#d4d4d4";
+                                    tableRowColor = "#198754";
                                     break;
                                 }
                             default:
@@ -49,15 +49,13 @@
                                     break;
                                 }
                         }
-                        <a asp-controller="GiftCard" asp-action="GiftCardyId" asp-route-id="@giftCard?.Id">
-                            <tr style="background-color:@tableRowColor; color:#fff">
-                                <td><a asp-controller="Administration" asp-action="ManageGiftCard" asp-route-id="@giftCard.Id" class="btn btn-light btn-sm">Управление</a></td>
-                                <td>@giftCard.GiftCardNumber</td>
-                                <td>@giftCard.Status</td>
-                                <td>@giftCard?.CreatedOn.ToString("dd.MM.yyyy")</td>
-                                <td>@(giftCard?.IdentityUser?.Email ?? "-")</td>
-                            </tr>
-                        </a>
+                        <tr style="background-color:@tableRowColor; color:#fff">
+                            <td><a asp-controller="Administration" asp-action="ManageGiftCard" asp-route-id="@giftCard?.Id" class="btn btn-light btn-sm">Управление</a></td>
+                            <td>@(giftCard?.GiftCardNumber ?? "")</td>
+                            <td>@giftCard?.Status</td>
+                            <td>@giftCard?.CreatedOn.ToString("dd.MM.yyyy")</td>
+                            <td>@(giftCard?.IdentityUser?.Email ?? "-")</td>
+                        </tr>
                     }
                 </tbody>
             </table>

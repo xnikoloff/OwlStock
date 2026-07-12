@@ -245,6 +245,63 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ManageGiftCard(Guid id)
+        {
+            return View(await _giftCardService.GetById(id));
+        }
+
+        [HttpPost()]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeclineGiftCard(Guid id)
+        {
+            bool result = await _giftCardService.ChangeStatus(id, GiftCardStatus.Declined);
+
+            if (result)
+            {
+                return RedirectToAction(nameof(GiftCards));
+            }
+            else
+            {
+                return View("Error", "Получи се грешка по време на смяната на статус на подаръчния ваучер");
+            }
+        }
+
+        [HttpPost()]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ValidateGiftCard(Guid id)
+        {
+            bool result = await _giftCardService.ChangeStatus(id, GiftCardStatus.Validated);
+
+            if (result)
+            {
+                return RedirectToAction(nameof(GiftCards));
+            }
+            else
+            {
+                return View("Error", "Получи се грешка по време на смяната на статус на подаръчния ваучер");
+            }
+        }
+
+        [HttpPost()]
+        [Authorize(Roles = "Administrator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetGiftCardAsUsed(Guid id)
+        {
+            bool result = await _giftCardService.ChangeStatus(id, GiftCardStatus.Used);
+
+            if (result)
+            {
+                return RedirectToAction(nameof(GiftCards));
+            }
+            else
+            {
+                return View("Error", "Получи се грешка по време на смяната на статус на подаръчния ваучер");
+            }
+        }
+
+        [HttpGet]
         public IActionResult PhotosIndex()
         {
             return View();

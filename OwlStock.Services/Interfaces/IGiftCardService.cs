@@ -1,4 +1,5 @@
 ﻿using OwlStock.Domain.Entities;
+using OwlStock.Domain.Enumerations;
 
 namespace OwlStock.Services.Interfaces
 {
@@ -7,5 +8,6 @@ namespace OwlStock.Services.Interfaces
         Task<IEnumerable<GiftCard>> GetAll();
         Task<GiftCard> GetById(Guid id);
         Task<bool> Create(GiftCard giftCard);
+        Task<bool> ChangeStatus(Guid id, GiftCardStatus status);
     }
 }

@@ -1,0 +1,88 @@
+﻿@model GiftCard
+
+@{
+    ViewData["Title"] = $"Подаръчен ваучер {Model.GiftCardNumber}";
+}
+<div class="manage-gift-card-container">
+    <div class="container my-5">
+        <div class="page-cover text-center">
+            <h1 class="page-cover-tittle">ПОДАРЪЧЕН ВАУЧЕР</h1>
+            <h1 class="page-cover-tittle text-primary"><i>@Model.GiftCardNumber</i></h1>
+
+            @switch (Model.Status)
+            {
+                case GiftCardStatus.New:
+                    {
+                        <h5 class="text-warning">/ОЧАКВА ПЛАЩАНЕ/</h5>
+                        break;
+                    }
+                case GiftCardStatus.Declined:
+                    {
+                        <h5 class="text-danger">/ОТКАЗАН/</h5>
+                        break;
+                    }
+                case GiftCardStatus.Validated:
+                    {
+                        <h5 class="text-success">/ПЛАТЕН/</h5>
+                        break;
+                    }
+                case GiftCardStatus.Used:
+                    {
+                        <h5 class="text-info">/ИЗПОЛЗВАН/</h5>
+                        break;
+                    }
+            }
+
+        </div>
+        <hr />
+    </div>
+    <div class="photoshoot-details-section-wrap mt-5">
+        <div class="container mt-5 py-5">
+            <div class="row">
+                <div class="col-4 mx-auto text-center">
+                    <h2 class="text-primary"><i class="fa-solid fa-camera fa-lg"></i></h2>
+                    <h4 class="photoshoot-details-top">@(Model.PhotoShootType.GetAttribute<DisplayAttribute>().Name)</h4>
+                </div>
+                <div class="col-4 mx-auto text-center">
+                    <h2 class="text-primary"><i class="fa-solid fa-calendar-days fa-lg"></i></h2>
+                    <h3 class="photoshoot-details-top">@Model?.CreatedOn.ToString("dd.MM.yyyy") г.</h3>
+                </div>
+                <div class="col-4 mx-auto text-center">
+                    <h2 class="text-primary"><i class="fa-solid fa-user-tie fa-lg"></i></h2>
+                    <h4 class="photoshoot-details-top">@Model?.Receiver</h4>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <h4><i>Ваучерът е валиден до: <span class="text-primary">@Model?.CreatedOn.AddYears(1).ToString("dd.MM.yyyy")</span></i></h4>
+                </div>
+            </div>
+            <div class="row mt-5 pt-5">
+                <div class="col-4 mx-auto text-center">
+                    <form asp-action="DeclineGiftCard" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="@(nameof(Model.Status))" value="@GiftCardStatus.Declined" />
+                        <input type="hidden" name="@(nameof(Model.Id))" value="@(Model?.Id ?? Guid.Empty)" />
+                        <button type="submit" class="btn btn-danger btn-sm">ОТКАЗВАНЕ</button>
+                    </form>
+                </div>
+                <div class="col-4 mx-auto text-center">
+                    <form asp-action="ValidateGiftCard" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="@(nameof(Model.Status))" value="@GiftCardStatus.Validated" />
+                        <input type="hidden" name="@(nameof(Model.Id))" value="@(Model?.Id ?? Guid.Empty)" />
+                        <button type="submit" class="btn btn-success btn-sm">ВАЛИДНА</button>
+                    </form>
+                </div>
+                <div class="col-4 mx-auto text-center">
+                    <form asp-action="SetGiftCardAsUsed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="@(nameof(Model.Status))" value="@GiftCardStatus.Used" />
+                        <input type="hidden" name="@(nameof(Model.Id))" value="@(Model?.Id ?? Guid.Empty)" />
+                        <button type="submit" class="btn btn-info btn-sm text-white">ИЗПОЛЗВАНА</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

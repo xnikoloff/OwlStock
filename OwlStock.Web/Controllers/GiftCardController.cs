@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OwlStock.Domain.Entities;
 using OwlStock.Services.DTOs;
 using OwlStock.Services.Interfaces;
@@ -19,6 +20,12 @@ namespace OwlStock.Web.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet("vaucher")]
+        public async Task<IActionResult> GiftCardById(Guid id)
+        {
+            return View(await _giftCardService.GetById(id));
         }
 
         [HttpGet("nov-vaucher")]
