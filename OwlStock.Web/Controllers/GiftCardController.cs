@@ -29,7 +29,7 @@ namespace OwlStock.Web.Controllers
         }
 
         [HttpGet("nov-vaucher")]
-        public IActionResult Create()
+        public IActionResult Template()
         {
             return View();
         }
@@ -51,10 +51,10 @@ namespace OwlStock.Web.Controllers
             }
         }
 
-        [HttpGet("template")]
+        /*[HttpGet("template")]
         public IActionResult Template(GiftCard giftCard)
         {
             return View(giftCard);
-        }
+        }*/
     }
 }
