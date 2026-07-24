@@ -51,10 +51,10 @@ namespace OwlStock.Web.Controllers
             }
         }
 
-        /*[HttpGet("template")]
+        [HttpGet("template")]
         public IActionResult Template(GiftCard giftCard)
         {
             return View(giftCard);
-        }*/
+        }
     }
 }

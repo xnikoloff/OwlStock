@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OwlStock.Infrastructure;
 using OwlStock.Services;
+using PuppeteerSharp;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System.Data;
@@ -80,6 +81,9 @@ builder.Services.AddServices();
 
 builder.Services.AddRazorPages();
 
+// Download Chromium if it doesn't exist
+BrowserFetcher browserFetcher = new();
+await browserFetcher.DownloadAsync();
 
 var app = builder.Build();
 

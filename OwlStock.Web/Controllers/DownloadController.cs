@@ -12,13 +12,16 @@ namespace OwlStock.Web.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IOrderService _orderService;
         private readonly IPhotoShootService _photoShootService;
+        private readonly IGiftCardService _giftCardService;
         
-        public DownloadController(IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService, IPhotoShootService photoShootService)
+        public DownloadController(IPhotoResizer photoResizer, IWebHostEnvironment webHostEnvironment, IOrderService orderService, 
+            IPhotoShootService photoShootService, IGiftCardService giftCardService)
         {
             _photoResizer = photoResizer;
             _webHostEnvironment = webHostEnvironment;
             _orderService = orderService;
             _photoShootService = photoShootService;
+            _giftCardService = giftCardService;
         }
 
         [HttpGet]
@@ -67,6 +70,20 @@ namespace OwlStock.Web.Controllers
             }
 
             throw new NullReferenceException($"{nameof(photo.FileType)} is null");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<FileResult> DownloadPhotoShootPhoto(GiftCard giftCard)
+        {
+            byte[] fileData = await _giftCardService.GeneratePDF(giftCard);
+
+            if(fileData.Length > 0)
+            {
+                return File(fileData, "application/pdf", giftCard?.GiftCardNumber);
+            }
+
+            return File(Array.Empty<byte>(), "application/pdf", giftCard?.GiftCardNumber);
         }
 
         [HttpGet]

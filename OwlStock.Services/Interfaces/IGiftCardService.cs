@@ -9,5 +9,6 @@ namespace OwlStock.Services.Interfaces
         Task<GiftCard> GetById(Guid id);
         Task<bool> Create(GiftCard giftCard);
         Task<bool> ChangeStatus(Guid id, GiftCardStatus status);
+        Task<byte[]> GeneratePDF(GiftCard giftCard);
     }
 }

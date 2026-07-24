@@ -4,7 +4,10 @@ using Microsoft.IdentityModel.Tokens;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
+using OwlStock.Infrastructure.Common.GiftCardTemplates;
 using OwlStock.Services.Interfaces;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 
 namespace OwlStock.Services
 {
@@ -142,6 +145,32 @@ namespace OwlStock.Services
             {
                 return false;
             }
+        }
+
+        public async Task<byte[]> GeneratePDF(GiftCard giftCard)
+        {
+            string template = CreateGiftCardTemplate.CreateGiftCard(new()
+            {
+                GiftCardNumber = giftCard.GiftCardNumber,
+                Photoshoot = giftCard.PhotoShootType.ToString(),
+                Receiver = giftCard.Receiver,
+                ValidUntil = giftCard.CreatedOn.AddYears(1).ToString("dd.MM.yyyy")
+            });
+
+            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true
+            });
+
+            var page = await browser.NewPageAsync();
+
+            await page.SetContentAsync(template);
+
+            return await page.PdfDataAsync(new PdfOptions
+            {
+                Format = PaperFormat.A4,
+                PrintBackground = true
+            });
         }
         
         private string GenerateGiftCardNumber(PhotoShootType photoShootType)
