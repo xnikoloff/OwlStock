@@ -11,7 +11,7 @@ using OwlStock.Infrastructure;
 
 namespace OwlStock.Infrastructure.Migrations
 {
-    [DbContext(typeof(OwlStockDbContext))]
+    [DbContext(typeof(PhotonicDbContext))]
     [Migration("20250110134552_AddTestimony")]
     partial class AddTestimony
     {

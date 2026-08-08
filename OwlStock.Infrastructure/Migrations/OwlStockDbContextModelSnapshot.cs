@@ -10,7 +10,7 @@ using OwlStock.Infrastructure;
 
 namespace OwlStock.Infrastructure.Migrations
 {
-    [DbContext(typeof(OwlStockDbContext))]
+    [DbContext(typeof(PhotonicDbContext))]
     partial class OwlStockDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -269,6 +269,89 @@ namespace OwlStock.Infrastructure.Migrations
                     b.ToTable("Announcements");
                 });
 
+            modelBuilder.Entity("OwlStock.Domain.Entities.Article", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ArticleCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EditedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("EditedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ReadingTime")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("ShowInTopPosition")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleCategoryId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("EditedById");
+
+                    b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.ArticleCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("ArticleCategories");
+                });
+
             modelBuilder.Entity("OwlStock.Domain.Entities.City", b =>
                 {
                     b.Property<int>("Id")
@@ -317,89 +400,6 @@ namespace OwlStock.Infrastructure.Migrations
                     b.HasIndex("RegionId");
 
                     b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.DynamicContent", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("DynamicContentCategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EditedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("EditedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ReadingTime")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ShowInTopPosition")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DeletedById");
-
-                    b.HasIndex("DynamicContentCategoryId");
-
-                    b.HasIndex("EditedById");
-
-                    b.ToTable("DynamicContents");
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.DynamicContentCategory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.ToTable("DynamicContentCategories");
                 });
 
             modelBuilder.Entity("OwlStock.Domain.Entities.Gear", b =>
@@ -985,6 +985,44 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Navigation("UnhiddenBy");
                 });
 
+            modelBuilder.Entity("OwlStock.Domain.Entities.Article", b =>
+                {
+                    b.HasOne("OwlStock.Domain.Entities.ArticleCategory", "ArticleCategories")
+                        .WithMany("Articles")
+                        .HasForeignKey("ArticleCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
+                        .WithMany()
+                        .HasForeignKey("DeletedById");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "EditedBy")
+                        .WithMany()
+                        .HasForeignKey("EditedById");
+
+                    b.Navigation("ArticleCategories");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("DeletedBy");
+
+                    b.Navigation("EditedBy");
+                });
+
+            modelBuilder.Entity("OwlStock.Domain.Entities.ArticleCategory", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.Navigation("CreatedBy");
+                });
+
             modelBuilder.Entity("OwlStock.Domain.Entities.City", b =>
                 {
                     b.HasOne("OwlStock.Domain.Entities.Municipality", "Municipality")
@@ -1002,44 +1040,6 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Navigation("Municipality");
 
                     b.Navigation("Region");
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.DynamicContent", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "DeletedBy")
-                        .WithMany()
-                        .HasForeignKey("DeletedById");
-
-                    b.HasOne("OwlStock.Domain.Entities.DynamicContentCategory", "DynamicContentCategories")
-                        .WithMany("DynamicContents")
-                        .HasForeignKey("DynamicContentCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "EditedBy")
-                        .WithMany()
-                        .HasForeignKey("EditedById");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("DeletedBy");
-
-                    b.Navigation("DynamicContentCategories");
-
-                    b.Navigation("EditedBy");
-                });
-
-            modelBuilder.Entity("OwlStock.Domain.Entities.DynamicContentCategory", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("OwlStock.Domain.Entities.GiftCard", b =>
@@ -1199,9 +1199,9 @@ namespace OwlStock.Infrastructure.Migrations
                     b.Navigation("PhotoShoot");
                 });
 
-            modelBuilder.Entity("OwlStock.Domain.Entities.DynamicContentCategory", b =>
+            modelBuilder.Entity("OwlStock.Domain.Entities.ArticleCategory", b =>
                 {
-                    b.Navigation("DynamicContents");
+                    b.Navigation("Articles");
                 });
 
             modelBuilder.Entity("OwlStock.Domain.Entities.PhotoShoot", b =>

@@ -2,6 +2,7 @@
 using OwlStock.Services.Common;
 using OwlStock.Services.Facades.Implementations;
 using OwlStock.Services.Facades.Interfaces;
+using OwlStock.Services.Implementations;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services
@@ -24,7 +25,7 @@ namespace OwlStock.Services
             services.AddTransient<ISettlementService, SettlementService>();
             services.AddTransient<IWeatherService, WeatherService>();
             services.AddTransient<ICalculationsService, CalculationsService>();
-            services.AddTransient<IDynamicContentService, DynamicContentService>();
+            services.AddTransient<IBlogService, BlogService>();
             services.AddTransient<ICommonServices, CommonServices>();
             services.AddTransient<IPlaceService, PlaceService>();
             services.AddTransient<IAdministrationService, AdministrationService>();
@@ -33,7 +34,7 @@ namespace OwlStock.Services
             services.AddTransient<IGiftCardService, GiftCardService>();
             services.AddTransient<IPhotoshootFacade, PhotoshootFacade>();
             services.AddTransient<IPhotoFacade, PhotoFacade>();
-            services.AddTransient<IDynamicContentServiceFacade, DynamicContentServiceFacade>();
+            services.AddTransient<IBlogServiceFacade, BlogServiceFacade>();
             services.AddTransient<IHomeFacade, HomeFacade>();
 
             return services;

@@ -1,9 +1,9 @@
-﻿using OwlStock.Services.DTOs.DynamicContents;
+﻿using OwlStock.Services.DTOs.Articles;
 
 namespace OwlStock.Services.Facades.Interfaces
 {
-    public interface IDynamicContentServiceFacade
+    public interface IBlogServiceFacade
     {
-        Task<bool> Create(CreateDynamicContentDTO dto);
+        Task<bool> Create(CreateArticleDTO dto);
     }
 }

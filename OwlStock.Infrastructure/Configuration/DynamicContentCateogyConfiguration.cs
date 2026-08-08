@@ -3,26 +3,26 @@ using OwlStock.Domain.Entities;
 
 namespace OwlStock.Infrastructure.Configuration
 {
-    public class DynamicContentCateogyConfiguration : ConfigurationBase<DynamicContentCategory>
+    public class ArticleCateogyConfiguration : ConfigurationBase<ArticleCategory>
     {
-        public override void Configure(EntityTypeBuilder<DynamicContentCategory> builder)
+        public override void Configure(EntityTypeBuilder<ArticleCategory> builder)
         {
             builder.HasData(
-                new DynamicContentCategory
+                new ArticleCategory
                 {
                     Id = Guid.NewGuid(),
                     Name = "Технологии",
                     CreatedOn = DateTime.UtcNow,
                 },
 
-                new DynamicContentCategory
+                new ArticleCategory
                 {
                     Id = Guid.NewGuid(),
                     Name = "Фототехника",
                     CreatedOn = DateTime.UtcNow,
                 },
 
-                new DynamicContentCategory
+                new ArticleCategory
                 {
                     Id = Guid.NewGuid(),
                     Name = "Образователни",

@@ -8,9 +8,9 @@ namespace OwlStock.Web.Components
 {
     public class PhotoSuggestionsViewComponent : ViewComponent
     {
-        private readonly OwlStockDbContext _context;
+        private readonly PhotonicDbContext _context;
 
-        public PhotoSuggestionsViewComponent(OwlStockDbContext context)
+        public PhotoSuggestionsViewComponent(PhotonicDbContext context)
         {
             _context = context;
         }

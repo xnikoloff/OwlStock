@@ -11,7 +11,7 @@ using OwlStock.Infrastructure;
 
 namespace OwlStock.Infrastructure.Migrations
 {
-    [DbContext(typeof(OwlStockDbContext))]
+    [DbContext(typeof(PhotonicDbContext))]
     [Migration("20230709093559_AddFilePathPropertyToPhotoEntity")]
     partial class AddFilePathPropertyToPhotoEntity
     {

@@ -8,10 +8,10 @@ namespace OwlStock.Services.Facades.Implementations
     public class HomeFacade : IHomeFacade
     {
         private readonly IHomeService _homeService;
-        private readonly IDynamicContentService _dynamicContentService;
+        private readonly IBlogService _dynamicContentService;
         private readonly ITestimonyService _testimonyService;
 
-        public HomeFacade(IHomeService homeService, IDynamicContentService dynamicContentService, ITestimonyService testimonyService)
+        public HomeFacade(IHomeService homeService, IBlogService dynamicContentService, ITestimonyService testimonyService)
         {
             _homeService = homeService;
             _dynamicContentService = dynamicContentService;
@@ -23,7 +23,7 @@ namespace OwlStock.Services.Facades.Implementations
             return await _homeService.GetHomeData(await GetDynamicContents(), await GetTestimonies());
         }
 
-        private async Task<IEnumerable<DynamicContent>> GetDynamicContents()
+        private async Task<IEnumerable<Article>> GetDynamicContents()
         {
             return await _dynamicContentService.GetTopContent();
         }

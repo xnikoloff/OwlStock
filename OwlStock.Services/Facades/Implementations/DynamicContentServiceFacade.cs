@@ -1,25 +1,25 @@
-﻿using OwlStock.Services.DTOs.DynamicContents;
+﻿using OwlStock.Services.DTOs.Articles;
 using OwlStock.Services.Facades.Interfaces;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services.Facades.Implementations
 {
-    public class DynamicContentServiceFacade : IDynamicContentServiceFacade
+    public class BlogServiceFacade : IBlogServiceFacade
     {
-        private readonly IDynamicContentService _dynamicContentService;
+        private readonly IBlogService _blogService;
         private readonly ICalculationsService _calculationsService;
         private readonly IFileService _fileService;
 
-        public DynamicContentServiceFacade(IDynamicContentService dynamicContentService, ICalculationsService calculationsService, IFileService fileService)
+        public BlogServiceFacade(IBlogService blogService, ICalculationsService calculationsService, IFileService fileService)
         {
-            _dynamicContentService = dynamicContentService;
+            _blogService = blogService;
             _calculationsService = calculationsService;
             _fileService = fileService;
         }
 
-        public async Task<bool> Create(CreateDynamicContentDTO dto)
+        public async Task<bool> Create(CreateArticleDTO dto)
         {
-            dto!.DynamicContent!.ReadingTime = _calculationsService.CalculateReadingTime(dto.DynamicContent.Content);
+            dto!.Article!.ReadingTime = _calculationsService.CalculateReadingTime(dto.Article.Content);
 
             bool resultIFormFile = await _fileService.CreateIFormFile(dto!.Image, dto!.WebRootPath);
 
@@ -28,7 +28,7 @@ namespace OwlStock.Services.Facades.Implementations
                 return false;
             }
 
-            bool resultContent = await _dynamicContentService.Create(dto);
+            bool resultContent = await _blogService.Create(dto);
 
             if (!resultContent)
             {

@@ -42,11 +42,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 
-builder.Services.AddDbContext<OwlStockDbContext>(options =>
+builder.Services.AddDbContext<PhotonicDbContext>(options =>
     options.UseSqlServer(connectionString ?? 
         throw new NullReferenceException($"{connectionString} is null")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+    
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     //password policy
@@ -61,7 +61,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(20);
     options.Lockout.MaxFailedAccessAttempts = 6;
 })
-    .AddEntityFrameworkStores<OwlStockDbContext>()
+    .AddEntityFrameworkStores<PhotonicDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(options =>

@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OwlStock.Domain.Entities;
-using OwlStock.Infrastructure.Configuration;
 
 namespace OwlStock.Infrastructure
 {
-    public class OwlStockDbContext : IdentityDbContext
+    public class PhotonicDbContext : IdentityDbContext
     {
-        public OwlStockDbContext() { }
+        public PhotonicDbContext() { }
 
-        public OwlStockDbContext(DbContextOptions<OwlStockDbContext> options)
+        public PhotonicDbContext(DbContextOptions<PhotonicDbContext> options)
             : base(options) { }
 
         public DbSet<PhotoBase>? PhotosBase { get; set; }
@@ -24,8 +23,8 @@ namespace OwlStock.Infrastructure
         public DbSet<Region>? Regions { get; set; }
         public DbSet<Municipality>? Municipalities { get; set; }
         public DbSet<City>? Cities { get; set; }
-        public DbSet<DynamicContent>? DynamicContents { get; set; }
-        public DbSet<DynamicContentCategory>? DynamicContentCategories { get; set; }
+        public DbSet<Article>? Articles { get; set; }
+        public DbSet<ArticleCategory>? ArticleCategories { get; set; }
         public DbSet<Place>? Places { get; set; }
         public DbSet<Testimony>? Testimonies { get; set; }
         public DbSet<Announcement>? Announcements { get; set; }

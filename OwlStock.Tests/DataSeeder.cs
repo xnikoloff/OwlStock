@@ -8,19 +8,19 @@ namespace OwlStock.Tests
 {
     public class DataSeeder
     {
-        protected OwlStockDbContext BuildDbContext()
+        protected PhotonicDbContext BuildDbContext()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<OwlStockDbContext>()
+            var optionsBuilder = new DbContextOptionsBuilder<PhotonicDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
-            OwlStockDbContext context = new(optionsBuilder);
+            PhotonicDbContext context = new(optionsBuilder);
             return context;
 
         }
 
-        public async Task<OwlStockDbContext> ArrangeDbContext()
+        public async Task<PhotonicDbContext> ArrangeDbContext()
         {
-            OwlStockDbContext context = BuildDbContext();
+            PhotonicDbContext context = BuildDbContext();
 
             List<IdentityUser> users = new()
             {

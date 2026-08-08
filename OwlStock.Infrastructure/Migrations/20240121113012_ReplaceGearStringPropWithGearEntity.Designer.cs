@@ -11,10 +11,10 @@ using OwlStock.Infrastructure;
 
 namespace OwlStock.Infrastructure.Migrations
 {
-    [DbContext(typeof(OwlStockDbContext))]
+    [DbContext(typeof(PhotonicDbContext))]
     [Migration("20240121113012_ReplaceGearStringPropWithGearEntity")]
     partial class ReplaceGearStringPropWithGearEntity
-    {
+    {   
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -11,7 +11,7 @@ using OwlStock.Infrastructure;
 
 namespace OwlStock.Infrastructure.Migrations
 {
-    [DbContext(typeof(OwlStockDbContext))]
+    [DbContext(typeof(PhotonicDbContext))]
     [Migration("20240529163129_AddPhotoDeliveryAddressToPhotoshootEntity")]
     partial class AddPhotoDeliveryAddressToPhotoshootEntity
     {

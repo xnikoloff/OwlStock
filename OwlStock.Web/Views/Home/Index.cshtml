@@ -162,12 +162,12 @@
             <h1 class="display-5 mb-4">ПОСЛЕДНИТЕ НОВИНИ И ПУБЛИКАЦИИ</h1>
         </div>
         <div class="row g-0 team-items">
-            @foreach (DynamicContent dynamicContent in Model?.DynamicContents ?? new List<DynamicContent>())
+            @foreach (Article article in Model?.Articles ?? new List<Article>())
             {
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item position-relative">
                         <div class="position-relative">
-                            <img class="img-fluid" src="~/resources/images/@(dynamicContent.ImageName)" alt="">
+                            <img class="img-fluid" src="~/resources/images/@(article.ImageName)" alt="">
                             <!--<div class="team-social text-center">
                                 <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
@@ -175,10 +175,10 @@
                             </div>-->
                         </div>
                         <div class="bg-light text-center p-4 dynamic-content-title-wrap">
-                            <h3 class="mt-2"><a class="text-dark" asp-action="Content" asp-controller="DynamicContent" asp-route-id="@dynamicContent?.Id">@(dynamicContent?.Title ?? "")</a></h3>
+                            <h3 class="mt-2"><a class="text-dark" asp-action="Content" asp-controller="Blog" asp-route-id="@article?.Id">@(article?.Title ?? "")</a></h3>
                         </div>
                         <div class="bg-primary text-center p-4">
-                            <span class="text-light"><a asp-action="AllByCategory" asp-controller="DynamicContent" asp-route-id="@dynamicContent?.DynamicContentCategories?.Id" class="text-light">@(dynamicContent?.DynamicContentCategories?.Name ?? "")</a> | @(dynamicContent?.CreatedOn.ToString("dd.MM.yyyy") ?? "") г.</span>
+                            <span class="text-light"><a asp-action="AllByCategory" asp-controller="Blog" asp-route-id="@article?.ArticleCategories?.Id" class="text-light">@(article?.ArticleCategories?.Name ?? "")</a> | @(article?.CreatedOn.ToString("dd.MM.yyyy") ?? "") г.</span>
                         </div>
                     </div>
                 </div>
