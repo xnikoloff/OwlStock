@@ -141,7 +141,7 @@ namespace OwlStock.Web.Controllers
         [HttpGet("moite-fotosesii")]
         public async Task<IActionResult> MyPhotoShoots()
         {
-            return View(await _photoShootService.MyPhotoShoots(GetUserId()));
+            return View(await _photoShootService.PhotoShootsByUser(GetUserId()));
         }
 
         [Authorize]

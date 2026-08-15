@@ -5,6 +5,9 @@ using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services.Implementations
 {
+    /// <summary>
+    /// Currently not in use. Probably it will be deleted in the future
+    /// </summary>
     internal class OrderService : IOrderService
     {
         private readonly PhotonicDbContext _context;

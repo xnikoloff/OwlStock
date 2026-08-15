@@ -28,6 +28,11 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
         
+        /// <summary>
+        /// Gets the current weather information for a settlement
+        /// </summary>
+        /// <param name="settlement">Name of the settlement used as a keyword</param>
+        /// <returns>WeatherCurrent entity with the required data</returns>
         public async Task<WeatherCurrent> GetCurrentWeather(string settlement)
         {
             using HttpClient client = new();
@@ -51,6 +56,12 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets information about the weather forecast for a settlement
+        /// </summary>
+        /// <param name="settlementId">Id of the settlement</param>
+        /// <returns>WeatherForecast entity with the required data</returns>
+        /// <exception cref="NullReferenceException">Thrown when the provided argument is null or empty</exception>
         public async Task<WeatherForecast> GetForecast(string settlementId)
         {
             if (settlementId.IsNullOrEmpty())
@@ -81,6 +92,12 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets the forecast for a place
+        /// </summary>
+        /// <param name="placeId">Id of the place</param>
+        /// <returns>WeatherForecast entity with the required data</returns>
+        /// <exception cref="NullReferenceException">Thrown when provided argument is null</exception>
         public async Task<WeatherForecast> GetForecastForPlace(Guid placeId)
         {
             if (placeId == Guid.Empty)

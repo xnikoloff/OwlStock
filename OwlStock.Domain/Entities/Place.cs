@@ -9,6 +9,7 @@ namespace OwlStock.Domain.Entities
         public Place()
         {
             PhotoShoots = new HashSet<PhotoShoot>();
+            PhotoBase = new();
         }
 
         [Key]
@@ -42,13 +43,13 @@ namespace OwlStock.Domain.Entities
         [ForeignKey(nameof(PhotoBase))]
         public Guid? PhotoBaseId { get; set; }
 
-        public PhotoBase? PhotoBase { get; set; }
+        public PhotoBase PhotoBase { get; set; }
 
         [ForeignKey(nameof(City))]
         public int CityId { get; set; }
 
         public City? City { get; set; }
 
-        public ICollection<PhotoShoot>? PhotoShoots { get; set; }
+        public ICollection<PhotoShoot> PhotoShoots { get; set; }
     }
 }

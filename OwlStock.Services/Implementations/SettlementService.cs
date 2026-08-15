@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using OwlStock.Domain.Entities;
@@ -15,34 +16,39 @@ namespace OwlStock.Services.Implementations
 
         private readonly PhotonicDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<SettlementService> _logger;
 
-        public SettlementService(PhotonicDbContext context, IConfiguration configuration)
+        public SettlementService(PhotonicDbContext context, IConfiguration configuration, ILogger<SettlementService> logger)
         {
             _context = context;
             _configuration = configuration;
             _apiKey = configuration.GetSection("WeatherStack").GetSection("Key").Value!;
+            _logger = logger;
         }
 
+        /// <summary>
+        /// Returns list of cities that match the search query
+        /// </summary>
+        /// <param name="query">The search query</param>
+        /// <returns>List of City containing the matching cities</returns>
         public async Task<IEnumerable<City>> Autocomplete(string query)
         {
-            if(_context.Cities is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
-            }
 
             return await _context.Cities.Where(c => (c.Name ?? string.Empty).Contains(query)).ToListAsync();
         }
 
+        /// <summary>
+        /// Gets a City by Id
+        /// </summary>
+        /// <param name="id">Id of the City</param>
+        /// <returns>The City that matches the Id</returns>
+        /// <exception cref="NullReferenceException"></exception>
         public async Task<City> GetCityById(int id)
         {
-            if(_context.Cities is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
-            }
-
             if(id == 0)
             {
-                throw new NullReferenceException($"{nameof(id)} is 0");
+                _logger.LogError("{id} is 0 in {Method}, {Class}, {DateTime}", nameof(id), nameof(GetCityById), nameof(SettlementService), DateTime.Now);
+                return new();
             }
 
             return await _context.Cities
@@ -52,13 +58,12 @@ namespace OwlStock.Services.Implementations
                 throw new NullReferenceException($"City with {nameof(id)} {id} cannot be found");
         }
 
+        /// <summary>
+        /// Gets list of the regions that are currently serviced
+        /// </summary>
+        /// <returns>List of Region containing the serviced regions</returns>
         public async Task<IEnumerable<Region>> GetServicedRegion()
         {
-            if (_context.Regions is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
-            }
-
             return await _context.Regions
                 .Where(r => (r.Name ?? string.Empty).Equals("Пловдив") ||
                 (r.Name ?? string.Empty).Equals("Пазарджик") ||
@@ -67,12 +72,12 @@ namespace OwlStock.Services.Implementations
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Gets all cities for the serviced regions
+        /// </summary>
+        /// <returns>List of City containing the cities for the serviced regions</returns>
         public async Task<IEnumerable<City>> GetCitiesByServicedRegions()
         {
-            if (_context.Cities is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
-            }
 
             List<City> allSettlements = await _context.Cities
                 .OrderBy(c => c.Name)
@@ -88,12 +93,13 @@ namespace OwlStock.Services.Implementations
             return cities;
         }
 
+        /// <summary>
+        /// Get all cities for a serviced region
+        /// </summary>
+        /// <param name="region">Id of the region</param>
+        /// <returns>List of all cities for a serviced region</returns>
         public async Task<IEnumerable<City>> GetCitiesByRegion(int region)
         {
-            if (_context.Cities is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
-            }
             
             var result = await _context.Cities
                 .Include(c => c.Region)
@@ -103,13 +109,14 @@ namespace OwlStock.Services.Implementations
             return result;
         }
 
+        /// <summary>
+        /// Gets latitude and longitude of a settlement
+        /// </summary>
+        /// <param name="settlementId">Id of the settlement</param>
+        /// <returns>An array of coordinates. 0th element is latitude, 1st element is longitude</returns>
+        /// <exception cref="NullReferenceException"></exception>
         public async Task<double[]> GetLatitudeAndLongitude(int settlementId)
         {
-            if (_context.Cities is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Cities)} is null");
-            }
-
             double[]? data = await _context.Cities
                 .Where(c => c.Id == settlementId)
                 .Select(c => new double[] { c.Latitude, c.Longitude })
@@ -123,6 +130,12 @@ namespace OwlStock.Services.Implementations
             return data;
         }
 
+        /// <summary>
+        /// Gets all info for a settlement from the WeatherStack API which will be used as autocomplete
+        /// </summary>
+        /// <param name="settlement">Name of the settlement used as a keyword</param>
+        /// <returns>List of SettlementInfo</returns>
+        /// <exception cref="NullReferenceException"></exception>
         public async Task<IEnumerable<SettlementInfo>> GetSettlementInfo(string settlement)
         {
             string? host = _configuration.GetSection("WeatherStack").GetSection("Host").Value ?? throw new NullReferenceException("Cannot get section 'Host'");
@@ -136,6 +149,13 @@ namespace OwlStock.Services.Implementations
 
             return autocomplete ?? throw new NullReferenceException($"{nameof(autocomplete)} is null");
         }
+
+        /// <summary>
+        /// Gets the name of the settlement in which a popular place is located in
+        /// </summary>
+        /// <param name="placeId">If of the popular place</param>
+        /// <returns>Name of the settlement as string</returns>
+        /// <exception cref="NullReferenceException"></exception>
         public async Task<string> GetPopularPlaceSettlementName(Guid placeId)
         {
             if(_context.Places is null)

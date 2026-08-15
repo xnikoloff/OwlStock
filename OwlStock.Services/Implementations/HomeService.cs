@@ -18,6 +18,12 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Get all the data that is required to load the home page
+        /// </summary>
+        /// <param name="articles">List of articles displayed on the home page</param>
+        /// <param name="testimonies">List of testimonials displayed on the home page</param>
+        /// <returns>DTO with the data that is required to load the home page</returns>
         public async Task<HomePageDTO> GetHomeData(IEnumerable<Article> articles, IEnumerable<Testimony> testimonies)
         {
             return new HomePageDTO()
@@ -28,6 +34,11 @@ namespace OwlStock.Services.Implementations
             };
         }
 
+        /// <summary>
+        /// Gets the path to a random photo file for the home page carousel
+        /// </summary>
+        /// <returns>Path to the photo file. Returns an empty string if there are no photos found</returns>
+        /// <exception cref="NullReferenceException">Thrown when tha path to the small photo file is null</exception>
         private async Task<string> ChooseHomePagePhoto()
         {
             if(_context.GalleryPhotos is null)

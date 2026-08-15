@@ -35,11 +35,21 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Sends an Inquiry to the website's own email
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         public async Task SendInquiry(SendInquiryEmailTemplateDTO dto)
         {
             await Send(dto);
         }
 
+        /// <summary>
+        /// Send an email
+        /// </summary>
+        /// <param name="dto">DTO containing the data needed for an email</param>
+        /// <returns>True if sent successfuly, else false</returns>
         public async Task<bool> Send(EmailTemplateBaseDTO dto)
         {
             SmtpClient client = new(_smtpHost)
@@ -72,7 +82,7 @@ namespace OwlStock.Services.Implementations
                     messagePhotonic.From = new MailAddress(_smtpEmail,  _smtpDisplayName);
                     messagePhotonic.To.Add(_smtpEmail);
                     messagePhotonic.Subject = dto.Topic ?? "";
-                    messagePhotonic.Body = GetTemplatePhoton(dto);
+                    messagePhotonic.Body = GetTemplatePhotonic(dto);
 
                     messages = new MailMessage[] { messageUser, messagePhotonic };
                 }
@@ -116,6 +126,12 @@ namespace OwlStock.Services.Implementations
 
         }
 
+        /// <summary>
+        /// Gets the corresponsing email template
+        /// </summary>
+        /// <param name="dto">Contains data required to get the corresponding email template</param>
+        /// <returns>The email template as string</returns>
+        /// <exception cref="ArgumentException">Thrown when an invalid email template is requested</exception>
         public string GetTemplate(EmailTemplateBaseDTO dto)
         {
             switch (dto.EmailTemplate)
@@ -212,7 +228,13 @@ namespace OwlStock.Services.Implementations
             }
         }
 
-        public string GetTemplatePhoton(EmailTemplateBaseDTO dto)
+        /// <summary>
+        /// Gets email template that is sent to the admin
+        /// </summary>
+        /// <param name="dto">Contains data required to get the corresponding email template</param>
+        /// <returns>The email template as string</returns>
+        /// <exception cref="ArgumentException">Thrown when an invalid email template is requested</exception>
+        public string GetTemplatePhotonic(EmailTemplateBaseDTO dto)
         {
             switch (dto.EmailTemplate)
             {

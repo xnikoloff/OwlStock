@@ -20,10 +20,13 @@ namespace OwlStock.Services.Implementations
         {
             _context = context ?? new();
             _logger = logger;
-
         }
 
-
+        /// <summary>
+        /// Creates new article
+        /// </summary>
+        /// <param name="dto">The DTO for creating an article</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> Create(CreateArticleDTO dto)
         {
             if (dto == null)
@@ -100,6 +103,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Deletes an article by setting the IsVisible property to false
+        /// </summary>
+        /// <param name="id">Id of the article</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> Delete(Guid id)
         {
             if (_context.Articles is null)
@@ -132,6 +140,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Recovers deleted article by setting the IsVisible property back to true
+        /// </summary>
+        /// <param name="id">If of the article</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> Recover(Guid id)
         {
             if (_context.Articles is null)
@@ -158,6 +171,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets and article by its id
+        /// </summary>
+        /// <param name="id">Id of the article</param>
+        /// <returns>Returs the found article</returns>
         public async Task<Article> GetById(Guid id)
         {
             if (_context.Articles is null)
@@ -182,6 +200,10 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all articles
+        /// </summary>
+        /// <returns>All articles with an AllArticlesDTO</returns>
         public async Task<AllArticlesDTO> GetAll()
         {
             if (_context.Articles is null)
@@ -219,6 +241,12 @@ namespace OwlStock.Services.Implementations
             }            
         }
 
+
+        /// <summary>
+        /// Gets all articles that belong to a given category
+        /// </summary>
+        /// <param name="id">Id of the category</param>
+        /// <returns>All articles for the given category with an AllArticlesDTO</returns>
         public async Task<AllArticlesDTO> GetAllByCategory(Guid id)
         {
             if (_context.Articles is null)
@@ -263,6 +291,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all articles with IsVisible marked as false
+        /// </summary>
+        /// <returns>All articles with IsVisible marked as false with an AllArticlesDTO</returns>
+
         public async Task<AllArticlesDTO> GetAllDeleted()
         {
             if (_context.Articles is null)
@@ -301,6 +334,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Paginates the articles
+        /// </summary>
+        /// <param name="pageNumber">The current page number that is requested</param>
+        /// <returns>All articles that need to be displyed on the current page plus total number of pages</returns>
         public async Task<AllArticlesDTO> GetAllByPage(int pageNumber)
         {
             if (_context.Articles is null)
@@ -355,6 +393,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+
+        /// <summary>
+        /// Gets the last four articles. If there are less than four articles, gets all
+        /// </summary>
+        /// <returns>List of the articles</returns>
         public async Task<IEnumerable<Article>> GetTopContent()
         {
             if (_context.Articles is null)
@@ -393,6 +436,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Creates new category
+        /// </summary>
+        /// <param name="category">Object of ArticleCategory, containing the category name and the user that created the category</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> CreateCategory(ArticleCategory category)
         {
             if (_context.ArticleCategories is null)
@@ -416,6 +464,10 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all articles alongside their categories
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<ArticleCategory>> GetAllArticleCategories()
         {
             if (_context.Articles is null)
@@ -490,6 +542,10 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Calculates the total page of numbers based on the visible content and the total number of articles
+        /// </summary>
+        /// <returns>Number of the pages as integer</returns>
         private async Task<int> CalculatePagesNumber()
         {
             if (_context.Articles is null)

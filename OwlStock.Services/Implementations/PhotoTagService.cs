@@ -17,6 +17,12 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Create new photo search tag
+        /// </summary>
+        /// <param name="tags">String of the search tags, separeted by commas</param>
+        /// <param name="photoId">ID of the corresponding photo</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> Add(string tags, Guid photoId)
         {
             List<string> tagsSplit = SplitTags(tags);
@@ -51,6 +57,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets ID of the photos that match the search tag
+        /// </summary>
+        /// <param name="tagText">The search tag</param>
+        /// <returns>List of GUID of the matching photos</returns>
         public async Task<List<Guid>> GetPhotoIdListByTag(string tagText)
         {
             try
@@ -70,6 +81,11 @@ namespace OwlStock.Services.Implementations
             }
         }
         
+        /// <summary>
+        /// Split the tags that are separated by commas to a list of strings
+        /// </summary>
+        /// <param name="tags">String of the tags separated by commas</param>
+        /// <returns>List of string containing each tag</returns>
         private List<string> SplitTags(string tags)
         {
             try

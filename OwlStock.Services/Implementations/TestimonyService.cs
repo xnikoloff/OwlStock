@@ -17,13 +17,13 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Creates new user testimony
+        /// </summary>
+        /// <param name="testimony">Testimony entity containing the required data</param>
+        /// <returns></returns>
         public async Task<Testimony> Create(Testimony testimony)
         {
-            if(_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             testimony.CreatedOn = DateTime.Now;
             testimony.IsApproved = false;
             testimony.IsHidden = false;
@@ -34,13 +34,14 @@ namespace OwlStock.Services.Implementations
             return testimony;
         }
 
+        /// <summary>
+        /// Approves a testimony
+        /// </summary>
+        /// <param name="id">Id of the testimony</param>
+        /// <returns>The testimony</returns>
+        /// <exception cref="NullReferenceException">Thrown when the testimony cannot be found</exception>
         public async Task<Testimony> Approve(Guid id)
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             Testimony? testimony = await _context.Testimonies
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
@@ -56,14 +57,15 @@ namespace OwlStock.Services.Implementations
 
             return testimony;
         }
-        
+
+        /// <summary>
+        /// Sets the IsHidden to true
+        /// </summary>
+        /// <param name="id">Id of the testimony</param>
+        /// <returns>The testimony</returns>
+        /// <exception cref="NullReferenceException">Thrown when the testimony cannot be found</exception>
         public async Task<Testimony> Hide(Guid id)
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             Testimony? testimony = await _context.Testimonies
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
@@ -80,13 +82,14 @@ namespace OwlStock.Services.Implementations
             return testimony;
         }
 
+        /// <summary>
+        /// Sets the IsHidden to false for a testimony has already had its IsHidden set to true
+        /// </summary>
+        /// <param name="id">Id of the testimony</param>
+        /// <returns>The testimony</returns>
+        /// <exception cref="NullReferenceException">Thrown when the testimony cannot be found</exception>
         public async Task<Testimony> Unhide(Guid id)
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             Testimony? testimony = await _context.Testimonies
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
@@ -103,13 +106,12 @@ namespace OwlStock.Services.Implementations
             return testimony;
         }
 
+        /// <summary>
+        /// Gets the last four created testimonies
+        /// </summary>
+        /// <returns>List of the testimonies</returns>
         public async Task<IEnumerable<Testimony>> GetLastFour()
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             try
             {
                 int count = await _context.Testimonies.CountAsync();
@@ -138,52 +140,48 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all testimonies that have property IsApproved set to true and IsHidden to false
+        /// </summary>
+        /// <returns>List of Testimony</returns>
         public async Task<IEnumerable<Testimony>> GetApproved()
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             return await _context.Testimonies
                 .Where(t => t.IsHidden == false && t.IsApproved)
                 .OrderByDescending(t => t.CreatedOn)
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Gets all testimonies that have property IsHidden set to true
+        /// </summary>
+        /// <returns>List of testimonies</returns>
         public async Task<IEnumerable<Testimony>> GetHidden()
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             return await _context.Testimonies
                 .Where(t => t.IsHidden)
                 .OrderByDescending(t => t.CreatedOn)
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Gets all testimonies that have properties IsHidden and IsApproved set to false
+        /// </summary>
+        /// <returns>List of Testimony</returns>
         public async Task<IEnumerable<Testimony>> GetNew()
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             return await _context.Testimonies
                 .Where(t => t.IsHidden == false && t.IsApproved == false)
                 .OrderByDescending(t => t.CreatedOn)
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Gets all testimonies have property IsHidden set to false and HiddenOn that is not null, meaning that they were hidden at least once before
+        /// </summary>
+        /// <returns>List of Testimony</returns>
         public async Task<IEnumerable<Testimony>> GetUnhidden()
         {
-            if (_context.Testimonies is null)
-            {
-                throw new NullReferenceException($"{nameof(_context.Testimonies)} is null");
-            }
-
             return await _context.Testimonies
                 .Where(t => t.IsHidden == false && t.HiddenOn != null)
                 .OrderByDescending(t => t.CreatedOn)

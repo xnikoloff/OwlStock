@@ -20,17 +20,16 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets Photo by ID
+        /// </summary>
+        /// <param name="id">Id of the photo</param>
+        /// <returns>PhotoById DTO with the required data</returns>
         public async Task<PhotoByIdDTO> GetById(Guid id)
         {
             if(id == Guid.Empty)
             {
                 _logger.LogError(null, $"An error occurred at {DateTime.UtcNow}, {nameof(GetById)}, {nameof(PhotoService)}, {nameof(id)} was empty");
-                return new();
-            }
-
-            if(_context.GalleryPhotos is null)
-            {
-                _logger.LogError(null, $"An error occurred at {DateTime.UtcNow}, {nameof(GetById)}, {nameof(PhotoService)}, {nameof(_context.GalleryPhotos)} was null");
                 return new();
             }
 
@@ -56,23 +55,16 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets PhotoBase by ID
+        /// </summary>
+        /// <param name="id">Id of the PhotoBase</param>
+        /// <returns>PhotoBase entity with the required data</returns>
         public async Task<PhotoBase> GetPhotoBaseById(Guid id)
         {
             if (id == Guid.Empty)
             {
                 _logger.LogError(null, $"An error occurred at {DateTime.UtcNow}, {nameof(GetPhotoBaseById)}, {nameof(PhotoService)}, {nameof(id)} was empty");
-                return new();
-            }
-
-            if (_context.PhotosBase is null)
-            {
-                _logger.LogError($"An error occurred at {DateTime.UtcNow}, {nameof(GetPhotoBaseById)}, {nameof(PhotoService)}, {nameof(_context.PhotosBase)} is null");
-                return new();
-            }
-
-            if (_context.GalleryPhotos is null)
-            {
-                _logger.LogError($"An error occurred at {DateTime.UtcNow}, {nameof(GetPhotoBaseById)}, {nameof(PhotoService)}, {nameof(_context.GalleryPhotos)} is null");
                 return new();
             }
 
@@ -88,14 +80,12 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets list of Gear for a photo
+        /// </summary>
+        /// <returns>List of Gear</returns>
         public async Task<IEnumerable<Gear>> GetPhotoGears()
         {
-            if (_context.Gear is null)
-            {
-                _logger.LogError(null, $"An error occurred at {DateTime.UtcNow}, {nameof(GetPhotoGears)}, {nameof(PhotoService)}, {nameof(_context.Gear)} was null");
-                return new List<Gear>();
-            }
-
             try
             {
                 return await _context.Gear.ToListAsync();
@@ -108,7 +98,13 @@ namespace OwlStock.Services.Implementations
             }
         }
         
-
+        /// <summary>
+        /// Creates new Photo
+        /// </summary>
+        /// <param name="photo">PhotoBase entity</param>
+        /// <param name="userId">Id of the current user</param>
+        /// <returns>PhotoBase object</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<PhotoBase> Create(PhotoBase? photo, string userId)
         {
             if(photo is null)
@@ -202,7 +198,11 @@ namespace OwlStock.Services.Implementations
                         break;
                     }
 
-                    default: throw new ArgumentException($"{nameof(photo)} has invalid type");
+                    default:
+                        {
+                            _logger.LogError($"An invalid option was provided to the swtich statement at {DateTime.UtcNow}, {nameof(Create)}, {nameof(PhotoService)}");
+                            return new();
+                        }
                 }
                     
                 await _context.SaveChangesAsync();
@@ -219,6 +219,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Sets IsDeleted property to true
+        /// </summary>
+        /// <param name="photo">A PhotoBase object</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> Delete(PhotoBase photo)
         {
             if (photo is null)
@@ -227,16 +232,15 @@ namespace OwlStock.Services.Implementations
                 return false;
             }
 
-            if(_context.PhotosBase is null)
-            {
-                _logger.LogError($"An error occurred at {DateTime.UtcNow}, {nameof(Delete)}, {nameof(PhotoService)}, {nameof(_context.PhotosBase)} is null");
-                return false;
-            }
-
             try
             {
-                PhotoBase? photoBase = await _context.PhotosBase.FindAsync(photo.Id) ??
-                throw new NullReferenceException($"{nameof(PhotoBase)} with Id {photo.Id} cannot be found");
+                PhotoBase? photoBase = await _context.PhotosBase.FindAsync(photo.Id);
+
+                if(photoBase is null)
+                {
+                    _logger.LogError($"${nameof(photoBase)} is null at {DateTime.UtcNow}, {nameof(Delete)}, {nameof(PhotoService)}");
+                    return false;
+                }
 
                 photoBase.IsDeleted = true;
                 await _context.SaveChangesAsync();
@@ -251,6 +255,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Swaps the IsDownloadable property from true to false and vice versa
+        /// </summary>
+        /// <param name="photoId"></param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> ChangeDownloadPermissions(Guid photoId)
         {
             if(_context.GalleryPhotos is null)
@@ -261,8 +270,13 @@ namespace OwlStock.Services.Implementations
 
             try
             {
-                GalleryPhoto? photo = await _context.GalleryPhotos.FindAsync(photoId) ??
-                throw new NullReferenceException($"{nameof(GalleryPhoto)} with Id {photoId} cannot be found");
+                GalleryPhoto? photo = await _context.GalleryPhotos.FindAsync(photoId);
+                
+                if (photo is null)
+                {
+                    _logger.LogError($"${nameof(photo)} is null at {DateTime.UtcNow}, {nameof(Delete)}, {nameof(PhotoService)}");
+                    return false;
+                }
 
                 photo.IsDownloadable = !photo.IsDownloadable;
 
@@ -331,6 +345,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Updates the Id of PhotoBase for a photo
+        /// </summary>
+        /// <param name="photo">PhotoBase object</param>
+        /// <returns>True if successful, else false</returns>
         private async Task<bool> UpdateBasePhotoId(PhotoBase photo)
         {
             try
@@ -344,8 +363,13 @@ namespace OwlStock.Services.Implementations
                 {
                     case GalleryPhoto:
                     {
-                        GalleryPhoto galleryPhoto = await _context.GalleryPhotos!.OrderByDescending(p => p.Id).FirstOrDefaultAsync() ??
-                            throw new NullReferenceException("No Gallery Photos are found");
+                        GalleryPhoto? galleryPhoto = await _context.GalleryPhotos!.OrderByDescending(p => p.Id).FirstOrDefaultAsync();
+                        
+                        if (galleryPhoto is null)
+                        {
+                            _logger.LogError($"${nameof(galleryPhoto)} is null at {DateTime.UtcNow}, {nameof(Delete)}, {nameof(PhotoService)}");
+                            return false;
+                        }
 
                         galleryPhoto.PhotoBaseId = basePhotoId;
                         break;
@@ -353,8 +377,13 @@ namespace OwlStock.Services.Implementations
 
                     case PhotoShootPhoto:
                     {
-                        PhotoShootPhoto photoShootPhoto = await _context.PhotoShootPhotos!.OrderByDescending(p => p.Id).FirstOrDefaultAsync() ??
-                            throw new NullReferenceException("No Photo Shoot Photos are found"); ;
+                        PhotoShootPhoto? photoShootPhoto = await _context.PhotoShootPhotos!.OrderByDescending(p => p.Id).FirstOrDefaultAsync();
+
+                        if (photoShootPhoto is null)
+                        {
+                            _logger.LogError($"${nameof(photoShootPhoto)} is null at {DateTime.UtcNow}, {nameof(Delete)}, {nameof(PhotoService)}");
+                            return false;
+                        }
 
                         photoShootPhoto.PhotoBaseId = basePhotoId;
                         break;

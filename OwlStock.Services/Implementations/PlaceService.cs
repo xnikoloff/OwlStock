@@ -18,14 +18,12 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets all photoshoot locations
+        /// </summary>
+        /// <returns>IEnumerable of Place containing data for all photoshoot locations</returns>
         public async Task<IEnumerable<Place>> All()
         {
-            if(_context.Places is null)
-            {
-                _logger.LogInformation("{context} is null in {Method}, {Class}, {DateTime}", nameof(_context.Places), nameof(All), nameof(PlaceService), DateTime.Now);
-                return Enumerable.Empty<Place>();
-            }
-
             try
             {
                 return await _context.Places
@@ -41,13 +39,12 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all popular photoshoot locations
+        /// </summary>
+        /// <returns>IEnumerable of Place containing data for all the popular photoshoot locations</returns>
         public async Task<IEnumerable<Place>> AllPopular()
         {
-            if (_context.Places is null)
-            {
-                _logger.LogError("{context} is null in {Method}, {Class}, {DateTime}", nameof(_context.Places), nameof(All), nameof(PlaceService), DateTime.Now);
-                return Enumerable.Empty<Place>();
-            }
 
             try
             {
@@ -63,17 +60,16 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all popular photoshoot locations for a region
+        /// </summary>
+        /// <param name="regionId">Id of the region</param>
+        /// <returns>IEnumerable of Place containing data for all the popular photoshoot locations for a region</returns>
         public async Task<IEnumerable<Place>> GetPopularPlacesByRegion(int regionId)
         {
             if(regionId == 0)
             {
                 _logger.LogError("{var} is 0 in {Method}, {Class}, {DateTime}", nameof(regionId), nameof(GetPopularPlacesByRegion), nameof(PlaceService), DateTime.Now);
-                return Enumerable.Empty<Place>();
-            }
-
-            if(_context.Places is null)
-            {
-                _logger.LogError("{context} is null in {Method}, {Class}, {DateTime}", nameof(_context.Places), nameof(GetPopularPlacesByRegion), nameof(PlaceService), DateTime.Now);
                 return Enumerable.Empty<Place>();
             }
 
@@ -92,19 +88,13 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets a photoshoot location by Id
+        /// </summary>
+        /// <param name="id">Id of the photoshoto location</param>
+        /// <returns>Returns a DTO with data of the requested location</returns>
         public async Task<PlaceByIdDTO?> PlaceById(Guid id)
         {
-            if (_context.Places is null)
-            {
-                _logger.LogError("{context} is null in {Method}, {Class}, {DateTime}", nameof(_context.Places), nameof(PlaceById), nameof(PlaceService), DateTime.Now);
-                return new();
-            }
-
-            if(_context.PhotoShoots is null)
-            {
-                _logger.LogError("{context} is null in {Method}, {Class}, {DateTime}", nameof(_context.PhotoShoots), nameof(PlaceById), nameof(PlaceService), DateTime.Now);
-                return new();
-            }
 
             List<PhotoShootPhoto>? photos = new();
 
@@ -124,7 +114,7 @@ namespace OwlStock.Services.Implementations
                 }
 
                 //collect all photoshoot photos for this place
-                foreach(PhotoShoot photoshoot in place.PhotoShoots)
+                foreach(PhotoShoot photoshoot in place!.PhotoShoots)
                 {
                     foreach(PhotoShootPhoto photo in photoshoot.PhotoShootPhotos)
                     {
@@ -138,7 +128,7 @@ namespace OwlStock.Services.Implementations
                     Name = place?.Name,
                     Description = place?.Description,
                     GoogleMapsURL = place?.GoogleMapsURL,
-                    IsPopular = place.IsPopular,
+                    IsPopular = place!.IsPopular,
                     PhotoFileName = place?.PhotoBase?.FileName,
                     Photos = photos,
                     PhotoBase = place?.PhotoBase ?? new()
@@ -154,6 +144,11 @@ namespace OwlStock.Services.Implementations
             }
         }
         
+        /// <summary>
+        /// Creates a new Place
+        /// </summary>
+        /// <param name="dto">DTO with the required data to create a new Place</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<Guid> Create(CreatePlaceDTO dto)
         {
             if(_context.Places is null)
@@ -188,6 +183,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Updates a photoshoot location
+        /// </summary>
+        /// <param name="place">Place containing the required data</param>
+        /// <returns>Id of the updated Place</returns>
         public async Task<Guid> Update(Place place)
         {
             if (_context.Places is null)
@@ -205,7 +205,7 @@ namespace OwlStock.Services.Implementations
                     existingPlace.Name = place?.Name;
                     existingPlace.Description = place?.Description;
                     existingPlace.GoogleMapsURL = place?.GoogleMapsURL;
-                    existingPlace.IsPopular = place.IsPopular;
+                    existingPlace.IsPopular = place!.IsPopular;
                     await _context.SaveChangesAsync();
                 }
 
@@ -219,14 +219,14 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Updates the Id of a photo related to a location
+        /// </summary>
+        /// <param name="placeId">Id of the Place</param>
+        /// <param name="photoId">Id of the photo</param>
+        /// <returns>True if successful, else false</returns>
         public async Task<bool> UpdatePhotoId(Guid placeId, Guid photoId)
         {
-            if (_context.Places is null)
-            {
-                _logger.LogError("{context} is null in {Method}, {Class}, {DateTime}", nameof(_context.Places), nameof(UpdatePhotoId), nameof(PlaceService), DateTime.Now);
-                return false;
-            }
-
             try
             {
                 Place? existingPlace = await _context.Places.FindAsync(placeId);

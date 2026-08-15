@@ -16,11 +16,11 @@ namespace OwlStock.Services.Interfaces
         Task<bool> SetReservedDate(DateTime dates);
 
         Task<Guid> Add(CreateRegularPhotoShootDTO dto);
-        Task<Guid> AddSmallProduct(CreateSmallProductPhotoshootDTO dto);
+        Task<Guid> AddSmallProductPhotoShoot(CreateSmallProductPhotoshootDTO dto);
         Task<bool> Update(UpdatePhotoShootDTO dto);
         Task<PhotoShoot> PhotoShootById(Guid id);
         Task<PhotoShootByIdDTO> PhotoShootById(Guid id, string userId);
-        Task<List<MyPhotoShootsDTO>> MyPhotoShoots(string userId);
+        Task<List<MyPhotoShootsDTO>> PhotoShootsByUser(string userId);
         Task<IEnumerable<DateTime>> GetReservedDates();
 
         /// <summary>

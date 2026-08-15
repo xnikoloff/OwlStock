@@ -18,6 +18,12 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Creates a photo file
+        /// </summary>
+        /// <param name="photo">Contains information that is required for creating the photo file</param>
+        /// <returns>True if successful, else false</returns>
+        /// <exception cref="NullReferenceException">Thrown when the file path is null</exception>
         public bool CreatePhotoFile(PhotoBase photo)
         {
             if (File.Exists(Path.Combine(photo.FilePath, photo.FileName)))
@@ -78,6 +84,12 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Creates a photo file for a photoshoot location
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// <exception cref="NullReferenceException"></exception>
         public bool CreatePlacePhotoFile(CreatePlacePhotoFileDTO dto)
         {
             if (dto.PhotoBase == null)
@@ -121,6 +133,12 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Creates a photo file from an IFormFile
+        /// </summary>
+        /// <param name="file">The IFormFile</param>
+        /// <param name="webRootPath">Path to the root directory of the project</param>
+        /// <returns></returns>
         public async Task<bool> CreateIFormFile(IFormFile file, string webRootPath)
         {
             if (file == null)

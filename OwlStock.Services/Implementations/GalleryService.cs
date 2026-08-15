@@ -20,6 +20,10 @@ namespace OwlStock.Services.Implementations
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets all gallery photos
+        /// </summary>
+        /// <returns>List of all GalleryPhotos</returns>
         public async Task<List<GalleryPhoto>> All()
         {
             if (_context.GalleryPhotos is null)
@@ -45,6 +49,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all photos that are connected to a photoshoot
+        /// </summary>
+        /// <param name="photoShootType">Type of the photoshoot</param>
+        /// <returns>List of the photoshoot photos</returns>
         private async Task<List<PhotoShootPhoto>> AllPhotoshootPhotos(PhotoShootType photoShootType)
         {
             if (_context.PhotoShootPhotos is null)
@@ -78,11 +87,15 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Builds a dictionary that contains list of all gallery categories and the corresponding photos for each of the categories
+        /// </summary>
+        /// <returns>Dictionary of gallery categories with their corresponding photos</returns>
         public async Task<Dictionary<Category, List<GalleryPhoto?>>> BuildCategoriesGallery()
         {
             if(_context.PhotosCategories is null)
             {
-                throw new NullReferenceException($"{nameof(_context.PhotosCategories)} is null");
+                _logger.LogError($"{nameof(_context.PhotosCategories)} is null in {nameof(BuildCategoriesGallery)}, {nameof(FileService)}, {DateTime.Now}");
             }
 
             Dictionary<Category, List<GalleryPhoto?>> categoriesWithPhotos = new();
@@ -113,6 +126,11 @@ namespace OwlStock.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Gets all corresponding photos to a photoshoot type
+        /// </summary>
+        /// <param name="photoshootType">The photoshoot type</param>
+        /// <returns>List of PhotoshootPhoto corresponding to a photoshoot type</returns>
         public async Task<List<PhotoShootPhoto>> AllByPhotoshootType(PhotoShootType photoshootType)
         {
             List<PhotoShootPhoto> photos = await AllPhotoshootPhotos(photoshootType);
@@ -126,6 +144,11 @@ namespace OwlStock.Services.Implementations
             return photos;
         }
 
+        /// <summary>
+        /// Gets all corresponding gallery photos to a gallery category 
+        /// </summary>
+        /// <param name="category">The gallery category</param>
+        /// <returns>List of GalleryPhotos corresponding to a gallery category</returns>
         public async Task<List<GalleryPhoto>> AllByCategory(Category category)
         {
             List<GalleryPhoto> galleryPhotos = await All();
@@ -135,6 +158,11 @@ namespace OwlStock.Services.Implementations
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets all corresponding gallery photos to a search tag 
+        /// </summary>
+        /// <param name="tagText">The tag that is requested</param>
+        /// <returns>List of GalleryPhotos corresponding to a search tag</returns>
         public async Task<List<GalleryPhoto>> AllByTags(string tagText)
         {
             List<Guid> idList = await _photoTagService.GetPhotoIdListByTag(tagText);
