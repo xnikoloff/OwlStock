@@ -10,10 +10,12 @@ namespace OwlStock.Web.Controllers
     public class GiftCardController : Controller
     {
         private readonly IGiftCardService _giftCardService;
+        private readonly IPdfService _pdfService;
 
-        public GiftCardController(IGiftCardService giftCardService)
+        public GiftCardController(IGiftCardService giftCardService, IPdfService pdfService)
         {
             _giftCardService = giftCardService;
+            _pdfService = pdfService;
         }
 
         [HttpGet]
@@ -38,11 +40,13 @@ namespace OwlStock.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateGiftCardDTO dto)
         {
-            bool result = await _giftCardService.Create(dto.GiftCard ?? new());
+            GiftCard giftCard = await _giftCardService.Create(dto.GiftCard ?? new());
+            string html = _giftCardService.GetHtmlTemplate(giftCard);
+            byte[]? pdf = _pdfService.GeneratePdfFromHtml(html);
 
-            if (result)
+            if (pdf != null)
             {
-                return View(nameof(Template), dto.GiftCard ?? new());
+                return DownloadGiftCard(pdf);
             }
 
             else
@@ -51,10 +55,9 @@ namespace OwlStock.Web.Controllers
             }
         }
 
-        /*[HttpGet("template")]
-        public IActionResult Template(GiftCard giftCard)
+        private FileResult DownloadGiftCard(byte[] bytes)
         {
-            return View(giftCard);
-        }*/
+            return File(bytes, "application/pdf", "ваучер");
+        }
     }
 }

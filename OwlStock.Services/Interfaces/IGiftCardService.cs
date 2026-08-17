@@ -7,7 +7,8 @@ namespace OwlStock.Services.Interfaces
     {
         Task<IEnumerable<GiftCard>> GetAll();
         Task<GiftCard> GetById(Guid id);
-        Task<bool> Create(GiftCard giftCard);
+        Task<GiftCard> Create(GiftCard giftCard);
         Task<bool> ChangeStatus(Guid id, GiftCardStatus status);
+        string GetHtmlTemplate(GiftCard giftCard);
     }
 }

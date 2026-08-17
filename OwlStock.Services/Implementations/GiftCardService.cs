@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using OwlStock.Domain.Entities;
 using OwlStock.Domain.Enumerations;
 using OwlStock.Infrastructure;
+using OwlStock.Infrastructure.Common.PdfTemplates.GiftCard;
 using OwlStock.Services.Interfaces;
 
 namespace OwlStock.Services.Implementations
@@ -67,18 +68,18 @@ namespace OwlStock.Services.Implementations
             }
         }
 
-        public async Task<bool> Create(GiftCard giftCard)
+        public async Task<GiftCard> Create(GiftCard giftCard)
         {
             if(giftCard == null)
             {
                 _logger.LogError($"{nameof(giftCard)} is null at {DateTime.UtcNow} in {nameof(GiftCardService)}, {nameof(Create)}");
-                return false;
+                return new();
             }
 
             if (giftCard.Receiver.IsNullOrEmpty())
             {
                 _logger.LogError($"${nameof(giftCard.Receiver)} is null or empty at {DateTime.UtcNow} in {nameof(GiftCardService)}, {nameof(Create)}");
-                return false;
+                return new();
             }
 
             giftCard.CreatedOn = DateTime.Now;
@@ -89,13 +90,13 @@ namespace OwlStock.Services.Implementations
             {
                 await _context.AddAsync(giftCard);
                 await _context.SaveChangesAsync();
-                return true;
+                return giftCard;
             }
 
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred at {Time}", DateTime.UtcNow);
-                return false;
+                return new();
             }
         }
 
@@ -142,6 +143,25 @@ namespace OwlStock.Services.Implementations
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Builds the HTML template for a GiftCard
+        /// </summary>
+        /// <param name="giftCard">GiftCard with the required data</param>
+        /// <returns>HTML code as string</returns>
+        public string GetHtmlTemplate(GiftCard giftCard)
+        {
+            GiftCardTemplateBaseDTO dto = new()
+            {
+                GiftCardNumber = giftCard.GiftCardNumber,
+                Photoshoot = giftCard.PhotoShootType.ToString(),
+                Receiver = giftCard.Receiver,
+                ValidUntil = giftCard.CreatedOn.AddYears(1).ToString("dd.MM.yyyy")
+            };
+
+            return CreateGiftCardPdfTemplate.CreateGiftCard(dto);
+           
         }
         
         private string GenerateGiftCardNumber(PhotoShootType photoShootType)

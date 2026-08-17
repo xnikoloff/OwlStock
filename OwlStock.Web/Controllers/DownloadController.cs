@@ -107,5 +107,11 @@ namespace OwlStock.Web.Controllers
 
             return StatusCode(500, "An error cccured while zipping files");
         }
+
+        [HttpGet]
+        public FileResult DownloadGiftCard(byte[] bytes)
+        {
+            return File(bytes, "application/pdf", "ваучер");
+        }
     }
 }
