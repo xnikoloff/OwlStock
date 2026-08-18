@@ -39,16 +39,6 @@ namespace OwlStock.Services.Implementations
                 MarginRight = 20
             };
 
-            html = """
-<!DOCTYPE html>
-<html>
-<body>
-    <h1>Hello World</h1>
-    <p>This is a test.</p>
-</body>
-</html>
-""";
-
             using PdfDocument document = PdfGenerator.GeneratePdf(html, config);
 
             using var stream = new MemoryStream();

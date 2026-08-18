@@ -57,7 +57,7 @@ namespace OwlStock.Web.Controllers
 
         private FileResult DownloadGiftCard(byte[] bytes)
         {
-            return File(bytes, "application/pdf", "ваучер");
+            return File(bytes, "application/pdf", "ваучер.pdf");
         }
     }
 }
