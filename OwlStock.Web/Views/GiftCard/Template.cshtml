@@ -45,7 +45,7 @@
                                 Подаръчен ваучер
                             </span>
 
-                            <h1 style="font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:600;color:#222;margin:15px 0;">
+                            <h1 class="certificate-logo" style="font-family:'Cormorant Garamond',serif;font-size:62px;font-weight:600;color:#222;margin:15px 0;">
                                 <img src="~/img/icons/icon-1.png" alt="logo" />
                             </h1>
                         </div>
@@ -80,7 +80,7 @@
                                     <span class="value" style="font-size:22px;color:#222;font-weight:500;">
                                         --- г   
                                     </span>
-                                    <h6 class="remove" style="font-style:italic">/попълва автоматично след изтегляне/</h6>
+                                    <h6 class="remove remove-valid-until-description" style="font-style:italic">/попълва се автоматично след изтегляне/</h6>
                                 </div>
 
                             </div>
@@ -90,13 +90,13 @@
 
                             <div class="signature" style="width:240px;">
                                 <div class="line" style="height:1px;background:#222;margin-bottom:8px;"></div>
-                                <span style="font-size:14px;color:#555;">
+                                <span class="contacts" style="font-size:14px;color:#555;">
                                     <b>PHOTONIC.bg | +359 878 131828</b>
                                 </span>
                             </div>
 
                             <div class="certificate-number" style="font-size:13px;color:#888;letter-spacing:2px;">
-                                Certificate #__number__
+                                #CERTIFICATE NUMBER
                             </div>
 
                         </div>
@@ -110,5 +110,44 @@
 <style>
     .info-text{
         font-size: 1.2rem
+    }
+
+    @@media only screen and (max-width: 995px) {
+
+        .certificate-wrap{
+            padding: 10px !important;
+        }
+
+        .certificate{
+            padding: 40px 20px !important;
+        }
+
+        .label{
+            font-size: 9px !important;
+        }
+
+        .value, .remove-valid-until-description, #GiftCard_PhotoShootType {
+            font-size: 10px !important;
+        }
+
+        .signature{
+            width: 150px !important;
+        }
+
+        .contacts{
+            font-size: 8px !important;
+        }
+
+        .certificate-number {
+            font-size: 8px !important;
+        }
+
+        .certificate-logo img {
+            width: 150px;
+        }
+
+        .presented{
+            font-size: 10px !important;
+        }
     }
 </style>
